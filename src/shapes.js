@@ -259,11 +259,141 @@ export function buildIntro(n) {
   return { pos, col, group, wing, delay, nCrane: nC };
 }
 
+// ---------- "Care": two hands lifting up a glowing creation ----------
+// Drawn with 2D canvas paths (original artwork), then sampled into particles with its colors.
+export function drawCare(size = 600) {
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  const g = c.getContext('2d');
+  const k = size / 600;
+  g.scale(k, k);
+  g.fillStyle = '#000';
+  g.fillRect(0, 0, 600, 600);
+  g.lineCap = 'round';
+
+  // light rays + halo behind the creation
+  const cx = 300, cy = 215;
+  const halo = g.createRadialGradient(cx, cy, 10, cx, cy, 150);
+  halo.addColorStop(0, 'rgba(140,220,255,.55)');
+  halo.addColorStop(1, 'rgba(140,220,255,0)');
+  g.fillStyle = halo;
+  g.beginPath(); g.arc(cx, cy, 150, 0, Math.PI * 2); g.fill();
+  for (let i = 0; i < 16; i++) {
+    const a = (i / 16) * Math.PI * 2 + 0.1;
+    if (Math.sin(a) > 0.55) continue; // no rays down into the hands
+    const r0 = 72, r1 = i % 2 ? 150 : 190;
+    const gr = g.createLinearGradient(cx + Math.cos(a) * r0, cy + Math.sin(a) * r0, cx + Math.cos(a) * r1, cy + Math.sin(a) * r1);
+    gr.addColorStop(0, 'rgba(170,230,255,.95)');
+    gr.addColorStop(1, 'rgba(170,230,255,0)');
+    g.strokeStyle = gr; g.lineWidth = i % 2 ? 3 : 5;
+    g.beginPath(); g.moveTo(cx + Math.cos(a) * r0, cy + Math.sin(a) * r0); g.lineTo(cx + Math.cos(a) * r1, cy + Math.sin(a) * r1); g.stroke();
+  }
+
+  // the creation: a faceted gem
+  const top = cy - 70, girdle = cy - 16, tip = cy + 74, w = 86, tw = 42;
+  const facets = [
+    [[cx - w, girdle], [cx - tw, top], [cx - 12, girdle], '#bdf0ff'],
+    [[cx - tw, top], [cx + tw, top], [cx, girdle], '#e9fbff'],
+    [[cx - 12, girdle], [cx - tw, top], [cx, girdle], '#a6e6ff'],
+    [[cx + 12, girdle], [cx + tw, top], [cx, girdle], '#8fdcff'],
+    [[cx + w, girdle], [cx + tw, top], [cx + 12, girdle], '#6ccaf7'],
+    [[cx - w, girdle], [cx - 12, girdle], [cx, tip], '#5cc0f5'],
+    [[cx - 12, girdle], [cx + 12, girdle], [cx, tip], '#8ad8ff'],
+    [[cx + 12, girdle], [cx + w, girdle], [cx, tip], '#2f9ae6'],
+  ];
+  for (const [a, b, d, col] of facets) {
+    g.fillStyle = col;
+    g.beginPath(); g.moveTo(...a); g.lineTo(...b); g.lineTo(...d); g.closePath(); g.fill();
+  }
+  g.strokeStyle = '#000'; g.lineWidth = 4; // facet edges read as fine gaps between particles
+  for (const [a, b, d] of facets) { g.beginPath(); g.moveTo(...a); g.lineTo(...b); g.lineTo(...d); g.closePath(); g.stroke(); }
+  // sparkles
+  g.fillStyle = '#ffffff';
+  for (const [x, y, r] of [[cx - 95, cy - 70, 5], [cx + 105, cy - 40, 4], [cx + 60, cy - 105, 3.5], [cx - 60, cy + 30, 3]]) {
+    g.beginPath(); g.moveTo(x, y - r * 3); g.lineTo(x + r, y); g.lineTo(x, y + r * 3); g.lineTo(x - r, y); g.closePath(); g.fill();
+    g.beginPath(); g.moveTo(x - r * 3, y); g.lineTo(x, y + r); g.lineTo(x + r * 3, y); g.lineTo(x, y - r); g.closePath(); g.fill();
+  }
+
+  // two open hands, palms up, cupped beneath the gem
+  const skin = (y0, y1) => {
+    const gr = g.createLinearGradient(0, y0, 0, y1);
+    gr.addColorStop(0, '#fff3ea'); gr.addColorStop(1, '#d9b9a6');
+    return gr;
+  };
+  const hand = (side) => {
+    g.save();
+    g.translate(300, 0);
+    g.scale(side, 1);
+    g.fillStyle = skin(290, 600);
+    // forearm + wrist
+    g.beginPath();
+    g.moveTo(66, 540); g.quadraticCurveTo(66, 490, 40, 440);
+    g.lineTo(170, 420); g.quadraticCurveTo(192, 480, 200, 540); g.closePath(); g.fill();
+    // palm: a cupped bowl shape
+    g.beginPath();
+    g.moveTo(8, 330);
+    g.quadraticCurveTo(0, 410, 50, 445);
+    g.quadraticCurveTo(130, 470, 185, 410);
+    g.quadraticCurveTo(205, 370, 190, 330);
+    g.quadraticCurveTo(100, 345, 8, 330);
+    g.fill();
+    // four fingers curling up and outward
+    const fingers = [[70, 336, 92, 270, 17], [108, 338, 140, 268, 17.5], [145, 340, 182, 282, 16.5], [178, 352, 215, 312, 14]];
+    for (const [x1, y1, x2, y2, r] of fingers) {
+      g.strokeStyle = skin(y2 - 20, y1 + 20); g.lineWidth = r * 2;
+      g.beginPath(); g.moveTo(x1, y1); g.quadraticCurveTo((x1 + x2) / 2 + 6, (y1 + y2) / 2 + 10, x2, y2); g.stroke();
+    }
+    // thumb resting along the inner edge
+    g.strokeStyle = skin(300, 420); g.lineWidth = 34;
+    g.beginPath(); g.moveTo(40, 420); g.quadraticCurveTo(10, 380, 22, 318); g.stroke();
+    // fine gaps between fingers + palm crease, so the shape reads clearly in particles
+    g.strokeStyle = '#000'; g.lineWidth = 6;
+    for (const [x1, y1, x2, y2] of [[89, 342, 118, 278], [127, 346, 160, 280], [162, 352, 198, 300]]) {
+      g.beginPath(); g.moveTo(x1, y1); g.quadraticCurveTo((x1 + x2) / 2 + 6, (y1 + y2) / 2 + 10, x2, y2); g.stroke();
+    }
+    g.beginPath(); g.moveTo(45, 405); g.quadraticCurveTo(110, 430, 170, 388); g.stroke();
+    g.restore();
+  };
+  hand(-1); hand(1);
+  // a faint line where the two palms meet
+  g.strokeStyle = '#000'; g.lineWidth = 3;
+  g.lineWidth = 5;
+  g.beginPath(); g.moveTo(300, 330); g.lineTo(300, 600); g.stroke();
+  return c;
+}
+
+function sampleCanvas(c, n, { width = 3.6, depth = 0.3, threshold = 0.25, ySquash = 1, skinKeep = 1 } = {}) {
+  const W = c.width, H = c.height;
+  const d = c.getContext('2d').getImageData(0, 0, W, H).data;
+  const pts = [];
+  for (let y = 0; y < H; y += 2)
+    for (let x = 0; x < W; x += 2) {
+      const i = (y * W + x) * 4;
+      const r = d[i] / 255, gg = d[i + 1] / 255, b = d[i + 2] / 255;
+      const lum = 0.3 * r + 0.55 * gg + 0.15 * b;
+      // keep faint halo pixels only sometimes, so the glow reads as soft dust
+      if (!(lum > threshold || (lum > 0.08 && rnd() < lum * 1.5))) continue;
+      // skin (warm, r > b) is a big area: thin it out so the glowing creation gets more particles
+      if (r > b + 0.06 && rnd() > skinKeep) continue;
+      pts.push(x, y, r, gg, b, lum);
+    }
+  const pos = new Float32Array(n * 3), col = new Float32Array(n * 3);
+  const count = pts.length / 6, s = width / W;
+  for (let i = 0; i < n; i++) {
+    const k = (rnd() * count | 0) * 6;
+    pos[i * 3] = (pts[k] + rnd() * 2 - W / 2) * s;
+    pos[i * 3 + 1] = -(pts[k + 1] + rnd() * 2 - H / 2) * s * ySquash;
+    pos[i * 3 + 2] = (pts[k + 5] - 0.5) * depth + gauss() * 0.03;
+    col.set([pts[k + 2], pts[k + 3], pts[k + 4]], i * 3);
+  }
+  return { pos, col };
+}
+
 // Edit this list to make the hero about you. build() may return a Promise.
 export const SHAPES = [
 // Captions come from i18n.js (DICT[lang].shapes[key]).
   { key: 'crane', build: (n) => image(avatarUrl, n, { width: 3.7, depth: 0.22, threshold: 0.5 }) },
-  { key: 'code', build: (n) => glyph('</>', n, { font: '700 300px ui-monospace, monospace', width: 3.6, hue: [170, 210] }) },
+  { key: 'care', build: (n) => sampleCanvas(drawCare(600), n, { width: 3.8, skinKeep: 0.42 }) },
   { key: 'auto', build: knot },
   { key: 'data', build: helix },
   { key: 'web', build: globe },
