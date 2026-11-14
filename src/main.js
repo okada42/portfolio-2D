@@ -14,7 +14,10 @@ const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 // ---------- loader: shown % eases toward real progress ----------
 const bar = $('.loader-bar span'), pctEl = $('.loader-pct'), msgEl = $('.loader-msg'), loaderEl = $('.loader');
 let target = 0, shown = 0, finished = false;
-const bump = (n) => (target = Math.min(100, target + n));
+const bump = (n) => {
+  target = Math.min(100, target + n);
+  if (target > 99.5) target = 100; // float sums like 6 × (50/6) land at 99.999…
+};
 let onDone = () => {};
 (function loop() {
   shown += Math.max((target - shown) * 0.08, target > shown ? 0.3 : 0);
