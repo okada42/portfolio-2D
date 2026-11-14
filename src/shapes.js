@@ -272,7 +272,7 @@ export function drawCare(size = 600) {
   g.lineCap = 'round';
 
   // light rays + halo behind the creation
-  const cx = 300, cy = 215;
+  const cx = 300, cy = 200;
   const halo = g.createRadialGradient(cx, cy, 10, cx, cy, 150);
   halo.addColorStop(0, 'rgba(140,220,255,.55)');
   halo.addColorStop(1, 'rgba(140,220,255,0)');
@@ -314,51 +314,55 @@ export function drawCare(size = 600) {
     g.beginPath(); g.moveTo(x - r * 3, y); g.lineTo(x, y + r); g.lineTo(x + r * 3, y); g.lineTo(x, y - r); g.closePath(); g.fill();
   }
 
-  // two open hands, palms up, cupped beneath the gem
+  // two open hands rising from wrists that touch at the bottom center, opening up and outward in a V,
+  // palms up, fingers gently spread and curving upward, thumbs on the inner side
   const skin = (y0, y1) => {
     const gr = g.createLinearGradient(0, y0, 0, y1);
-    gr.addColorStop(0, '#fff3ea'); gr.addColorStop(1, '#d9b9a6');
+    gr.addColorStop(0, '#fff3ea'); gr.addColorStop(1, '#d7b6a2');
     return gr;
+  };
+  // finger = black outline first, then skin on top, so neighbours stay visibly separated
+  const digit = (x1, y1, cx1, cy1, x2, y2, r) => {
+    g.strokeStyle = '#000'; g.lineWidth = r * 2 + 7;
+    g.beginPath(); g.moveTo(x1, y1); g.quadraticCurveTo(cx1, cy1, x2, y2); g.stroke();
+    g.strokeStyle = skin(y2 - 20, y1 + 30); g.lineWidth = r * 2;
+    g.beginPath(); g.moveTo(x1, y1); g.quadraticCurveTo(cx1, cy1, x2, y2); g.stroke();
   };
   const hand = (side) => {
     g.save();
     g.translate(300, 0);
     g.scale(side, 1);
-    g.fillStyle = skin(290, 600);
-    // forearm + wrist
+    // forearm, nearly vertical, touching the other one at the center
+    g.fillStyle = skin(470, 600);
     g.beginPath();
-    g.moveTo(66, 540); g.quadraticCurveTo(66, 490, 40, 440);
-    g.lineTo(170, 420); g.quadraticCurveTo(192, 480, 200, 540); g.closePath(); g.fill();
-    // palm: a cupped bowl shape
+    g.moveTo(3, 600); g.lineTo(6, 500); g.quadraticCurveTo(10, 470, 22, 455);
+    g.lineTo(92, 470); g.quadraticCurveTo(76, 520, 70, 600); g.closePath(); g.fill();
+    // fingers fan up and outward from the knuckles, tips curling slightly inward (cupped)
+    digit(186, 372, 212, 342, 226, 306, 12.5);  // little finger
+    digit(160, 356, 186, 312, 192, 268, 15);    // ring
+    digit(132, 346, 150, 296, 150, 248, 16.5);  // middle
+    digit(104, 350, 112, 304, 106, 262, 15.5);  // index
+    // thumb on the inner side, pointing up and slightly out
+    digit(56, 408, 38, 372, 44, 322, 15);
+    // palm drawn last so it covers the finger roots cleanly
+    g.fillStyle = skin(330, 480);
     g.beginPath();
-    g.moveTo(8, 330);
-    g.quadraticCurveTo(0, 410, 50, 445);
-    g.quadraticCurveTo(130, 470, 185, 410);
-    g.quadraticCurveTo(205, 370, 190, 330);
-    g.quadraticCurveTo(100, 345, 8, 330);
-    g.fill();
-    // four fingers curling up and outward
-    const fingers = [[70, 336, 92, 270, 17], [108, 338, 140, 268, 17.5], [145, 340, 182, 282, 16.5], [178, 352, 215, 312, 14]];
-    for (const [x1, y1, x2, y2, r] of fingers) {
-      g.strokeStyle = skin(y2 - 20, y1 + 20); g.lineWidth = r * 2;
-      g.beginPath(); g.moveTo(x1, y1); g.quadraticCurveTo((x1 + x2) / 2 + 6, (y1 + y2) / 2 + 10, x2, y2); g.stroke();
-    }
-    // thumb resting along the inner edge
-    g.strokeStyle = skin(300, 420); g.lineWidth = 34;
-    g.beginPath(); g.moveTo(40, 420); g.quadraticCurveTo(10, 380, 22, 318); g.stroke();
-    // fine gaps between fingers + palm crease, so the shape reads clearly in particles
-    g.strokeStyle = '#000'; g.lineWidth = 6;
-    for (const [x1, y1, x2, y2] of [[89, 342, 118, 278], [127, 346, 160, 280], [162, 352, 198, 300]]) {
-      g.beginPath(); g.moveTo(x1, y1); g.quadraticCurveTo((x1 + x2) / 2 + 6, (y1 + y2) / 2 + 10, x2, y2); g.stroke();
-    }
-    g.beginPath(); g.moveTo(45, 405); g.quadraticCurveTo(110, 430, 170, 388); g.stroke();
+    g.moveTo(20, 458);
+    g.quadraticCurveTo(14, 410, 58, 372);
+    g.lineTo(100, 344);
+    g.quadraticCurveTo(150, 336, 190, 372);
+    g.quadraticCurveTo(170, 440, 94, 470);
+    g.closePath(); g.fill();
+    // palm creases
+    g.strokeStyle = '#000'; g.lineWidth = 4;
+    g.beginPath(); g.moveTo(66, 392); g.quadraticCurveTo(120, 372, 176, 388); g.stroke();
+    g.beginPath(); g.moveTo(58, 420); g.quadraticCurveTo(80, 440, 70, 456); g.stroke();
     g.restore();
   };
   hand(-1); hand(1);
-  // a faint line where the two palms meet
-  g.strokeStyle = '#000'; g.lineWidth = 3;
-  g.lineWidth = 5;
-  g.beginPath(); g.moveTo(300, 330); g.lineTo(300, 600); g.stroke();
+  // where the two wrists meet
+  g.strokeStyle = '#000'; g.lineWidth = 5;
+  g.beginPath(); g.moveTo(300, 470); g.lineTo(300, 600); g.stroke();
   return c;
 }
 
