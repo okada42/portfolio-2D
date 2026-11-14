@@ -177,6 +177,88 @@ async function image(url, n, { width = 3.4, depth = 0.5, threshold = 0.42 } = {}
   return { pos, col };
 }
 
+// ---------- Intro: a white crane in flight (side view, heading -x) + a blue "AI" ----------
+// wing[i] = distance along the wing span (0 for non-wing points); the shader flaps by it.
+function flyingCrane(n) {
+  const pos = new Float32Array(n * 3), col = new Float32Array(n * 3), wing = new Float32Array(n);
+  const S = 0.85;
+  const white = (k = 0) => { const l = 0.88 + 0.12 * rnd() - k; return [l, l + 0.02, Math.min(1, l + 0.06)]; };
+  for (let i = 0; i < n; i++) {
+    const r = rnd();
+    let p, c, w = 0;
+    if (r < 0.56) {
+      // wings: near (z+) and far (z-), span u along +y and depth, chord v back along -x
+      const side = rnd() < 0.5 ? 1 : -1;
+      const u = Math.pow(rnd(), 0.8);
+      let v = rnd();
+      // broad inner wing tapering to the tip; leading edge sweeps back
+      const chord = 0.7 * (1 - u * 0.5);
+      const lead = 0.2 - u * u * 0.55;
+      let len = chord;
+      if (u > 0.72) {
+        // separated primary feathers ("fingers") at the tip
+        const f = (v * 6) | 0, fv = v * 6 - f;
+        if (fv > 0.6) v = f / 6 + rnd() * 0.1;
+        len = chord * (1 + (u - 0.72) * 1.4 * (1 - f / 6));
+      }
+      p = [lead - v * len, 0.08 + u * 0.22 - v * 0.06 + Math.sin(v * Math.PI) * 0.05, side * (0.14 + u * 1.35)];
+      w = u * 1.4;
+      c = v > 0.7 ? [0.78, 0.88, 1] : white(v * 0.06); // icy trailing edge
+    } else if (r < 0.71) {
+      // body: ellipsoid surface
+      const a = gauss(), b = gauss(), d = gauss(), L = Math.hypot(a, b, d) || 1;
+      p = [a / L * 0.46, b / L * 0.15, d / L * 0.17];
+      c = white();
+    } else if (r < 0.81) {
+      // neck reaching forward
+      const t = rnd();
+      p = [0.36 + 0.95 * t + gauss() * 0.02, 0.04 + 0.12 * t + gauss() * 0.03, gauss() * 0.03];
+      c = white();
+    } else if (r < 0.85) {
+      // head with red crown
+      const a = gauss(), b = gauss(), d = gauss(), L = Math.hypot(a, b, d) || 1;
+      p = [1.33 + a / L * 0.07, 0.16 + b / L * 0.06, d / L * 0.06];
+      c = b / L > 0.35 ? [1, 0.18, 0.15] : white();
+    } else if (r < 0.88) {
+      // beak
+      const t = rnd();
+      p = [1.39 + 0.3 * t, 0.15 - 0.03 * t + gauss() * 0.01 * (1 - t), gauss() * 0.008];
+      c = [0.85, 0.82, 0.62];
+    } else if (r < 0.94) {
+      // legs trailing behind
+      const t = rnd(), side = rnd() < 0.5 ? 1 : -1;
+      p = [-0.35 - 1.0 * t, -0.07 - 0.08 * t + gauss() * 0.008, side * 0.04];
+      c = [0.45, 0.5, 0.58];
+    } else {
+      // tail feathers
+      const t = rnd();
+      p = [-0.45 - 0.3 * t, 0.02 + gauss() * 0.05 * t, gauss() * 0.08 * t];
+      c = white(0.15);
+    }
+    pos.set([-p[0] * S, p[1] * S, p[2] * S], i * 3); // mirrored: flies right-to-left
+    col.set(c, i * 3);
+    wing[i] = w * S;
+  }
+  return { pos, col, wing };
+}
+
+// group: 1 = crane, 2 = AI. Crane particles get a delay near 0, AI appears later.
+export function buildIntro(n) {
+  const nC = Math.floor(n * 0.45);
+  const crane = flyingCrane(nC);
+  const ai = glyph('AI', n - nC, { font: '900 300px system-ui, sans-serif', width: 2.6, depth: 0.5, hue: [195, 228] });
+  const pos = new Float32Array(n * 3), col = new Float32Array(n * 3);
+  const group = new Float32Array(n), wing = new Float32Array(n), delay = new Float32Array(n);
+  pos.set(crane.pos); col.set(crane.col);
+  pos.set(ai.pos, nC * 3); col.set(ai.col, nC * 3);
+  wing.set(crane.wing);
+  for (let i = 0; i < n; i++) {
+    group[i] = i < nC ? 1 : 2;
+    delay[i] = i < nC ? rnd() * 0.3 : 0.45 + rnd() * 0.55;
+  }
+  return { pos, col, group, wing, delay };
+}
+
 // Edit this list to make the hero about you. build() may return a Promise.
 export const SHAPES = [
 // Captions come from i18n.js (DICT[lang].shapes[key]).

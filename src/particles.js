@@ -12,6 +12,11 @@ attribute vec3 aColFrom;
 attribute vec3 aColTo;
 attribute float aDelay;
 attribute float aRand;
+attribute float aGroup;
+attribute float aWing;
+uniform vec3 uOff;
+uniform float uFlap;
+uniform float uAIGlow;
 uniform float uT;
 uniform float uTime;
 uniform float uSize;
@@ -28,6 +33,13 @@ void main(){
   // stagger each particle by its delay so shapes build up in a sweep
   float t = ease(clamp((uT - aDelay*.45) / .55, 0., 1.));
   vec3 p = mix(aFrom, aTo, t);
+  // intro crane: flap wings by span distance and carry along the flight path
+  float isCrane = step(.5, aGroup) * step(aGroup, 1.5);
+  float f = sin(uTime * 7.);
+  p.y += isCrane * aWing * (f * 1.05 + .1) * uFlap;
+  p.z *= 1. - isCrane * uFlap * .35 * abs(f);
+  p.y -= isCrane * f * .06 * uFlap; // body bobs against the stroke
+  p += isCrane * uOff;
   // swirl mid-flight, gentle breathing at rest
   float mid = sin(t*3.14159);
   float ph = aRand*6.2831 + uTime*.6;
@@ -42,7 +54,9 @@ void main(){
   vAlpha = mix(.35, 1., 1. - uChaos) * (.55 + .45*aRand);
   vec4 mv = modelViewMatrix * vec4(p, 1.);
   gl_Position = projectionMatrix * mv;
-  gl_PointSize = uSize * uPR * (.6 + aRand*.8) * (6. / -mv.z);
+  float glow = step(1.5, aGroup) * uAIGlow * (.5 + .5 * sin(uTime * 3. + aRand * 6.2831));
+  vCol += glow * vec3(.15, .3, .45);
+  gl_PointSize = uSize * uPR * (.6 + aRand*.8) * (6. / -mv.z) * (1. + glow * .8);
 }`;
 
 const frag = /* glsl */ `
@@ -75,7 +89,7 @@ void main(){
 
 const TIMING = { form: 3.2, hold: 6.5, scatter: 2.6 };
 
-export function createScene(canvas, shapes, { count, small, reduceMotion, onShape }) {
+export function createScene(canvas, shapes, { count, small, reduceMotion, onShape, intro }) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
   const pr = Math.min(devicePixelRatio || 1, small ? 1.5 : 2);
   renderer.setPixelRatio(pr);
@@ -119,9 +133,12 @@ export function createScene(canvas, shapes, { count, small, reduceMotion, onShap
   };
   for (const [k, a] of Object.entries(A)) { a.setUsage(THREE.DynamicDrawUsage); geo.setAttribute(k, a); }
   geo.setAttribute('aRand', new THREE.BufferAttribute(rand, 1));
+  geo.setAttribute('aGroup', new THREE.BufferAttribute(intro?.group ?? new Float32Array(count), 1));
+  geo.setAttribute('aWing', new THREE.BufferAttribute(intro?.wing ?? new Float32Array(count), 1));
   const touch = () => Object.values(A).forEach((a) => (a.needsUpdate = true));
 
   const U = {
+    uOff: { value: new THREE.Vector3() }, uFlap: { value: 0 }, uAIGlow: { value: 0 },
     uT: { value: 1 }, uTime: { value: 0 }, uSize: { value: small ? 2.4 : 2.6 }, uPR: { value: pr },
     uChaos: { value: 1 }, uMouse: { value: new THREE.Vector3(99, 99, 0) }, uMouseOn: { value: 0 },
   };
@@ -183,6 +200,39 @@ export function createScene(canvas, shapes, { count, small, reduceMotion, onShap
     state.phase = 'form'; state.t0 = now;
     onShape?.(idx);
   }
+  // ---------- intro: crane forms -> flies to "AI" -> both merge into shape 0 (avatar) ----------
+  const IT = { form: 2.6, fly: 4.4, merge: 3.4 };
+  const START = new THREE.Vector3(4.8, -1.9, 0); // enter from bottom-right, away from the headline
+  let introDone = !intro || reduceMotion;
+  const flightPath = (k, out) => {
+    const e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+    return out.set(START.x * (1 - e), START.y * (1 - e) + Math.sin(e * Math.PI) * 0.7, 0);
+  };
+  function introForm(now) {
+    from.set(cloud); to.set(intro.pos);
+    cTo.set(intro.col); delay.set(intro.delay);
+    touch();
+    U.uT.value = 0; U.uFlap.value = 1;
+    flightPath(0, U.uOff.value);
+    state.phase = 'intro-form'; state.t0 = now;
+  }
+  function introMerge(now) {
+    from.set(intro.pos); cFrom.set(intro.col);
+    const s = shapes[0];
+    to.set(s.pos); cTo.set(s.col);
+    // burst outward from the meeting point
+    let hi = 0;
+    const r = new Float32Array(count);
+    for (let i = 0; i < count; i++) { r[i] = Math.hypot(s.pos[i * 3], s.pos[i * 3 + 1]); hi = Math.max(hi, r[i]); }
+    for (let i = 0; i < count; i++) delay[i] = Math.min(1, (r[i] / (hi || 1)) * 0.7 + rnd() * 0.3);
+    touch();
+    U.uT.value = 0;
+    U.uOff.value.set(0, 0, 0);
+    state.idx = 0;
+    state.phase = 'intro-merge'; state.t0 = now;
+    onShape?.(0);
+  }
+
   function scatter(now) {
     const s = shapes[state.idx];
     from.set(s.pos); cFrom.set(s.col);
@@ -222,13 +272,29 @@ export function createScene(canvas, shapes, { count, small, reduceMotion, onShap
   });
   ro.observe(canvas);
 
-  let raf = 0, visible = true, dead = false;
+  let raf = 0, visible = true, dead = false, sway = 0;
   function tick() {
     if (dead) return;
     const now = clock.getElapsedTime();
     U.uTime.value = now;
     const e = now - state.t0;
-    if (state.phase === 'form') {
+    if (state.phase === 'intro-form') {
+      U.uT.value = Math.min(1, e / IT.form);
+      U.uChaos.value = 1 - U.uT.value;
+      if (e >= IT.form) { state.phase = 'intro-fly'; state.t0 = now; }
+    } else if (state.phase === 'intro-fly') {
+      const k = Math.min(1, e / IT.fly);
+      U.uChaos.value = 0;
+      flightPath(k, U.uOff.value);
+      U.uAIGlow.value = k;
+      if (k >= 1) introMerge(now);
+    } else if (state.phase === 'intro-merge') {
+      U.uT.value = Math.min(1, e / IT.merge);
+      U.uChaos.value = 0;
+      U.uFlap.value = Math.max(0, 1 - e / 0.5);
+      U.uAIGlow.value = Math.max(0, 1 - e / 0.8);
+      if (e >= IT.merge) { introDone = true; state.phase = 'hold'; state.t0 = now; }
+    } else if (state.phase === 'form') {
       U.uT.value = Math.min(1, e / T.form);
       U.uChaos.value = 1 - U.uT.value;
       if (e >= T.form) { state.phase = 'hold'; state.t0 = now; }
@@ -240,8 +306,10 @@ export function createScene(canvas, shapes, { count, small, reduceMotion, onShap
       U.uChaos.value = U.uT.value;
       if (e >= T.scatter) form(now);
     }
-    group.rotation.y = Math.sin(now * 0.18) * 0.45;
-    group.rotation.x = Math.sin(now * 0.13) * 0.08;
+    // hold the camera angle steady during the flight, then ease into the slow sway
+    sway += ((introDone ? 1 : 0) - sway) * 0.015;
+    group.rotation.y = Math.sin(now * 0.18) * 0.45 * sway;
+    group.rotation.x = Math.sin(now * 0.13) * 0.08 * sway + 0.5 * (1 - sway);
     dust.rotation.y = -now * 0.02;
     stars.rotation.y = now * 0.005;
 
@@ -270,7 +338,11 @@ export function createScene(canvas, shapes, { count, small, reduceMotion, onShap
   resume();
 
   return {
-    start() { if (state.phase === 'idle') form(clock.getElapsedTime()); },
+    start() {
+      if (state.phase !== 'idle') return;
+      if (introDone) form(clock.getElapsedTime());
+      else introForm(clock.getElapsedTime());
+    },
     goTo(i) {
       state.next = i;
       if (state.phase === 'hold') scatter(clock.getElapsedTime());

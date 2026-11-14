@@ -1,4 +1,4 @@
-import { SHAPES } from './shapes.js';
+import { SHAPES, buildIntro } from './shapes.js';
 import { apply, setLang, t, onLangChange } from './i18n.js';
 
 const $ = (s) => document.querySelector(s);
@@ -66,7 +66,7 @@ function hasWebGL() {
     };
     onLangChange(() => renderShapeUI(false));
     const scene = createScene($('.stage'), built, {
-      count: COUNT, small, reduceMotion,
+      count: COUNT, small, reduceMotion, intro: buildIntro(COUNT),
       onShape(i) { current = i; renderShapeUI(true); },
     });
     renderShapeUI(false);
