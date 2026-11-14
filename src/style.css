@@ -187,3 +187,15 @@ h2 { font-size: clamp(30px, 4.5vw, 54px); line-height: 1.15; margin: 12px 0 20px
   .svc-grid { grid-template-columns: repeat(2, 1fr); }
   .hero-copy { max-width: 560px; }
 }
+
+/* header order: logo · clock · status pill · language | nav in the right corner */
+.header .logo { order: 0; }
+.header .clock { order: 1; align-items: flex-start; margin-left: 12px; }
+.header .status-pill { order: 2; }
+.header .lang-switch { order: 3; }
+.header nav { order: 4; margin-left: auto; }
+.header .menu-btn { order: 5; }
+@media (max-width: 640px) {
+  .header .status-pill { margin-left: 0; }
+  .header .menu-btn { margin-left: auto; }
+}
