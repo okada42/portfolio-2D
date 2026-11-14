@@ -314,22 +314,36 @@ export function drawCare(size = 600) {
     g.beginPath(); g.moveTo(x - r * 3, y); g.lineTo(x, y + r); g.lineTo(x + r * 3, y); g.lineTo(x, y - r); g.closePath(); g.fill();
   }
 
-  // two slender, feminine hands rising from wrists that touch at the bottom center, opening up and
-  // outward in a V; long tapered fingers curve gently upward, thumbs on the OUTER side
-  const skin = (y0, y1) => {
-    const gr = g.createLinearGradient(0, y0, 0, y1);
-    gr.addColorStop(0, '#fff4ee'); gr.addColorStop(1, '#dcbcaa');
-    return gr;
+  // Two realistic, slender (feminine) hands, palms up, rising from wrists that touch at the center and
+  // opening outward in a V. Thumbs on the outer side. No outlines: form comes from soft shading only,
+  // which the particle sampler turns into density (light = dense, shadow = sparse).
+  const SKIN_HI = '#ffeee4', SKIN_MID = '#f1d0bd', SKIN_LO = '#c99a84';
+  const softShade = (pathFn, { rim = 'rgba(120,70,55,.6)', rimW = 16, blur = 7, hi = 'rgba(255,248,242,.55)', hiPath = null } = {}) => {
+    g.save();
+    pathFn(); g.clip();
+    // base fill
+    pathFn(); g.fill();
+    // rim shadow: blurred dark stroke along the edge, clipped inside -> rounded, volumetric look
+    g.filter = `blur(${blur}px)`;
+    g.strokeStyle = rim; g.lineWidth = rimW;
+    pathFn(); g.stroke();
+    if (hiPath) { g.strokeStyle = hi; g.lineWidth = 7; hiPath(); g.stroke(); }
+    g.restore();
   };
-  // tapered finger along a quadratic curve: wide at the root, narrow rounded tip
-  const fingerPath = (x1, y1, qx, qy, x2, y2, r0, r1) => {
-    const N = 24, L = [], R = [];
+  const quad = (x1, y1, qx, qy, x2, y2, t) => {
+    const u = 1 - t;
+    return [u * u * x1 + 2 * u * t * qx + t * t * x2, u * u * y1 + 2 * u * t * qy + t * t * y2];
+  };
+  // finger body along a gentle curve; real fingers taper only a little and end in a round pad
+  const fingerPath = (f) => () => {
+    const [x1, y1, qx, qy, x2, y2, r0, r1] = f;
+    const N = 28, L = [], R = [];
     for (let i = 0; i <= N; i++) {
-      const t = i / N, u = 1 - t;
-      const x = u * u * x1 + 2 * u * t * qx + t * t * x2, y = u * u * y1 + 2 * u * t * qy + t * t * y2;
-      const dx = 2 * u * (qx - x1) + 2 * t * (x2 - qx), dy = 2 * u * (qy - y1) + 2 * t * (y2 - qy);
+      const t = i / N, [x, y] = quad(x1, y1, qx, qy, x2, y2, t);
+      const dx = 2 * (1 - t) * (qx - x1) + 2 * t * (x2 - qx), dy = 2 * (1 - t) * (qy - y1) + 2 * t * (y2 - qy);
       const len = Math.hypot(dx, dy) || 1, nx = -dy / len, ny = dx / len;
-      const r = r0 + (r1 - r0) * Math.pow(t, 1.3);
+      // slight bulge at each knuckle joint
+      const r = r0 + (r1 - r0) * t + Math.sin(t * Math.PI * 3) * 0.6;
       L.push([x + nx * r, y + ny * r]); R.push([x - nx * r, y - ny * r]);
     }
     g.beginPath();
@@ -339,50 +353,75 @@ export function drawCare(size = 600) {
     for (let i = N; i >= 0; i--) g.lineTo(...R[i]);
     g.closePath();
   };
-  const digit = (x1, y1, qx, qy, x2, y2, r0, r1) => {
-    g.fillStyle = '#000'; fingerPath(x1, y1, qx, qy, x2, y2, r0 + 3.5, r1 + 3.5); g.fill(); // outline keeps fingers apart
-    g.fillStyle = skin(y2 - 10, y1 + 30); fingerPath(x1, y1, qx, qy, x2, y2, r0, r1); g.fill();
-    // soft nail highlight near the tip
-    const t = 0.86, u = 1 - t;
-    const nx = u * u * x1 + 2 * u * t * qx + t * t * x2, ny = u * u * y1 + 2 * u * t * qy + t * t * y2;
-    g.fillStyle = 'rgba(255,225,225,.9)';
-    g.beginPath(); g.ellipse(nx, ny, r1 * 0.75, r1 * 1.2, Math.atan2(y2 - qy, x2 - qx) + Math.PI / 2, 0, Math.PI * 2); g.fill();
+  const finger = (f) => {
+    const [x1, y1, qx, qy, x2, y2] = f;
+    const gr = g.createLinearGradient(x2, y2, x1, y1);
+    gr.addColorStop(0, SKIN_HI); gr.addColorStop(0.7, SKIN_MID); gr.addColorStop(1, SKIN_LO);
+    g.fillStyle = gr;
+    softShade(fingerPath(f), {
+      rimW: 12, blur: 4,
+      hiPath: () => { g.beginPath(); const a = quad(...f.slice(0, 6), 0.15), b = quad(...f.slice(0, 6), 0.55), c2 = quad(...f.slice(0, 6), 0.95); g.moveTo(...a); g.quadraticCurveTo(...b, ...c2); },
+    });
+    // joint creases: soft, faint bands across the finger
+    g.save(); fingerPath(f)(); g.clip(); g.filter = 'blur(2.5px)';
+    g.strokeStyle = 'rgba(140,85,70,.45)'; g.lineWidth = 3;
+    for (const t of [0.4, 0.7]) {
+      const [x, y] = quad(...f.slice(0, 6), t);
+      const [xa, ya] = quad(...f.slice(0, 6), t + 0.02);
+      const ang = Math.atan2(ya - y, xa - x) + Math.PI / 2;
+      g.beginPath(); g.moveTo(x - Math.cos(ang) * 14, y - Math.sin(ang) * 14); g.lineTo(x + Math.cos(ang) * 14, y + Math.sin(ang) * 14); g.stroke();
+    }
+    g.restore();
   };
   const hand = (side) => {
     g.save();
     g.translate(300, 0);
     g.scale(side, 1);
-    // slender forearm, touching the other one at the center
-    g.fillStyle = skin(460, 600);
-    g.beginPath();
-    g.moveTo(4, 600); g.quadraticCurveTo(6, 520, 16, 462);
-    g.lineTo(76, 470); g.quadraticCurveTo(62, 530, 58, 600); g.closePath(); g.fill();
-    // fingers (inner -> outer): little, ring, middle, index — long and tapered
-    digit(98, 354, 96, 318, 104, 272, 8.5, 5.5);    // little finger, nearest the center
-    digit(120, 344, 122, 296, 136, 244, 9.5, 6);    // ring
-    digit(143, 343, 152, 290, 170, 236, 10, 6.5);   // middle
-    digit(164, 352, 184, 306, 206, 262, 9.5, 6);    // index
-    // thumb on the OUTER side, sweeping up and out
-    digit(170, 418, 214, 404, 236, 350, 11, 7);
-    // small, softly rounded palm drawn last to cover the finger roots
-    g.fillStyle = skin(330, 470);
-    g.beginPath();
-    g.moveTo(18, 462);
-    g.quadraticCurveTo(28, 404, 88, 358);
-    g.quadraticCurveTo(130, 334, 174, 352);
-    g.quadraticCurveTo(196, 380, 186, 420);
-    g.quadraticCurveTo(150, 462, 76, 472);
-    g.closePath(); g.fill();
-    // palm creases
-    g.strokeStyle = '#000'; g.lineWidth = 3.5;
-    g.beginPath(); g.moveTo(84, 384); g.quadraticCurveTo(130, 366, 172, 378); g.stroke();
-    g.beginPath(); g.moveTo(150, 432); g.quadraticCurveTo(128, 444, 112, 462); g.stroke();
+    // slender forearm
+    const fa = () => { g.beginPath(); g.moveTo(2, 610); g.bezierCurveTo(4, 540, 8, 500, 18, 458); g.lineTo(82, 466); g.bezierCurveTo(70, 510, 62, 560, 60, 610); g.closePath(); };
+    let gr = g.createLinearGradient(0, 460, 0, 600); gr.addColorStop(0, SKIN_MID); gr.addColorStop(1, SKIN_LO);
+    g.fillStyle = gr; softShade(fa, { rimW: 18, blur: 8 });
+    // fingers, inner -> outer: little, ring, middle (longest), index. [x1,y1, ctrl, x2,y2, rootR, tipR]
+    const F = [
+      [84, 356, 82, 320, 92, 282, 9, 7.6],
+      [108, 342, 110, 296, 124, 248, 10.2, 8.4],
+      [134, 336, 142, 288, 160, 236, 10.6, 8.8],
+      [160, 344, 178, 302, 196, 260, 10.2, 8.4],
+    ];
+    for (const f of F) finger(f);
+    // palm: soft rounded shape with a fleshy thumb mound (outer) and heel (inner)
+    const palm = () => {
+      g.beginPath();
+      g.moveTo(16, 462);
+      g.bezierCurveTo(18, 420, 40, 380, 76, 356);
+      g.bezierCurveTo(110, 334, 150, 332, 176, 352);
+      g.bezierCurveTo(196, 372, 204, 400, 192, 426);
+      g.bezierCurveTo(170, 458, 130, 474, 84, 472);
+      g.closePath();
+    };
+    gr = g.createRadialGradient(118, 405, 10, 118, 405, 95); gr.addColorStop(0, SKIN_HI); gr.addColorStop(1, SKIN_MID);
+    g.fillStyle = gr; softShade(palm, { rimW: 22, blur: 9 });
+    // thumb on the outer side: thicker, two segments, rising from the thumb mound
+    const T = [170, 420, 214, 402, 228, 348, 13, 9.8];
+    finger(T);
+    // re-cover the thumb root with the mound so it grows out of the palm naturally
+    g.save(); palm(); g.clip();
+    gr = g.createRadialGradient(176, 410, 4, 176, 410, 42); gr.addColorStop(0, 'rgba(255,238,228,.95)'); gr.addColorStop(1, 'rgba(241,208,189,0)');
+    g.fillStyle = gr; g.beginPath(); g.arc(176, 410, 42, 0, Math.PI * 2); g.fill();
+    // palm lines: very soft and faint (blurred), never hard gaps
+    g.filter = 'blur(3px)'; g.strokeStyle = 'rgba(150,95,78,.4)'; g.lineWidth = 3;
+    g.beginPath(); g.moveTo(80, 382); g.quadraticCurveTo(125, 366, 170, 376); g.stroke();
+    g.beginPath(); g.moveTo(150, 368); g.quadraticCurveTo(128, 410, 118, 460); g.stroke();
+    // soft shadow where the fingers meet the palm
+    g.strokeStyle = 'rgba(150,95,78,.35)'; g.lineWidth = 8;
+    g.beginPath(); g.moveTo(74, 358); g.bezierCurveTo(110, 336, 150, 334, 176, 352); g.stroke();
+    g.restore();
     g.restore();
   };
   hand(-1); hand(1);
-  // where the two wrists meet
-  g.strokeStyle = '#000'; g.lineWidth = 5;
-  g.beginPath(); g.moveTo(300, 470); g.lineTo(300, 600); g.stroke();
+  // a soft shadow where the two wrists meet
+  g.save(); g.filter = 'blur(4px)'; g.strokeStyle = 'rgba(120,70,55,.55)'; g.lineWidth = 6;
+  g.beginPath(); g.moveTo(300, 470); g.lineTo(300, 600); g.stroke(); g.restore();
   return c;
 }
 
@@ -397,8 +436,9 @@ function sampleCanvas(c, n, { width = 3.6, depth = 0.3, threshold = 0.25, ySquas
       const lum = 0.3 * r + 0.55 * gg + 0.15 * b;
       // keep faint halo pixels only sometimes, so the glow reads as soft dust
       if (!(lum > threshold || (lum > 0.08 && rnd() < lum * 1.5))) continue;
-      // skin (warm, r > b) is a big area: thin it out so the glowing creation gets more particles
-      if (r > b + 0.06 && rnd() > skinKeep) continue;
+      // skin (warm, r > b): keep with probability rising with brightness, so lit areas are dense
+      // and shadowed edges thin out softly -> reads as rounded form, not outlines
+      if (r > b + 0.06 && rnd() > skinKeep * Math.pow(lum, 1.6) * 1.35) continue;
       pts.push(x, y, r, gg, b, lum);
     }
   const pos = new Float32Array(n * 3), col = new Float32Array(n * 3);
@@ -417,7 +457,7 @@ function sampleCanvas(c, n, { width = 3.6, depth = 0.3, threshold = 0.25, ySquas
 export const SHAPES = [
 // Captions come from i18n.js (DICT[lang].shapes[key]).
   { key: 'crane', build: (n) => image(avatarUrl, n, { width: 3.7, depth: 0.22, threshold: 0.5 }) },
-  { key: 'care', build: (n) => sampleCanvas(drawCare(600), n, { width: 3.8, skinKeep: 0.42 }) },
+  { key: 'care', build: (n) => sampleCanvas(drawCare(600), n, { width: 3.8, skinKeep: 0.62, threshold: 0.2 }) },
   { key: 'auto', build: knot },
   { key: 'data', build: helix },
   { key: 'web', build: globe },
