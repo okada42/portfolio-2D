@@ -314,49 +314,69 @@ export function drawCare(size = 600) {
     g.beginPath(); g.moveTo(x - r * 3, y); g.lineTo(x, y + r); g.lineTo(x + r * 3, y); g.lineTo(x, y - r); g.closePath(); g.fill();
   }
 
-  // two open hands rising from wrists that touch at the bottom center, opening up and outward in a V,
-  // palms up, fingers gently spread and curving upward, thumbs on the inner side
+  // two slender, feminine hands rising from wrists that touch at the bottom center, opening up and
+  // outward in a V; long tapered fingers curve gently upward, thumbs on the OUTER side
   const skin = (y0, y1) => {
     const gr = g.createLinearGradient(0, y0, 0, y1);
-    gr.addColorStop(0, '#fff3ea'); gr.addColorStop(1, '#d7b6a2');
+    gr.addColorStop(0, '#fff4ee'); gr.addColorStop(1, '#dcbcaa');
     return gr;
   };
-  // finger = black outline first, then skin on top, so neighbours stay visibly separated
-  const digit = (x1, y1, cx1, cy1, x2, y2, r) => {
-    g.strokeStyle = '#000'; g.lineWidth = r * 2 + 7;
-    g.beginPath(); g.moveTo(x1, y1); g.quadraticCurveTo(cx1, cy1, x2, y2); g.stroke();
-    g.strokeStyle = skin(y2 - 20, y1 + 30); g.lineWidth = r * 2;
-    g.beginPath(); g.moveTo(x1, y1); g.quadraticCurveTo(cx1, cy1, x2, y2); g.stroke();
+  // tapered finger along a quadratic curve: wide at the root, narrow rounded tip
+  const fingerPath = (x1, y1, qx, qy, x2, y2, r0, r1) => {
+    const N = 24, L = [], R = [];
+    for (let i = 0; i <= N; i++) {
+      const t = i / N, u = 1 - t;
+      const x = u * u * x1 + 2 * u * t * qx + t * t * x2, y = u * u * y1 + 2 * u * t * qy + t * t * y2;
+      const dx = 2 * u * (qx - x1) + 2 * t * (x2 - qx), dy = 2 * u * (qy - y1) + 2 * t * (y2 - qy);
+      const len = Math.hypot(dx, dy) || 1, nx = -dy / len, ny = dx / len;
+      const r = r0 + (r1 - r0) * Math.pow(t, 1.3);
+      L.push([x + nx * r, y + ny * r]); R.push([x - nx * r, y - ny * r]);
+    }
+    g.beginPath();
+    g.moveTo(...L[0]);
+    for (const p of L) g.lineTo(...p);
+    g.arc(x2, y2, r1, Math.atan2(L[N][1] - y2, L[N][0] - x2), Math.atan2(R[N][1] - y2, R[N][0] - x2), true);
+    for (let i = N; i >= 0; i--) g.lineTo(...R[i]);
+    g.closePath();
+  };
+  const digit = (x1, y1, qx, qy, x2, y2, r0, r1) => {
+    g.fillStyle = '#000'; fingerPath(x1, y1, qx, qy, x2, y2, r0 + 3.5, r1 + 3.5); g.fill(); // outline keeps fingers apart
+    g.fillStyle = skin(y2 - 10, y1 + 30); fingerPath(x1, y1, qx, qy, x2, y2, r0, r1); g.fill();
+    // soft nail highlight near the tip
+    const t = 0.86, u = 1 - t;
+    const nx = u * u * x1 + 2 * u * t * qx + t * t * x2, ny = u * u * y1 + 2 * u * t * qy + t * t * y2;
+    g.fillStyle = 'rgba(255,225,225,.9)';
+    g.beginPath(); g.ellipse(nx, ny, r1 * 0.75, r1 * 1.2, Math.atan2(y2 - qy, x2 - qx) + Math.PI / 2, 0, Math.PI * 2); g.fill();
   };
   const hand = (side) => {
     g.save();
     g.translate(300, 0);
     g.scale(side, 1);
-    // forearm, nearly vertical, touching the other one at the center
-    g.fillStyle = skin(470, 600);
+    // slender forearm, touching the other one at the center
+    g.fillStyle = skin(460, 600);
     g.beginPath();
-    g.moveTo(3, 600); g.lineTo(6, 500); g.quadraticCurveTo(10, 470, 22, 455);
-    g.lineTo(92, 470); g.quadraticCurveTo(76, 520, 70, 600); g.closePath(); g.fill();
-    // fingers fan up and outward from the knuckles, tips curling slightly inward (cupped)
-    digit(186, 372, 212, 342, 226, 306, 12.5);  // little finger
-    digit(160, 356, 186, 312, 192, 268, 15);    // ring
-    digit(132, 346, 150, 296, 150, 248, 16.5);  // middle
-    digit(104, 350, 112, 304, 106, 262, 15.5);  // index
-    // thumb on the inner side, pointing up and slightly out
-    digit(56, 408, 38, 372, 44, 322, 15);
-    // palm drawn last so it covers the finger roots cleanly
-    g.fillStyle = skin(330, 480);
+    g.moveTo(4, 600); g.quadraticCurveTo(6, 520, 16, 462);
+    g.lineTo(76, 470); g.quadraticCurveTo(62, 530, 58, 600); g.closePath(); g.fill();
+    // fingers (inner -> outer): little, ring, middle, index — long and tapered
+    digit(98, 354, 96, 318, 104, 272, 8.5, 5.5);    // little finger, nearest the center
+    digit(120, 344, 122, 296, 136, 244, 9.5, 6);    // ring
+    digit(143, 343, 152, 290, 170, 236, 10, 6.5);   // middle
+    digit(164, 352, 184, 306, 206, 262, 9.5, 6);    // index
+    // thumb on the OUTER side, sweeping up and out
+    digit(170, 418, 214, 404, 236, 350, 11, 7);
+    // small, softly rounded palm drawn last to cover the finger roots
+    g.fillStyle = skin(330, 470);
     g.beginPath();
-    g.moveTo(20, 458);
-    g.quadraticCurveTo(14, 410, 58, 372);
-    g.lineTo(100, 344);
-    g.quadraticCurveTo(150, 336, 190, 372);
-    g.quadraticCurveTo(170, 440, 94, 470);
+    g.moveTo(18, 462);
+    g.quadraticCurveTo(28, 404, 88, 358);
+    g.quadraticCurveTo(130, 334, 174, 352);
+    g.quadraticCurveTo(196, 380, 186, 420);
+    g.quadraticCurveTo(150, 462, 76, 472);
     g.closePath(); g.fill();
     // palm creases
-    g.strokeStyle = '#000'; g.lineWidth = 4;
-    g.beginPath(); g.moveTo(66, 392); g.quadraticCurveTo(120, 372, 176, 388); g.stroke();
-    g.beginPath(); g.moveTo(58, 420); g.quadraticCurveTo(80, 440, 70, 456); g.stroke();
+    g.strokeStyle = '#000'; g.lineWidth = 3.5;
+    g.beginPath(); g.moveTo(84, 384); g.quadraticCurveTo(130, 366, 172, 378); g.stroke();
+    g.beginPath(); g.moveTo(150, 432); g.quadraticCurveTo(128, 444, 112, 462); g.stroke();
     g.restore();
   };
   hand(-1); hand(1);
