@@ -308,7 +308,7 @@ function heart(n) {
 export const SHAPES = [
 // Captions come from i18n.js (DICT[lang].shapes[key]).
   { key: 'crane', build: (n) => image(avatarUrl, n, { width: 3.7, depth: 0.22, threshold: 0.5 }) },
-  { key: 'heart', build: heart, beat: true },
+  { key: 'heart', build: heart },
   { key: 'auto', build: knot },
   { key: 'data', build: helix },
   { key: 'web', build: globe },
