@@ -259,196 +259,47 @@ export function buildIntro(n) {
   return { pos, col, group, wing, delay, nCrane: nC };
 }
 
-// ---------- "Care": two hands lifting up a glowing creation ----------
-// Drawn with 2D canvas paths (original artwork), then sampled into particles with its colors.
-export function drawCare(size = 600) {
-  const c = document.createElement('canvas');
-  c.width = c.height = size;
-  const g = c.getContext('2d');
-  const k = size / 600;
-  g.scale(k, k);
-  g.fillStyle = '#000';
-  g.fillRect(0, 0, 600, 600);
-  g.lineCap = 'round';
-
-  // light rays + halo behind the creation
-  const cx = 300, cy = 200;
-  const halo = g.createRadialGradient(cx, cy, 10, cx, cy, 150);
-  halo.addColorStop(0, 'rgba(140,220,255,.55)');
-  halo.addColorStop(1, 'rgba(140,220,255,0)');
-  g.fillStyle = halo;
-  g.beginPath(); g.arc(cx, cy, 150, 0, Math.PI * 2); g.fill();
-  for (let i = 0; i < 16; i++) {
-    const a = (i / 16) * Math.PI * 2 + 0.1;
-    if (Math.sin(a) > 0.55) continue; // no rays down into the hands
-    const r0 = 72, r1 = i % 2 ? 150 : 190;
-    const gr = g.createLinearGradient(cx + Math.cos(a) * r0, cy + Math.sin(a) * r0, cx + Math.cos(a) * r1, cy + Math.sin(a) * r1);
-    gr.addColorStop(0, 'rgba(170,230,255,.95)');
-    gr.addColorStop(1, 'rgba(170,230,255,0)');
-    g.strokeStyle = gr; g.lineWidth = i % 2 ? 3 : 5;
-    g.beginPath(); g.moveTo(cx + Math.cos(a) * r0, cy + Math.sin(a) * r0); g.lineTo(cx + Math.cos(a) * r1, cy + Math.sin(a) * r1); g.stroke();
-  }
-
-  // the creation: a faceted gem
-  const top = cy - 70, girdle = cy - 16, tip = cy + 74, w = 86, tw = 42;
-  const facets = [
-    [[cx - w, girdle], [cx - tw, top], [cx - 12, girdle], '#bdf0ff'],
-    [[cx - tw, top], [cx + tw, top], [cx, girdle], '#e9fbff'],
-    [[cx - 12, girdle], [cx - tw, top], [cx, girdle], '#a6e6ff'],
-    [[cx + 12, girdle], [cx + tw, top], [cx, girdle], '#8fdcff'],
-    [[cx + w, girdle], [cx + tw, top], [cx + 12, girdle], '#6ccaf7'],
-    [[cx - w, girdle], [cx - 12, girdle], [cx, tip], '#5cc0f5'],
-    [[cx - 12, girdle], [cx + 12, girdle], [cx, tip], '#8ad8ff'],
-    [[cx + 12, girdle], [cx + w, girdle], [cx, tip], '#2f9ae6'],
-  ];
-  for (const [a, b, d, col] of facets) {
-    g.fillStyle = col;
-    g.beginPath(); g.moveTo(...a); g.lineTo(...b); g.lineTo(...d); g.closePath(); g.fill();
-  }
-  g.strokeStyle = '#000'; g.lineWidth = 4; // facet edges read as fine gaps between particles
-  for (const [a, b, d] of facets) { g.beginPath(); g.moveTo(...a); g.lineTo(...b); g.lineTo(...d); g.closePath(); g.stroke(); }
-  // sparkles
-  g.fillStyle = '#ffffff';
-  for (const [x, y, r] of [[cx - 95, cy - 70, 5], [cx + 105, cy - 40, 4], [cx + 60, cy - 105, 3.5], [cx - 60, cy + 30, 3]]) {
-    g.beginPath(); g.moveTo(x, y - r * 3); g.lineTo(x + r, y); g.lineTo(x, y + r * 3); g.lineTo(x - r, y); g.closePath(); g.fill();
-    g.beginPath(); g.moveTo(x - r * 3, y); g.lineTo(x, y + r); g.lineTo(x + r * 3, y); g.lineTo(x, y - r); g.closePath(); g.fill();
-  }
-
-  // Two realistic, slender (feminine) hands, palms up, rising from wrists that touch at the center and
-  // opening outward in a V. Thumbs on the outer side. No outlines: form comes from soft shading only,
-  // which the particle sampler turns into density (light = dense, shadow = sparse).
-  const SKIN_HI = '#ffeee4', SKIN_MID = '#f1d0bd', SKIN_LO = '#c99a84';
-  const softShade = (pathFn, { rim = 'rgba(120,70,55,.6)', rimW = 16, blur = 7, hi = 'rgba(255,248,242,.55)', hiPath = null } = {}) => {
-    g.save();
-    pathFn(); g.clip();
-    // base fill
-    pathFn(); g.fill();
-    // rim shadow: blurred dark stroke along the edge, clipped inside -> rounded, volumetric look
-    g.filter = `blur(${blur}px)`;
-    g.strokeStyle = rim; g.lineWidth = rimW;
-    pathFn(); g.stroke();
-    if (hiPath) { g.strokeStyle = hi; g.lineWidth = 7; hiPath(); g.stroke(); }
-    g.restore();
-  };
-  const quad = (x1, y1, qx, qy, x2, y2, t) => {
-    const u = 1 - t;
-    return [u * u * x1 + 2 * u * t * qx + t * t * x2, u * u * y1 + 2 * u * t * qy + t * t * y2];
-  };
-  // finger body along a gentle curve; real fingers taper only a little and end in a round pad
-  const fingerPath = (f) => () => {
-    const [x1, y1, qx, qy, x2, y2, r0, r1] = f;
-    const N = 28, L = [], R = [];
-    for (let i = 0; i <= N; i++) {
-      const t = i / N, [x, y] = quad(x1, y1, qx, qy, x2, y2, t);
-      const dx = 2 * (1 - t) * (qx - x1) + 2 * t * (x2 - qx), dy = 2 * (1 - t) * (qy - y1) + 2 * t * (y2 - qy);
-      const len = Math.hypot(dx, dy) || 1, nx = -dy / len, ny = dx / len;
-      // slight bulge at each knuckle joint
-      const r = r0 + (r1 - r0) * t + Math.sin(t * Math.PI * 3) * 0.6;
-      L.push([x + nx * r, y + ny * r]); R.push([x - nx * r, y - ny * r]);
-    }
-    g.beginPath();
-    g.moveTo(...L[0]);
-    for (const p of L) g.lineTo(...p);
-    g.arc(x2, y2, r1, Math.atan2(L[N][1] - y2, L[N][0] - x2), Math.atan2(R[N][1] - y2, R[N][0] - x2), true);
-    for (let i = N; i >= 0; i--) g.lineTo(...R[i]);
-    g.closePath();
-  };
-  const finger = (f) => {
-    const [x1, y1, qx, qy, x2, y2] = f;
-    const gr = g.createLinearGradient(x2, y2, x1, y1);
-    gr.addColorStop(0, SKIN_HI); gr.addColorStop(0.7, SKIN_MID); gr.addColorStop(1, SKIN_LO);
-    g.fillStyle = gr;
-    softShade(fingerPath(f), {
-      rimW: 12, blur: 4,
-      hiPath: () => { g.beginPath(); const a = quad(...f.slice(0, 6), 0.15), b = quad(...f.slice(0, 6), 0.55), c2 = quad(...f.slice(0, 6), 0.95); g.moveTo(...a); g.quadraticCurveTo(...b, ...c2); },
-    });
-    // joint creases: soft, faint bands across the finger
-    g.save(); fingerPath(f)(); g.clip(); g.filter = 'blur(2.5px)';
-    g.strokeStyle = 'rgba(140,85,70,.45)'; g.lineWidth = 3;
-    for (const t of [0.4, 0.7]) {
-      const [x, y] = quad(...f.slice(0, 6), t);
-      const [xa, ya] = quad(...f.slice(0, 6), t + 0.02);
-      const ang = Math.atan2(ya - y, xa - x) + Math.PI / 2;
-      g.beginPath(); g.moveTo(x - Math.cos(ang) * 14, y - Math.sin(ang) * 14); g.lineTo(x + Math.cos(ang) * 14, y + Math.sin(ang) * 14); g.stroke();
-    }
-    g.restore();
-  };
-  const hand = (side) => {
-    g.save();
-    g.translate(300, 0);
-    g.scale(side, 1);
-    // slender forearm
-    const fa = () => { g.beginPath(); g.moveTo(2, 610); g.bezierCurveTo(4, 540, 8, 500, 18, 458); g.lineTo(82, 466); g.bezierCurveTo(70, 510, 62, 560, 60, 610); g.closePath(); };
-    let gr = g.createLinearGradient(0, 460, 0, 600); gr.addColorStop(0, SKIN_MID); gr.addColorStop(1, SKIN_LO);
-    g.fillStyle = gr; softShade(fa, { rimW: 18, blur: 8 });
-    // fingers, inner -> outer: little, ring, middle (longest), index. [x1,y1, ctrl, x2,y2, rootR, tipR]
-    const F = [
-      [84, 356, 82, 320, 92, 282, 9, 7.6],
-      [108, 342, 110, 296, 124, 248, 10.2, 8.4],
-      [134, 336, 142, 288, 160, 236, 10.6, 8.8],
-      [160, 344, 178, 302, 196, 260, 10.2, 8.4],
-    ];
-    for (const f of F) finger(f);
-    // palm: soft rounded shape with a fleshy thumb mound (outer) and heel (inner)
-    const palm = () => {
-      g.beginPath();
-      g.moveTo(16, 462);
-      g.bezierCurveTo(18, 420, 40, 380, 76, 356);
-      g.bezierCurveTo(110, 334, 150, 332, 176, 352);
-      g.bezierCurveTo(196, 372, 204, 400, 192, 426);
-      g.bezierCurveTo(170, 458, 130, 474, 84, 472);
-      g.closePath();
-    };
-    gr = g.createRadialGradient(118, 405, 10, 118, 405, 95); gr.addColorStop(0, SKIN_HI); gr.addColorStop(1, SKIN_MID);
-    g.fillStyle = gr; softShade(palm, { rimW: 22, blur: 9 });
-    // thumb on the outer side: thicker, two segments, rising from the thumb mound
-    const T = [170, 420, 214, 402, 228, 348, 13, 9.8];
-    finger(T);
-    // re-cover the thumb root with the mound so it grows out of the palm naturally
-    g.save(); palm(); g.clip();
-    gr = g.createRadialGradient(176, 410, 4, 176, 410, 42); gr.addColorStop(0, 'rgba(255,238,228,.95)'); gr.addColorStop(1, 'rgba(241,208,189,0)');
-    g.fillStyle = gr; g.beginPath(); g.arc(176, 410, 42, 0, Math.PI * 2); g.fill();
-    // palm lines: very soft and faint (blurred), never hard gaps
-    g.filter = 'blur(3px)'; g.strokeStyle = 'rgba(150,95,78,.4)'; g.lineWidth = 3;
-    g.beginPath(); g.moveTo(80, 382); g.quadraticCurveTo(125, 366, 170, 376); g.stroke();
-    g.beginPath(); g.moveTo(150, 368); g.quadraticCurveTo(128, 410, 118, 460); g.stroke();
-    // soft shadow where the fingers meet the palm
-    g.strokeStyle = 'rgba(150,95,78,.35)'; g.lineWidth = 8;
-    g.beginPath(); g.moveTo(74, 358); g.bezierCurveTo(110, 336, 150, 334, 176, 352); g.stroke();
-    g.restore();
-    g.restore();
-  };
-  hand(-1); hand(1);
-  // a soft shadow where the two wrists meet
-  g.save(); g.filter = 'blur(4px)'; g.strokeStyle = 'rgba(120,70,55,.55)'; g.lineWidth = 6;
-  g.beginPath(); g.moveTo(300, 470); g.lineTo(300, 600); g.stroke(); g.restore();
-  return c;
-}
-
-function sampleCanvas(c, n, { width = 3.6, depth = 0.3, threshold = 0.25, ySquash = 1, skinKeep = 1 } = {}) {
-  const W = c.width, H = c.height;
-  const d = c.getContext('2d').getImageData(0, 0, W, H).data;
-  const pts = [];
-  for (let y = 0; y < H; y += 2)
-    for (let x = 0; x < W; x += 2) {
-      const i = (y * W + x) * 4;
-      const r = d[i] / 255, gg = d[i + 1] / 255, b = d[i + 2] / 255;
-      const lum = 0.3 * r + 0.55 * gg + 0.15 * b;
-      // keep faint halo pixels only sometimes, so the glow reads as soft dust
-      if (!(lum > threshold || (lum > 0.08 && rnd() < lum * 1.5))) continue;
-      // skin (warm, r > b): keep with probability rising with brightness, so lit areas are dense
-      // and shadowed edges thin out softly -> reads as rounded form, not outlines
-      if (r > b + 0.06 && rnd() > skinKeep * Math.pow(lum, 1.6) * 1.35) continue;
-      pts.push(x, y, r, gg, b, lum);
-    }
+// ---------- Heart: a lit 3D heart surface ----------
+// Implicit surface (x² + 9/4·y² + z² − 1)³ − x²·z³ − 9/80·y²·z³ = 0, with z as "up".
+const heartF = (x, y, z) => {
+  const a = x * x + 2.25 * y * y + z * z - 1;
+  return a * a * a - x * x * z * z * z - 0.1125 * y * y * z * z * z;
+};
+function heart(n) {
   const pos = new Float32Array(n * 3), col = new Float32Array(n * 3);
-  const count = pts.length / 6, s = width / W;
+  const light = [0.45, 0.55, 0.7]; // from upper-left-front
+  const ll = Math.hypot(...light); light.forEach((v, i) => (light[i] = v / ll));
+  const S = 1.12;
   for (let i = 0; i < n; i++) {
-    const k = (rnd() * count | 0) * 6;
-    pos[i * 3] = (pts[k] + rnd() * 2 - W / 2) * s;
-    pos[i * 3 + 1] = -(pts[k + 1] + rnd() * 2 - H / 2) * s * ySquash;
-    pos[i * 3 + 2] = (pts[k + 5] - 0.5) * depth + gauss() * 0.03;
-    col.set([pts[k + 2], pts[k + 3], pts[k + 4]], i * 3);
+    // random direction from the center, binary-search the surface along it
+    let dx = gauss(), dy = gauss(), dz = gauss();
+    const l = Math.hypot(dx, dy, dz) || 1; dx /= l; dy /= l; dz /= l;
+    let lo = 0, hi = 1.6;
+    for (let k = 0; k < 22; k++) { const m = (lo + hi) / 2; heartF(dx * m, dy * m, dz * m) < 0 ? (lo = m) : (hi = m); }
+    const surface = rnd() < 0.88;
+    const r = surface ? lo : lo * Math.cbrt(rnd()) * 0.95;
+    const x = dx * r, y = dy * r, z = dz * r;
+    // screen space: X = x, Y = z (up), Z = y (depth)
+    pos.set([x * S, (z - 0.1) * S, y * S * 0.9], i * 3);
+    let c;
+    if (surface) {
+      const e = 1e-3;
+      const nx = heartF(x + e, y, z) - heartF(x - e, y, z);
+      const ny = heartF(x, y, z + e) - heartF(x, y, z - e);
+      const nz = heartF(x, y + e, z) - heartF(x, y - e, z);
+      const nl = Math.hypot(nx, ny, nz) || 1;
+      const N = [nx / nl, ny / nl, nz / nl];
+      const diff = Math.max(0, N[0] * light[0] + N[1] * light[1] + N[2] * light[2]);
+      // Blinn-Phong highlight (viewer looks down -Z) + soft pink rim light
+      const H = [light[0], light[1], light[2] + 1], hl = Math.hypot(...H);
+      const spec = Math.pow(Math.max(0, (N[0] * H[0] + N[1] * H[1] + N[2] * H[2]) / hl), 40);
+      const rim = Math.pow(1 - Math.max(0, N[2]), 2.5);
+      const base = hsl(348 + 10 * (z + 1) / 2, 0.95, 0.5 + 0.1 * (z + 1) / 2);
+      c = base.map((v, k) => Math.min(1, v * (0.45 + 0.85 * diff) + spec * 0.9 + rim * [1, 0.55, 0.7][k] * 0.35));
+    } else {
+      c = hsl(345, 0.9, 0.42); // inner glow
+    }
+    col.set(c, i * 3);
   }
   return { pos, col };
 }
@@ -457,7 +308,7 @@ function sampleCanvas(c, n, { width = 3.6, depth = 0.3, threshold = 0.25, ySquas
 export const SHAPES = [
 // Captions come from i18n.js (DICT[lang].shapes[key]).
   { key: 'crane', build: (n) => image(avatarUrl, n, { width: 3.7, depth: 0.22, threshold: 0.5 }) },
-  { key: 'care', build: (n) => sampleCanvas(drawCare(600), n, { width: 3.8, skinKeep: 0.62, threshold: 0.2 }) },
+  { key: 'heart', build: heart, beat: true },
   { key: 'auto', build: knot },
   { key: 'data', build: helix },
   { key: 'web', build: globe },

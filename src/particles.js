@@ -26,6 +26,7 @@ uniform vec3 uBack;       // seat on the crane's back (crane-local)
 uniform float uAIScale;
 uniform float uAIGlow;
 uniform float uT;
+uniform float uBeat;
 uniform float uTime;
 uniform float uSize;
 uniform float uPR;
@@ -62,6 +63,7 @@ void main(){
     p = mix(hover, ride, uRide);
   }
 
+  p *= 1. + uBeat;
   // swirl mid-flight, faint breathing at rest
   float mid = sin(t*3.14159);
   float ph = aRand*6.2831 + uTime*.6;
@@ -162,7 +164,7 @@ export function createScene(canvas, shapes, { count, small, reduceMotion, onShap
   const U = {
     uIntro: { value: 0 }, uOff: { value: new THREE.Vector3() }, uRoll: { value: 0 },
     uFlap: { value: 0 }, uFlapPh: { value: 0 }, uAIT: { value: 0 }, uAIHover: { value: new THREE.Vector3() },
-    uRide: { value: 0 }, uBack: { value: new THREE.Vector3(0.05, 0.52, 0) }, uAIScale: { value: 0.42 }, uAIGlow: { value: 0 },
+    uRide: { value: 0 }, uBeat: { value: 0 }, uBack: { value: new THREE.Vector3(0.05, 0.52, 0) }, uAIScale: { value: 0.42 }, uAIGlow: { value: 0 },
     uT: { value: 1 }, uTime: { value: 0 }, uSize: { value: small ? 2.4 : 2.6 }, uPR: { value: pr },
     uChaos: { value: 1 }, uMouse: { value: new THREE.Vector3(99, 99, 0) }, uMouseOn: { value: 0 },
   };
@@ -367,6 +369,11 @@ export function createScene(canvas, shapes, { count, small, reduceMotion, onShap
       U.uChaos.value = U.uT.value;
       if (e >= T.scatter) form(now);
     }
+    // heartbeat: a "lub-dub" double pulse about once a second, only while a beating shape is on screen
+    const beating = shapes[state.idx]?.beat && (state.phase === 'hold' || state.phase === 'form') && !reduceMotion;
+    const bt = (now % 1.05) / 1.05;
+    const pulse = Math.exp(-Math.pow((bt - 0.08) / 0.045, 2)) * 0.06 + Math.exp(-Math.pow((bt - 0.3) / 0.05, 2)) * 0.035;
+    U.uBeat.value += ((beating ? pulse : 0) - U.uBeat.value) * 0.35;
     // hold the camera angle steady during the flight, then ease into the slow sway
     sway += ((introDone ? 1 : 0) - sway) * 0.015;
     group.rotation.y = Math.sin(now * 0.18) * 0.22 * sway; // gentle, keeps flat shapes legible
