@@ -37,6 +37,7 @@ export const DICT = {
     'w2.t': 'Webアプリケーション開発', 'w2.d': '業務やサービスのニーズに合わせたWebシステム。',
     'w3.t': '業務システムの開発・改善', 'w3.d': '業務管理・データ管理など、実務に直結するしくみ。',
     'w4.t': '既存システムの保守・機能拡張', 'w4.d': '今の環境を活かした機能追加や改善。',
+    'w5.t': 'デザイン制作', 'w5.d': 'Figma・Photoshop・Illustrator を使ったWebデザイン、UI設計、バナー・グラフィック制作。',
 
     'work.no': '03 — WORKS', 'work.title': '制作実績',
     'p1.title': '社内文書のAI要約・分類ツール', 'p1.desc': 'Python · LLM API · 社内システム連携',
@@ -93,6 +94,7 @@ export const DICT = {
     'w2.t': 'Web applications', 'w2.d': 'Web systems shaped around your business and service needs.',
     'w3.t': 'Business systems', 'w3.d': 'Operations and data management tools that support daily work.',
     'w4.t': 'Maintenance & new features', 'w4.d': 'Improving and extending the systems you already have.',
+    'w5.t': 'Design', 'w5.d': 'Web design, UI layouts, banners and graphics in Figma, Photoshop and Illustrator.',
 
     'work.no': '03 — WORK', 'work.title': 'Selected work',
     'p1.title': 'AI summarizer for internal documents', 'p1.desc': 'Python · LLM API · internal system integration',
