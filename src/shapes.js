@@ -144,9 +144,43 @@ function cubeGrid(n) {
   return { pos, col };
 }
 
-// Edit this list to make the hero about you.
+// Sample bright pixels of an image, keeping their colors. Dark background is skipped.
+import avatarUrl from './avatar-sample.png';
+async function image(url, n, { width = 3.4, depth = 0.5, threshold = 0.42 } = {}) {
+  const img = new Image();
+  img.src = url;
+  await img.decode();
+  const W = img.naturalWidth, H = img.naturalHeight;
+  const c = document.createElement('canvas');
+  c.width = W; c.height = H;
+  const g = c.getContext('2d', { willReadFrequently: true });
+  g.drawImage(img, 0, 0);
+  const d = g.getImageData(0, 0, W, H).data;
+  const pts = [];
+  for (let y = 0; y < H; y++)
+    for (let x = 0; x < W; x++) {
+      const i = (y * W + x) * 4;
+      const r = d[i] / 255, gg = d[i + 1] / 255, b = d[i + 2] / 255;
+      const lum = 0.3 * r + 0.55 * gg + 0.15 * b;
+      const sat = Math.max(r, gg, b) - Math.min(r, gg, b);
+      if (lum > threshold || (sat > 0.5 && Math.max(r, gg, b) > 0.6)) pts.push(x, y, r, gg, b, lum);
+    }
+  const pos = new Float32Array(n * 3), col = new Float32Array(n * 3);
+  const count = pts.length / 6, s = width / W;
+  for (let i = 0; i < n; i++) {
+    const k = (rnd() * count | 0) * 6;
+    pos[i * 3] = (pts[k] + rnd() - W / 2) * s;
+    pos[i * 3 + 1] = -(pts[k + 1] + rnd() - H / 2) * s;
+    pos[i * 3 + 2] = (pts[k + 5] - 0.5) * depth + gauss() * 0.04; // brighter = closer
+    col.set([pts[k + 2], pts[k + 3], pts[k + 4]], i * 3);
+  }
+  return { pos, col };
+}
+
+// Edit this list to make the hero about you. build() may return a Promise.
 export const SHAPES = [
 // Captions come from i18n.js (DICT[lang].shapes[key]).
+  { key: 'crane', build: (n) => image(avatarUrl, n) },
   { key: 'ai', build: (n) => glyph('AI', n, { font: '900 300px system-ui, sans-serif', width: 3.2, hue: [190, 280] }) },
   { key: 'code', build: (n) => glyph('</>', n, { font: '700 300px ui-monospace, monospace', width: 3.6, hue: [170, 210] }) },
   { key: 'auto', build: knot },

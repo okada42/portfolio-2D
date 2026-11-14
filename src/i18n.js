@@ -16,6 +16,7 @@ export const DICT = {
     'hero.cta1': 'ご相談はこちら →', 'hero.cta2': '支援内容を見る',
     scroll: 'SCROLL',
 
+    'avatar.alt': 'Your Name のロゴ（鶴と富士山）',
     'about.no': '01 — ABOUT', 'about.title': '導入することより、<br />「何のために、どう使うか」。',
     'about.body': '10年以上、PHPやPythonを用いたWeb・システム開発に携わってきました。これから大切なのは、AIを導入すること自体ではなく、何のために、どのように活用し、安全かつ効果的にビジネスの成果へつなげるかという視点です。技術的な実現可能性だけでなく、安全性・運用性・費用対効果まで考えたご提案をします。',
     stat1: '年以上の開発経験', stat2: '主な開発言語（PHP / Python）', stat3: '% 費用対効果を重視',
@@ -52,6 +53,7 @@ export const DICT = {
     'contact.body': 'ご相談・お見積りは無料です。内容を確認のうえ、ご連絡いたします。',
     'shape.show': '{label} を表示',
     shapes: {
+      crane: ['鶴', '技術で、高く遠くへ'],
       ai: ['AI活用', '目的から考える導入'], code: ['開発', 'PHP / Python'], auto: ['自動化', '手作業を減らす'],
       data: ['データ', '集計・レポートを自動で'], web: ['Web', 'サイト・LP・Webアプリ'], system: ['システム連携', '安全に、既存環境へ'],
     },
@@ -70,6 +72,7 @@ export const DICT = {
     'hero.cta1': 'Start a conversation →', 'hero.cta2': 'See services',
     scroll: 'SCROLL',
 
+    'avatar.alt': 'Your Name logo (a crane and Mt. Fuji)',
     'about.no': '01 — ABOUT', 'about.title': 'Not just adopting AI,<br />but knowing why and how.',
     'about.body': "For over ten years I've built web applications and business systems with PHP and Python. What matters now isn't adopting AI for its own sake. It's knowing what it's for, how to use it, and how to turn it into results safely. I propose solutions that weigh security, maintainability and cost-effectiveness, not just technical feasibility.",
     stat1: '+ years of development', stat2: 'core languages (PHP / Python)', stat3: '% focused on ROI',
@@ -106,6 +109,7 @@ export const DICT = {
     'contact.body': "Consultations and quotes are free. I'll review your message and get back to you.",
     'shape.show': 'Show {label}',
     shapes: {
+      crane: ['CRANE', 'Technology that takes you further'],
       ai: ['AI', 'Purpose before tools'], code: ['DEVELOP', 'PHP / Python'], auto: ['AUTOMATE', 'Less manual work'],
       data: ['DATA', 'Reports that build themselves'], web: ['WEB', 'Sites, LPs & web apps'], system: ['INTEGRATE', 'Safely, into what you have'],
     },

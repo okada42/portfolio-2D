@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Your Name — AI活用・業務自動化・Web/システム開発</title>
   <meta name="description" content="Your Name のポートフォリオ。Web・3D・インタラクティブ開発。" />
+  <link rel="icon" type="image/png" href="./favicon.png" />
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+  <meta property="og:image" content="./avatar.webp" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;600&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/src/style.css" />
@@ -14,6 +17,7 @@
 
   <div class="loader" role="progressbar" aria-label="Loading" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
     <div class="loader-inner">
+      <img class="loader-logo" src="./avatar-256.webp" alt="" width="96" height="96" />
       <p class="loader-title">YOUR NAME</p>
       <div class="loader-bar"><span></span></div>
       <p class="loader-meta"><span class="loader-msg">準備しています</span><span class="loader-pct">0%</span></p>
@@ -21,7 +25,7 @@
   </div>
 
   <header class="header">
-    <a class="logo" href="#top">YN<span>.</span></a>
+    <a class="logo" href="#top"><img src="./avatar-256.webp" alt="" width="36" height="36" /><span class="logo-text">YN<span>.</span></span></a>
     <span class="clock" data-i18n-attr="aria-label:clock.label">--:--:--</span>
     <nav>
       <a href="#about" data-i18n="nav.about"></a>
@@ -58,8 +62,13 @@
   <main id="main">
     <section id="about" class="section">
       <p class="sec-no reveal" data-i18n="about.no"></p>
-      <h2 class="reveal" data-i18n="about.title"></h2>
-      <p class="reveal" data-i18n="about.body"></p>
+      <div class="about-row">
+        <div>
+          <h2 class="reveal" data-i18n="about.title"></h2>
+          <p class="reveal" data-i18n="about.body"></p>
+        </div>
+        <figure class="avatar reveal"><img src="./avatar.webp" data-i18n-attr="alt:avatar.alt" width="320" height="320" loading="lazy" /></figure>
+      </div>
       <div class="stats">
         <div class="reveal"><b data-count="10">0</b><span data-i18n="stat1"></span></div>
         <div class="reveal"><b data-count="2">0</b><span data-i18n="stat2"></span></div>

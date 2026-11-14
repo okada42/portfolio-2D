@@ -48,7 +48,7 @@ function hasWebGL() {
     await fonts; // glyph shapes need the font loaded
     const built = [];
     for (const s of SHAPES) {
-      built.push({ ...s, ...s.build(COUNT) });
+      built.push({ ...s, ...(await s.build(COUNT)) });
       bump(50 / SHAPES.length);
       await new Promise((r) => setTimeout(r, 0)); // keep UI responsive
     }
