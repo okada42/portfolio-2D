@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Your Name — ポートフォリオ</title>
+  <meta name="description" content="Your Name のポートフォリオ。Web・3D・インタラクティブ開発。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;600&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body class="is-loading">
+  <a class="skip" href="#main" data-i18n="skip">本文へ移動</a>
+
+  <div class="loader" role="progressbar" aria-label="Loading" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+    <div class="loader-inner">
+      <p class="loader-title">YOUR NAME</p>
+      <div class="loader-bar"><span></span></div>
+      <p class="loader-meta"><span class="loader-msg">準備しています</span><span class="loader-pct">0%</span></p>
+    </div>
+  </div>
+
+  <header class="header">
+    <a class="logo" href="#top">YN<span>.</span></a>
+    <span class="clock" data-i18n-attr="aria-label:clock.label">--:--:--</span>
+    <nav>
+      <a href="#about" data-i18n="nav.about">About</a>
+      <a href="#work" data-i18n="nav.work">Works</a>
+      <a href="#skills" data-i18n="nav.skills">Skills</a>
+      <a href="#contact" class="nav-cta" data-i18n="nav.contact">お問い合わせ</a>
+    </nav>
+    <div class="lang-switch" role="group" aria-label="Language">
+      <button type="button" data-lang="ja" aria-pressed="true">JP</button>
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </header>
+
+  <section class="hero" id="top">
+    <canvas class="stage" aria-hidden="true"></canvas>
+    <div class="vignette" aria-hidden="true"></div>
+    <div class="hero-copy">
+      <p class="eyebrow" data-i18n="eyebrow"></p>
+      <h1 data-i18n="hero.title"></h1>
+      <p class="lead" data-i18n="hero.lead"></p>
+      <p class="status"><span class="dot"></span><span data-i18n="hero.status"></span></p>
+      <div class="actions">
+        <a class="btn" href="#work" data-i18n="hero.cta1"></a>
+        <a class="btn ghost" href="#contact" data-i18n="hero.cta2"></a>
+      </div>
+    </div>
+    <aside class="shape-ui" hidden>
+      <p class="shape-caption" aria-live="polite"></p>
+      <ol class="shape-dots"></ol>
+    </aside>
+    <a class="scroll-cue" href="#about" data-i18n="scroll">SCROLL</a>
+  </section>
+
+  <main id="main">
+    <section id="about" class="section">
+      <p class="sec-no reveal" data-i18n="about.no"></p>
+      <h2 class="reveal" data-i18n="about.title"></h2>
+      <p class="reveal" data-i18n="about.body"></p>
+      <div class="stats">
+        <div class="reveal"><b data-count="24">0</b><span data-i18n="stat1"></span></div>
+        <div class="reveal"><b data-count="5">0</b><span data-i18n="stat2"></span></div>
+        <div class="reveal"><b data-count="100">0</b><span data-i18n="stat3"></span></div>
+      </div>
+    </section>
+
+    <section id="work" class="section">
+      <p class="sec-no reveal" data-i18n="work.no"></p>
+      <h2 class="reveal" data-i18n="work.title"></h2>
+      <div class="grid">
+        <article class="card reveal"><div class="thumb" style="--h:200"></div><h3 data-i18n="p1.title"></h3><p data-i18n="p1.desc"></p></article>
+        <article class="card reveal"><div class="thumb" style="--h:280"></div><h3 data-i18n="p2.title"></h3><p data-i18n="p2.desc"></p></article>
+        <article class="card reveal"><div class="thumb" style="--h:160"></div><h3 data-i18n="p3.title"></h3><p data-i18n="p3.desc"></p></article>
+        <article class="card reveal"><div class="thumb" style="--h:330"></div><h3 data-i18n="p4.title"></h3><p data-i18n="p4.desc"></p></article>
+      </div>
+    </section>
+
+    <section id="skills" class="section">
+      <p class="sec-no reveal" data-i18n="skills.no"></p>
+      <h2 class="reveal" data-i18n="skills.title"></h2>
+      <ul class="tags reveal">
+        <li>JavaScript</li><li>TypeScript</li><li>React</li><li>Next.js</li><li>three.js</li><li>GLSL</li><li>Node.js</li><li>CSS</li><li>Figma</li>
+      </ul>
+    </section>
+
+    <section id="contact" class="section contact">
+      <p class="sec-no reveal" data-i18n="contact.no"></p>
+      <h2 class="reveal" data-i18n="contact.title"></h2>
+      <a class="btn big reveal" href="mailto:hello@example.com">hello@example.com</a>
+    </section>
+  </main>
+
+  <footer class="footer">© <span class="year"></span> Your Name</footer>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
