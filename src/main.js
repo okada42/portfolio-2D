@@ -3,6 +3,13 @@ import { apply, setLang, t, onLangChange } from './i18n.js';
 
 const $ = (s) => document.querySelector(s);
 apply();
+
+// mobile menu
+const header = $('.header'), menuBtn = $('.menu-btn');
+const setMenu = (open) => { header.classList.toggle('open', open); menuBtn.setAttribute('aria-expanded', open); };
+menuBtn.addEventListener('click', () => setMenu(!header.classList.contains('open')));
+$('#site-nav').addEventListener('click', (e) => { if (e.target.closest('a')) setMenu(false); });
+addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });
 document.querySelector('.lang-switch').addEventListener('click', (e) => {
   const b = e.target.closest('[data-lang]');
   if (b) setLang(b.dataset.lang);

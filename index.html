@@ -27,12 +27,13 @@
   <header class="header">
     <a class="logo" href="#top"><img src="./avatar-256.webp" alt="" width="36" height="36" /><span class="logo-text">YN<span>.</span></span></a>
     <span class="clock" data-i18n-attr="aria-label:clock.label">--:--:--</span>
-    <nav>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" data-i18n-attr="aria-label:menu"><span></span><span></span></button>
+    <nav id="site-nav">
       <a href="#about" data-i18n="nav.about"></a>
       <a href="#services" data-i18n="nav.services"></a>
       <a href="#work" data-i18n="nav.work"></a>
-      <a href="#contact" class="nav-cta" data-i18n="nav.contact"></a>
-    </nav>
+      </nav>
+    <a href="#contact" class="nav-cta" data-i18n="nav.contact"></a>
     <div class="lang-switch" role="group" aria-label="Language">
       <button type="button" data-lang="ja" aria-pressed="true">JP</button>
       <button type="button" data-lang="en" aria-pressed="false">EN</button>

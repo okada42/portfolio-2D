@@ -313,6 +313,11 @@ export function createScene(canvas, shapes, { count, small, reduceMotion, onShap
   function layout() {
     const w = canvas.clientWidth, h = canvas.clientHeight;
     const narrow = w < 900;
+    // portrait screens: keep the flight and the AI inside the frame and below the caption
+    const portrait = narrow && h > w;
+    P[1].y = portrait ? 1.7 : 3.2;
+    HOVER.y = portrait ? 1.1 : 1.75;
+    if (state.phase.startsWith('intro')) U.uAIHover.value.copy(HOVER);
     group.position.set(narrow ? 0 : 1.3, narrow ? 0.9 : 0.1, 0);
     group.scale.setScalar(narrow ? Math.min(1, (w / h) * 1.1) : 1);
   }
