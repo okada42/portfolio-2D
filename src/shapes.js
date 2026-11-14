@@ -254,16 +254,15 @@ export function buildIntro(n) {
   wing.set(crane.wing);
   for (let i = 0; i < n; i++) {
     group[i] = i < nC ? 1 : 2;
-    delay[i] = i < nC ? rnd() * 0.3 : 0.45 + rnd() * 0.55;
+    delay[i] = i < nC ? rnd() * 0.3 : rnd();
   }
-  return { pos, col, group, wing, delay };
+  return { pos, col, group, wing, delay, nCrane: nC };
 }
 
 // Edit this list to make the hero about you. build() may return a Promise.
 export const SHAPES = [
 // Captions come from i18n.js (DICT[lang].shapes[key]).
-  { key: 'crane', build: (n) => image(avatarUrl, n) },
-  { key: 'ai', build: (n) => glyph('AI', n, { font: '900 300px system-ui, sans-serif', width: 3.2, hue: [190, 280] }) },
+  { key: 'crane', build: (n) => image(avatarUrl, n, { width: 3.7, depth: 0.22, threshold: 0.5 }) },
   { key: 'code', build: (n) => glyph('</>', n, { font: '700 300px ui-monospace, monospace', width: 3.6, hue: [170, 210] }) },
   { key: 'auto', build: knot },
   { key: 'data', build: helix },

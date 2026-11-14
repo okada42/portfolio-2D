@@ -54,7 +54,7 @@ export const DICT = {
     'shape.show': '{label} を表示',
     shapes: {
       crane: ['鶴', '技術で、高く遠くへ'],
-      ai: ['AI活用', '目的から考える導入'], code: ['開発', 'PHP / Python'], auto: ['自動化', '手作業を減らす'],
+      code: ['開発', 'PHP / Python'], auto: ['自動化', '手作業を減らす'],
       data: ['データ', '集計・レポートを自動で'], web: ['Web', 'サイト・LP・Webアプリ'], system: ['システム連携', '安全に、既存環境へ'],
     },
   },
@@ -110,7 +110,7 @@ export const DICT = {
     'shape.show': 'Show {label}',
     shapes: {
       crane: ['CRANE', 'Technology that takes you further'],
-      ai: ['AI', 'Purpose before tools'], code: ['DEVELOP', 'PHP / Python'], auto: ['AUTOMATE', 'Less manual work'],
+      code: ['DEVELOP', 'PHP / Python'], auto: ['AUTOMATE', 'Less manual work'],
       data: ['DATA', 'Reports that build themselves'], web: ['WEB', 'Sites, LPs & web apps'], system: ['INTEGRATE', 'Safely, into what you have'],
     },
   },

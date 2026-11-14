@@ -12,10 +12,18 @@ attribute vec3 aColFrom;
 attribute vec3 aColTo;
 attribute float aDelay;
 attribute float aRand;
-attribute float aGroup;
-attribute float aWing;
-uniform vec3 uOff;
-uniform float uFlap;
+attribute float aGroup;   // 1 = crane, 2 = AI (intro only)
+attribute float aWing;    // span distance for wing flapping
+uniform float uIntro;     // 1 while the intro choreography runs
+uniform vec3 uOff;        // crane position on its flight path
+uniform float uRoll;      // crane banking angle
+uniform float uFlap;      // flap amplitude
+uniform float uFlapPh;    // flap phase (integrated on CPU so speed can change smoothly)
+uniform float uAIT;       // AI materialize progress
+uniform vec3 uAIHover;    // where AI floats while forming
+uniform float uRide;      // 0 = AI hovering, 1 = AI riding on the crane's back
+uniform vec3 uBack;       // seat on the crane's back (crane-local)
+uniform float uAIScale;
 uniform float uAIGlow;
 uniform float uT;
 uniform float uTime;
@@ -28,22 +36,36 @@ varying vec3 vCol;
 varying float vAlpha;
 
 float ease(float t){ return t<.5 ? 4.*t*t*t : 1.-pow(-2.*t+2.,3.)/2.; }
+vec3 craneSpace(vec3 q){
+  float c = cos(uRoll), s = sin(uRoll);
+  q.xy = mat2(c, s, -s, c) * q.xy;
+  return q + uOff;
+}
 
 void main(){
-  // stagger each particle by its delay so shapes build up in a sweep
-  float t = ease(clamp((uT - aDelay*.45) / .55, 0., 1.));
+  float isCrane = uIntro * step(.5, aGroup) * step(aGroup, 1.5);
+  float isAI = uIntro * step(1.5, aGroup);
+  // AI runs on its own timeline so it can materialize during the flight
+  float tl = mix(uT, uAIT, isAI);
+  float t = ease(clamp((tl - aDelay*.45) / .55, 0., 1.));
   vec3 p = mix(aFrom, aTo, t);
-  // intro crane: flap wings by span distance and carry along the flight path
-  float isCrane = step(.5, aGroup) * step(aGroup, 1.5);
-  float f = sin(uTime * 7.);
-  p.y += isCrane * aWing * (f * 1.05 + .1) * uFlap;
-  p.z *= 1. - isCrane * uFlap * .35 * abs(f);
-  p.y -= isCrane * f * .06 * uFlap; // body bobs against the stroke
-  p += isCrane * uOff;
-  // swirl mid-flight, gentle breathing at rest
+
+  if (isCrane > .5) {
+    float f = sin(uFlapPh);
+    p.y += aWing * (f * 1.05 + .1) * uFlap;
+    p.z *= 1. - uFlap * .35 * abs(f);
+    p.y -= f * .06 * uFlap;
+    p = craneSpace(p);
+  } else if (isAI > .5) {
+    vec3 hover = p + uAIHover;
+    vec3 ride = craneSpace(p * uAIScale + uBack);
+    p = mix(hover, ride, uRide);
+  }
+
+  // swirl mid-flight, faint breathing at rest
   float mid = sin(t*3.14159);
   float ph = aRand*6.2831 + uTime*.6;
-  p += vec3(sin(ph+p.y*2.), cos(ph*1.3+p.x*2.), sin(ph*.7+p.z*2.)) * (mid*.6 + uChaos*.5 + .015);
+  p += vec3(sin(ph+p.y*2.), cos(ph*1.3+p.x*2.), sin(ph*.7+p.z*2.)) * (mid*.6 + uChaos*.5 + .004);
 
   // cursor pushes particles away
   vec3 d = p - uMouse;
@@ -51,10 +73,10 @@ void main(){
   p.xy += normalize(d.xy + 1e-4) * exp(-l*l*5.) * .55 * uMouseOn;
 
   vCol = mix(aColFrom, aColTo, t);
-  vAlpha = mix(.35, 1., 1. - uChaos) * (.55 + .45*aRand);
+  vAlpha = mix(.35, 1., 1. - uChaos) * (.55 + .45*aRand) * mix(1., .1 + .9*t, isAI);
   vec4 mv = modelViewMatrix * vec4(p, 1.);
   gl_Position = projectionMatrix * mv;
-  float glow = step(1.5, aGroup) * uAIGlow * (.5 + .5 * sin(uTime * 3. + aRand * 6.2831));
+  float glow = isAI * uAIGlow * (.5 + .5 * sin(uTime * 3. + aRand * 6.2831));
   vCol += glow * vec3(.15, .3, .45);
   gl_PointSize = uSize * uPR * (.6 + aRand*.8) * (6. / -mv.z) * (1. + glow * .8);
 }`;
@@ -102,7 +124,7 @@ export function createScene(canvas, shapes, { count, small, reduceMotion, onShap
 
   const composer = new EffectComposer(renderer);
   composer.addPass(new RenderPass(scene, camera));
-  const bloom = new UnrealBloomPass(new THREE.Vector2(canvas.clientWidth, canvas.clientHeight), small ? 0.55 : 0.75, 0.6, 0.15);
+  const bloom = new UnrealBloomPass(new THREE.Vector2(canvas.clientWidth, canvas.clientHeight), small ? 0.35 : 0.45, 0.35, 0.3);
   composer.addPass(bloom);
   composer.addPass(new OutputPass());
 
@@ -138,7 +160,9 @@ export function createScene(canvas, shapes, { count, small, reduceMotion, onShap
   const touch = () => Object.values(A).forEach((a) => (a.needsUpdate = true));
 
   const U = {
-    uOff: { value: new THREE.Vector3() }, uFlap: { value: 0 }, uAIGlow: { value: 0 },
+    uIntro: { value: 0 }, uOff: { value: new THREE.Vector3() }, uRoll: { value: 0 },
+    uFlap: { value: 0 }, uFlapPh: { value: 0 }, uAIT: { value: 0 }, uAIHover: { value: new THREE.Vector3() },
+    uRide: { value: 0 }, uBack: { value: new THREE.Vector3(0.05, 0.52, 0) }, uAIScale: { value: 0.42 }, uAIGlow: { value: 0 },
     uT: { value: 1 }, uTime: { value: 0 }, uSize: { value: small ? 2.4 : 2.6 }, uPR: { value: pr },
     uChaos: { value: 1 }, uMouse: { value: new THREE.Vector3(99, 99, 0) }, uMouseOn: { value: 0 },
   };
@@ -200,36 +224,64 @@ export function createScene(canvas, shapes, { count, small, reduceMotion, onShap
     state.phase = 'form'; state.t0 = now;
     onShape?.(idx);
   }
-  // ---------- intro: crane forms -> flies to "AI" -> both merge into shape 0 (avatar) ----------
-  const IT = { form: 2.6, fly: 4.4, merge: 3.4 };
-  const START = new THREE.Vector3(4.8, -1.9, 0); // enter from bottom-right, away from the headline
+  // ---------- intro ----------
+  // crane swoops in from the distance -> AI materializes ahead -> AI flies onto the crane's back
+  // -> they glide to center -> burst into shape 0 (avatar)
+  const IT = { form: 1.4, fly: 6.2, merge: 3.0 };
+  const P = [new THREE.Vector3(5.8, -2.6, -3.5), new THREE.Vector3(4.2, 3.2, -1.2), new THREE.Vector3(1.8, 0.5, 0.3), new THREE.Vector3(0, 0.1, 0)];
+  const HOVER = new THREE.Vector3(0.2, 1.75, 0.2); // above the landing spot, clear of the headline
   let introDone = !intro || reduceMotion;
-  const flightPath = (k, out) => {
-    const e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
-    return out.set(START.x * (1 - e), START.y * (1 - e) + Math.sin(e * Math.PI) * 0.7, 0);
+  const sm = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+  const bez = (s, out) => {
+    const u = 1 - s;
+    return out.set(0, 0, 0)
+      .addScaledVector(P[0], u * u * u).addScaledVector(P[1], 3 * u * u * s)
+      .addScaledVector(P[2], 3 * u * s * s).addScaledVector(P[3], s * s * s);
   };
+  const tan = new THREE.Vector3(), tmp = new THREE.Vector3();
+  function flight(k) {
+    const s = 1 - Math.pow(1 - k, 2.2); // fast entry, slow arrival
+    bez(s, U.uOff.value);
+    bez(Math.min(1, s + 0.01), tmp);
+    tan.subVectors(tmp, U.uOff.value);
+    // heading is -x; bank toward the direction of travel
+    const roll = Math.max(-0.6, Math.min(0.6, Math.atan2(-tan.y, -tan.x || -1e-4)));
+    U.uRoll.value += (roll - U.uRoll.value) * 0.08;
+  }
   function introForm(now) {
     from.set(cloud); to.set(intro.pos);
-    cTo.set(intro.col); delay.set(intro.delay);
+    cTo.set(intro.col); cFrom.set(intro.col); delay.set(intro.delay);
+    // AI starts as a faint wide spray around its hover point
+    for (let i = intro.nCrane; i < count; i++) {
+      from[i * 3] = gauss() * 2.2; from[i * 3 + 1] = gauss() * 1.4; from[i * 3 + 2] = gauss() * 1.5;
+    }
     touch();
-    U.uT.value = 0; U.uFlap.value = 1;
-    flightPath(0, U.uOff.value);
-    state.phase = 'intro-form'; state.t0 = now;
+    Object.assign(state, { phase: 'intro-form', t0: now });
+    U.uIntro.value = 1; U.uT.value = 0; U.uAIT.value = 0; U.uRide.value = 0;
+    U.uFlap.value = 1; U.uAIHover.value.copy(HOVER);
+    flight(0); U.uRoll.value = 0.5;
   }
   function introMerge(now) {
-    from.set(intro.pos); cFrom.set(intro.col);
+    // bake the current on-screen positions so the hand-off to the avatar is seamless
+    const c = Math.cos(U.uRoll.value), sn = Math.sin(U.uRoll.value), o = U.uOff.value, bk = U.uBack.value, sc = U.uAIScale.value;
+    for (let i = 0; i < count; i++) {
+      let x = intro.pos[i * 3], y = intro.pos[i * 3 + 1], z = intro.pos[i * 3 + 2];
+      if (i >= intro.nCrane) { x = x * sc + bk.x; y = y * sc + bk.y; z = z * sc + bk.z; }
+      from[i * 3] = c * x - sn * y + o.x;
+      from[i * 3 + 1] = sn * x + c * y + o.y;
+      from[i * 3 + 2] = z + o.z;
+    }
+    cFrom.set(intro.col);
     const s = shapes[0];
     to.set(s.pos); cTo.set(s.col);
-    // burst outward from the meeting point
     let hi = 0;
     const r = new Float32Array(count);
     for (let i = 0; i < count; i++) { r[i] = Math.hypot(s.pos[i * 3], s.pos[i * 3 + 1]); hi = Math.max(hi, r[i]); }
     for (let i = 0; i < count; i++) delay[i] = Math.min(1, (r[i] / (hi || 1)) * 0.7 + rnd() * 0.3);
     touch();
-    U.uT.value = 0;
-    U.uOff.value.set(0, 0, 0);
+    U.uIntro.value = 0; U.uT.value = 0; U.uFlap.value = 0; U.uAIGlow.value = 0;
     state.idx = 0;
-    state.phase = 'intro-merge'; state.t0 = now;
+    Object.assign(state, { phase: 'intro-merge', t0: now });
     onShape?.(0);
   }
 
@@ -278,21 +330,25 @@ export function createScene(canvas, shapes, { count, small, reduceMotion, onShap
     const now = clock.getElapsedTime();
     U.uTime.value = now;
     const e = now - state.t0;
-    if (state.phase === 'intro-form') {
-      U.uT.value = Math.min(1, e / IT.form);
-      U.uChaos.value = 1 - U.uT.value;
-      if (e >= IT.form) { state.phase = 'intro-fly'; state.t0 = now; }
-    } else if (state.phase === 'intro-fly') {
-      const k = Math.min(1, e / IT.fly);
-      U.uChaos.value = 0;
-      flightPath(k, U.uOff.value);
-      U.uAIGlow.value = k;
+    const dt = Math.min(0.05, now - (tick.last ?? now)); tick.last = now;
+    if (state.phase === 'intro-form' || state.phase === 'intro-fly') {
+      const k = state.phase === 'intro-fly' ? Math.min(1, e / IT.fly) : 0;
+      if (state.phase === 'intro-form') {
+        U.uT.value = Math.min(1, e / IT.form);
+        U.uChaos.value = (1 - U.uT.value) * 0.6;
+        if (e >= IT.form) { state.phase = 'intro-fly'; state.t0 = now; }
+      } else U.uChaos.value = 0;
+      flight(k);
+      // strong strokes while climbing, then slower, then a wings-spread glide to the finish
+      U.uFlapPh.value += dt * (11 - 5 * sm(0.2, 0.8, k));
+      U.uFlap.value = 1 - sm(0.84, 0.97, k);
+      U.uAIT.value = sm(0.06, 0.55, k);            // AI gradually materializes
+      U.uRide.value = sm(0.58, 0.8, k);            // ...then flies to meet the crane
+      U.uAIGlow.value = U.uAIT.value * (1 - 0.9 * U.uRide.value);
       if (k >= 1) introMerge(now);
     } else if (state.phase === 'intro-merge') {
       U.uT.value = Math.min(1, e / IT.merge);
       U.uChaos.value = 0;
-      U.uFlap.value = Math.max(0, 1 - e / 0.5);
-      U.uAIGlow.value = Math.max(0, 1 - e / 0.8);
       if (e >= IT.merge) { introDone = true; state.phase = 'hold'; state.t0 = now; }
     } else if (state.phase === 'form') {
       U.uT.value = Math.min(1, e / T.form);
@@ -308,8 +364,8 @@ export function createScene(canvas, shapes, { count, small, reduceMotion, onShap
     }
     // hold the camera angle steady during the flight, then ease into the slow sway
     sway += ((introDone ? 1 : 0) - sway) * 0.015;
-    group.rotation.y = Math.sin(now * 0.18) * 0.45 * sway;
-    group.rotation.x = Math.sin(now * 0.13) * 0.08 * sway + 0.5 * (1 - sway);
+    group.rotation.y = Math.sin(now * 0.18) * 0.22 * sway; // gentle, keeps flat shapes legible
+    group.rotation.x = Math.sin(now * 0.13) * 0.08 * sway + 0.35 * (1 - sway);
     dust.rotation.y = -now * 0.02;
     stars.rotation.y = now * 0.005;
 

@@ -8,7 +8,7 @@ document.querySelector('.lang-switch').addEventListener('click', (e) => {
   if (b) setLang(b.dataset.lang);
 });
 const small = Math.min(innerWidth, innerHeight) < 700;
-const COUNT = small ? 9000 : 18000;
+const COUNT = small ? 11000 : 22000;
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // ---------- loader: shown % eases toward real progress ----------
