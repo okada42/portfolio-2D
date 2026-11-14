@@ -110,3 +110,21 @@ h2 { font-size: clamp(30px, 4.5vw, 54px); line-height: 1.15; margin: 12px 0 20px
   html { scroll-behavior: auto; }
   .reveal, .hero-copy > * { transition: none; opacity: 1; transform: none; }
 }
+
+/* about: concerns */
+.concerns { margin-top: 56px; padding: 28px; border: 1px solid var(--line); border-radius: 16px; background: linear-gradient(135deg, rgba(106,215,255,.06), rgba(185,140,255,.04)); }
+.concerns h3 { font-size: 18px; margin-bottom: 14px; }
+.concerns ul { list-style: none; padding: 0; display: grid; gap: 10px; }
+.concerns li { padding-left: 22px; position: relative; color: var(--fg); }
+.concerns li::before { content: ''; position: absolute; left: 0; top: .6em; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--accent); }
+
+/* services */
+.svc-head { margin: 44px 0 18px; font-size: 15px; color: var(--accent2); letter-spacing: .08em; }
+.svc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.svc { padding: 24px; border: 1px solid var(--line); border-radius: 14px; background: rgba(255,255,255,.02); transition: border-color .3s, transform .3s, background .3s; }
+.svc:hover { border-color: rgba(106,215,255,.5); background: rgba(106,215,255,.05); transform: translateY(-3px); }
+.svc span { font: 12px var(--mono); color: var(--accent); }
+.svc h4 { font-size: 17px; margin: 8px 0 6px; }
+.svc p { color: var(--muted); font-size: 14px; }
+.note { margin-top: 18px; font-size: 12px; color: var(--muted); }
+.contact > p:not(.sec-no) { margin: 0 auto; }

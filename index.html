@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Your Name — ポートフォリオ</title>
+  <title>Your Name — AI活用・業務自動化・Web/システム開発</title>
   <meta name="description" content="Your Name のポートフォリオ。Web・3D・インタラクティブ開発。" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;600&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -24,10 +24,10 @@
     <a class="logo" href="#top">YN<span>.</span></a>
     <span class="clock" data-i18n-attr="aria-label:clock.label">--:--:--</span>
     <nav>
-      <a href="#about" data-i18n="nav.about">About</a>
-      <a href="#work" data-i18n="nav.work">Works</a>
-      <a href="#skills" data-i18n="nav.skills">Skills</a>
-      <a href="#contact" class="nav-cta" data-i18n="nav.contact">お問い合わせ</a>
+      <a href="#about" data-i18n="nav.about"></a>
+      <a href="#services" data-i18n="nav.services"></a>
+      <a href="#work" data-i18n="nav.work"></a>
+      <a href="#contact" class="nav-cta" data-i18n="nav.contact"></a>
     </nav>
     <div class="lang-switch" role="group" aria-label="Language">
       <button type="button" data-lang="ja" aria-pressed="true">JP</button>
@@ -44,8 +44,8 @@
       <p class="lead" data-i18n="hero.lead"></p>
       <p class="status"><span class="dot"></span><span data-i18n="hero.status"></span></p>
       <div class="actions">
-        <a class="btn" href="#work" data-i18n="hero.cta1"></a>
-        <a class="btn ghost" href="#contact" data-i18n="hero.cta2"></a>
+        <a class="btn" href="#contact" data-i18n="hero.cta1"></a>
+        <a class="btn ghost" href="#services" data-i18n="hero.cta2"></a>
       </div>
     </div>
     <aside class="shape-ui" hidden>
@@ -61,9 +61,34 @@
       <h2 class="reveal" data-i18n="about.title"></h2>
       <p class="reveal" data-i18n="about.body"></p>
       <div class="stats">
-        <div class="reveal"><b data-count="24">0</b><span data-i18n="stat1"></span></div>
-        <div class="reveal"><b data-count="5">0</b><span data-i18n="stat2"></span></div>
+        <div class="reveal"><b data-count="10">0</b><span data-i18n="stat1"></span></div>
+        <div class="reveal"><b data-count="2">0</b><span data-i18n="stat2"></span></div>
         <div class="reveal"><b data-count="100">0</b><span data-i18n="stat3"></span></div>
+      </div>
+      <div class="concerns reveal">
+        <h3 data-i18n="q.title"></h3>
+        <ul><li data-i18n="q1"></li><li data-i18n="q2"></li><li data-i18n="q3"></li></ul>
+      </div>
+    </section>
+
+    <section id="services" class="section">
+      <p class="sec-no reveal" data-i18n="svc.no"></p>
+      <h2 class="reveal" data-i18n="svc.title"></h2>
+      <h3 class="svc-head reveal" data-i18n="svc.main"></h3>
+      <div class="svc-grid">
+        <article class="svc reveal"><span>01</span><h4 data-i18n="s1.t"></h4><p data-i18n="s1.d"></p></article>
+        <article class="svc reveal"><span>02</span><h4 data-i18n="s2.t"></h4><p data-i18n="s2.d"></p></article>
+        <article class="svc reveal"><span>03</span><h4 data-i18n="s3.t"></h4><p data-i18n="s3.d"></p></article>
+        <article class="svc reveal"><span>04</span><h4 data-i18n="s4.t"></h4><p data-i18n="s4.d"></p></article>
+        <article class="svc reveal"><span>05</span><h4 data-i18n="s5.t"></h4><p data-i18n="s5.d"></p></article>
+        <article class="svc reveal"><span>06</span><h4 data-i18n="s6.t"></h4><p data-i18n="s6.d"></p></article>
+      </div>
+      <h3 class="svc-head reveal" data-i18n="svc.sub"></h3>
+      <div class="svc-grid">
+        <article class="svc reveal"><span>07</span><h4 data-i18n="w1.t"></h4><p data-i18n="w1.d"></p></article>
+        <article class="svc reveal"><span>08</span><h4 data-i18n="w2.t"></h4><p data-i18n="w2.d"></p></article>
+        <article class="svc reveal"><span>09</span><h4 data-i18n="w3.t"></h4><p data-i18n="w3.d"></p></article>
+        <article class="svc reveal"><span>10</span><h4 data-i18n="w4.t"></h4><p data-i18n="w4.d"></p></article>
       </div>
     </section>
 
@@ -72,23 +97,27 @@
       <h2 class="reveal" data-i18n="work.title"></h2>
       <div class="grid">
         <article class="card reveal"><div class="thumb" style="--h:200"></div><h3 data-i18n="p1.title"></h3><p data-i18n="p1.desc"></p></article>
-        <article class="card reveal"><div class="thumb" style="--h:280"></div><h3 data-i18n="p2.title"></h3><p data-i18n="p2.desc"></p></article>
-        <article class="card reveal"><div class="thumb" style="--h:160"></div><h3 data-i18n="p3.title"></h3><p data-i18n="p3.desc"></p></article>
-        <article class="card reveal"><div class="thumb" style="--h:330"></div><h3 data-i18n="p4.title"></h3><p data-i18n="p4.desc"></p></article>
+        <article class="card reveal"><div class="thumb" style="--h:150"></div><h3 data-i18n="p2.title"></h3><p data-i18n="p2.desc"></p></article>
+        <article class="card reveal"><div class="thumb" style="--h:110"></div><h3 data-i18n="p3.title"></h3><p data-i18n="p3.desc"></p></article>
+        <article class="card reveal"><div class="thumb" style="--h:250"></div><h3 data-i18n="p4.title"></h3><p data-i18n="p4.desc"></p></article>
       </div>
+      <p class="note reveal" data-i18n="work.note"></p>
     </section>
 
-    <section id="skills" class="section">
-      <p class="sec-no reveal" data-i18n="skills.no"></p>
-      <h2 class="reveal" data-i18n="skills.title"></h2>
+    <section id="values" class="section">
+      <p class="sec-no reveal" data-i18n="values.no"></p>
+      <h2 class="reveal" data-i18n="values.title"></h2>
+      <p class="reveal" data-i18n="values.body"></p>
+      <h3 class="svc-head reveal" data-i18n="skills.title"></h3>
       <ul class="tags reveal">
-        <li>JavaScript</li><li>TypeScript</li><li>React</li><li>Next.js</li><li>three.js</li><li>GLSL</li><li>Node.js</li><li>CSS</li><li>Figma</li>
+        <li>PHP</li><li>Python</li><li>Google Apps Script</li><li>LLM / AI API</li><li>MySQL</li><li>WordPress</li><li>JavaScript</li><li>Excel / CSV</li><li>Linux</li>
       </ul>
     </section>
 
     <section id="contact" class="section contact">
       <p class="sec-no reveal" data-i18n="contact.no"></p>
       <h2 class="reveal" data-i18n="contact.title"></h2>
+      <p class="reveal" data-i18n="contact.body"></p>
       <a class="btn big reveal" href="mailto:hello@example.com">hello@example.com</a>
     </section>
   </main>

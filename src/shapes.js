@@ -146,10 +146,11 @@ function cubeGrid(n) {
 
 // Edit this list to make the hero about you.
 export const SHAPES = [
-  { key: 'name', label: 'HELLO', sub: 'Your Name', build: (n) => glyph('HELLO', n, { hue: [190, 280] }) },
-  { key: 'code', label: 'CODE', sub: 'Frontend & 3D', build: (n) => glyph('</>', n, { font: '700 300px ui-monospace, monospace', width: 3.6, hue: [170, 210] }) },
-  { key: 'web', label: 'WEB', sub: 'Sites that reach people', build: globe },
-  { key: 'craft', label: 'CRAFT', sub: 'Detail in motion', build: knot },
-  { key: 'grow', label: 'GROW', sub: 'Always learning', build: helix },
-  { key: 'system', label: 'SYSTEMS', sub: 'Solid architecture', build: cubeGrid },
+// Captions come from i18n.js (DICT[lang].shapes[key]).
+  { key: 'ai', build: (n) => glyph('AI', n, { font: '900 300px system-ui, sans-serif', width: 3.2, hue: [190, 280] }) },
+  { key: 'code', build: (n) => glyph('</>', n, { font: '700 300px ui-monospace, monospace', width: 3.6, hue: [170, 210] }) },
+  { key: 'auto', build: knot },
+  { key: 'data', build: helix },
+  { key: 'web', build: globe },
+  { key: 'system', build: cubeGrid },
 ];
