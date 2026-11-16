@@ -1,10 +1,12 @@
 // Shared by every page: i18n, header (menu, language switch, clock), scroll reveal, footer year.
 import { apply, setLang, onLangChange } from './i18n.js';
+import { initStarfield } from './starfield.js';
 
 const $ = (s) => document.querySelector(s);
 
 export function initCommon() {
   apply();
+  initStarfield();
 
   // mobile menu
   const header = $('.header'), menuBtn = $('.menu-btn');
