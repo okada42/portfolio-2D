@@ -1,6 +1,7 @@
 import { SHAPES, buildIntro } from './shapes.js';
 import { t, onLangChange } from './i18n.js';
 import { initCommon, observeReveal } from './common.js';
+import { initContactForm } from './contact.js';
 import { WORKS, cardHTML } from './works-render.js';
 
 // ---------- featured works (projects marked featured in data/works.csv) ----------
@@ -17,6 +18,7 @@ onLangChange(renderFeatured);
 const $ = (s) => document.querySelector(s);
 initCommon();
 renderFeatured();
+initContactForm();
 
 const small = Math.min(innerWidth, innerHeight) < 700;
 const COUNT = small ? 11000 : 22000;
