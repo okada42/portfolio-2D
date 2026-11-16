@@ -242,11 +242,59 @@ function flyingCrane(n) {
   return { pos, col, wing };
 }
 
+// "AI" as circuit-board letters: gradient outline, circuit traces inside the letters, amber nodes, sparkles.
+export function drawAILetters() {
+  const W = 760, H = 420;
+  const c = document.createElement('canvas'); c.width = W; c.height = H;
+  const g = c.getContext('2d');
+  g.fillStyle = '#000'; g.fillRect(0, 0, W, H);
+  const font = "800 330px 'Space Grotesk', system-ui, sans-serif";
+  const tx = W / 2, ty = H / 2 + 14;
+  // mask = the letter shapes
+  const mask = document.createElement('canvas'); mask.width = W; mask.height = H;
+  const m = mask.getContext('2d');
+  m.font = font; m.textAlign = 'center'; m.textBaseline = 'middle'; m.fillStyle = '#fff'; m.fillText('AI', tx, ty);
+  // circuit traces, kept only inside the letters
+  const traces = document.createElement('canvas'); traces.width = W; traces.height = H;
+  const t = traces.getContext('2d');
+  t.strokeStyle = 'rgba(150,215,255,.9)'; t.lineWidth = 4; t.lineCap = 'round';
+  let seed = 3; const r = () => ((seed = (seed * 9301 + 49297) % 233280) / 233280);
+  const nodes = [];
+  for (let y = 70; y < H - 40; y += 34) {
+    let x = 120 + r() * 40;
+    while (x < W - 120) {
+      const len = 40 + r() * 70, up = r() < 0.35 ? (r() < 0.5 ? -17 : 17) : 0;
+      t.beginPath(); t.moveTo(x, y); t.lineTo(x + len * 0.6, y); t.lineTo(x + len, y + up); t.stroke();
+      nodes.push([x + len, y + up]);
+      x += len + 18 + r() * 30;
+    }
+  }
+  t.globalCompositeOperation = 'destination-in'; t.drawImage(mask, 0, 0);
+  g.drawImage(traces, 0, 0);
+  // amber nodes at trace ends that fall inside a letter
+  const md = m.getImageData(0, 0, W, H).data;
+  g.fillStyle = '#ffb86b';
+  for (const [x, y] of nodes) {
+    const i = ((y | 0) * W + (x | 0)) * 4;
+    if (md[i] > 200) { g.beginPath(); g.arc(x, y, 6, 0, Math.PI * 2); g.fill(); }
+  }
+  // crisp gradient outline of the letters
+  const grad = g.createLinearGradient(tx - 220, 0, tx + 220, 0);
+  grad.addColorStop(0, '#5fd4ff'); grad.addColorStop(1, '#b98cff');
+  g.font = font; g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.lineJoin = 'round'; g.strokeStyle = grad; g.lineWidth = 9; g.strokeText('AI', tx, ty);
+  // sparkles around the word
+  const star = (x, y, rr) => { g.beginPath(); for (let i = 0; i < 8; i++) { const a = (i / 8) * Math.PI * 2 - Math.PI / 2, q = i % 2 ? rr * 0.28 : rr; g.lineTo(x + Math.cos(a) * q, y + Math.sin(a) * q); } g.closePath(); g.fill(); };
+  g.fillStyle = '#ffd7a8';
+  for (const [x, y, rr] of [[120, 70, 18], [655, 95, 13], [640, 340, 20], [95, 330, 11], [380, 30, 10]]) star(x, y, rr);
+  return c;
+}
+
 // group: 1 = crane, 2 = AI. Crane particles get a delay near 0, AI appears later.
 export function buildIntro(n) {
   const nC = Math.floor(n * 0.45);
   const crane = flyingCrane(nC);
-  const ai = glyph('AI', n - nC, { font: '900 300px system-ui, sans-serif', width: 2.6, depth: 0.5, hue: [195, 228] });
+  const ai = sampleDrawing(drawAILetters(), n - nC, { width: 2.9, depth: 0.12, threshold: 0.3 });
   const pos = new Float32Array(n * 3), col = new Float32Array(n * 3);
   const group = new Float32Array(n), wing = new Float32Array(n), delay = new Float32Array(n);
   pos.set(crane.pos); col.set(crane.col);

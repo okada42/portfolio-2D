@@ -77,7 +77,7 @@ void main(){
   vAlpha = mix(.35, 1., 1. - uChaos) * mix(.55 + .45*aRand, 1., uCrisp) * mix(1., .1 + .9*t, isAI);
   vec4 mv = modelViewMatrix * vec4(p, 1.);
   gl_Position = projectionMatrix * mv;
-  float glow = isAI * uAIGlow * (.5 + .5 * sin(uTime * 3. + aRand * 6.2831));
+  float glow = isAI * uAIGlow * .35 * (.5 + .5 * sin(uTime * 3. + aRand * 6.2831));
   vCol += glow * vec3(.15, .3, .45);
   gl_PointSize = uSize * uPR * mix(.6 + aRand*.8, 1.02, uCrisp) * (6. / -mv.z) * (1. + glow * .8);
 }`;
@@ -163,7 +163,7 @@ export function createScene(canvas, shapes, { count, small, reduceMotion, onShap
   const U = {
     uIntro: { value: 0 }, uOff: { value: new THREE.Vector3() }, uRoll: { value: 0 },
     uFlap: { value: 0 }, uFlapPh: { value: 0 }, uAIT: { value: 0 }, uAIHover: { value: new THREE.Vector3() },
-    uRide: { value: 0 }, uCrisp: { value: 0 }, uBack: { value: new THREE.Vector3(0.05, 0.52, 0) }, uAIScale: { value: 0.42 }, uAIGlow: { value: 0 },
+    uRide: { value: 0 }, uCrisp: { value: 0 }, uBack: { value: new THREE.Vector3(0.05, 0.6, 0) }, uAIScale: { value: 0.5 }, uAIGlow: { value: 0 },
     uT: { value: 1 }, uTime: { value: 0 }, uSize: { value: small ? 2.4 : 2.6 }, uPR: { value: pr },
     uChaos: { value: 1 }, uMouse: { value: new THREE.Vector3(99, 99, 0) }, uMouseOn: { value: 0 },
   };
@@ -385,7 +385,7 @@ export function createScene(canvas, shapes, { count, small, reduceMotion, onShap
       if (e >= T.scatter) form(now);
     }
     // sharp mode for detailed drawings: uniform still particles, less glow, almost no sway
-    const crispOn = shapes[state.idx]?.crisp && state.phase !== 'scatter' ? 1 : 0;
+    const crispOn = (shapes[state.idx]?.crisp && state.phase !== 'scatter') || state.phase === 'intro-form' || state.phase === 'intro-fly' ? 1 : 0;
     U.uCrisp.value += (crispOn - U.uCrisp.value) * 0.06;
     bloom.strength = (small ? 0.35 : 0.45) * (1 - 0.3 * U.uCrisp.value);
     // hold the camera angle steady during the flight, then ease into the slow sway
