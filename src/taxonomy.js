@@ -3,9 +3,9 @@
 
 export const SERVICES = [
   { key: 'web', ja: 'Web開発', en: 'Web Development', icon: 'web' },
-  { key: 'system', ja: 'システム導入', en: 'System Implementation', icon: 'system' },
-  { key: 'game', ja: 'ゲーム開発', en: 'Game Development', icon: 'game' },
-  { key: 'mobile', ja: 'モバイル開発', en: 'Mobile Development', icon: 'mobile' },
+  { key: 'system', ja: 'システム導入', en: 'Business Systems', icon: 'system' },
+  { key: 'game', ja: 'ゲーム開発', en: 'Games', icon: 'game' },
+  { key: 'mobile', ja: 'モバイルアプリ開発', en: 'Mobile Apps', icon: 'mobile' },
 ];
 
 export const INDUSTRIES = [
@@ -17,27 +17,27 @@ export const INDUSTRIES = [
   { key: 'manufacturing', ja: '製造業', en: 'Manufacturing' },
   { key: 'retail', ja: '小売・EC', en: 'Retail & E-commerce' },
   { key: 'education', ja: '教育・スクール', en: 'Education' },
-  { key: 'professional', ja: '士業・専門サービス', en: 'Professional Services' },
-  { key: 'it', ja: 'IT・Webサービス', en: 'IT & Tech' },
+  { key: 'professional', ja: '士業・コンサルティング', en: 'Professional Services' },
+  { key: 'it', ja: 'IT・Webサービス', en: 'Tech & Software' },
   { key: 'hospitality', ja: '観光・宿泊', en: 'Travel & Hospitality' },
-  { key: 'logistics', ja: '物流・運輸', en: 'Logistics & Transport' },
-  { key: 'staffing', ja: '人材・採用', en: 'Staffing & Recruitment' },
+  { key: 'logistics', ja: '物流・運輸', en: 'Logistics & Transportation' },
+  { key: 'staffing', ja: '人材・採用', en: 'Staffing & Recruiting' },
   { key: 'entertainment', ja: 'エンタメ・ゲーム', en: 'Entertainment & Games' },
-  { key: 'public', ja: '公共・団体', en: 'Public & Non-profit' },
-  { key: 'personal', ja: '個人・クリエイター', en: 'Personal & Creators' },
+  { key: 'public', ja: '自治体・団体', en: 'Government & Nonprofits' },
+  { key: 'personal', ja: '個人・クリエイター', en: 'Individuals & Creators' },
   { key: 'other', ja: 'その他', en: 'Other' },
 ];
 
 // Only used for Web Development projects.
 export const SITE_TYPES = [
-  { key: 'hp', ja: 'ホームページ（HP）', en: 'Website (HP)' },
+  { key: 'hp', ja: 'ホームページ（HP）', en: 'Website' },
   { key: 'corporate', ja: 'コーポレートサイト', en: 'Corporate site' },
   { key: 'lp', ja: 'ランディングページ', en: 'Landing page' },
-  { key: 'ec', ja: 'ECサイト', en: 'E-commerce' },
-  { key: 'booking', ja: '予約サイト', en: 'Booking / Reservation' },
-  { key: 'media', ja: 'メディア・ブログ', en: 'Media / Blog' },
-  { key: 'recruit', ja: '採用サイト', en: 'Recruitment' },
-  { key: 'portal', ja: 'ポータル・会員サイト', en: 'Portal / Membership' },
+  { key: 'ec', ja: 'ECサイト', en: 'Online store' },
+  { key: 'booking', ja: '予約サイト', en: 'Booking & reservations' },
+  { key: 'media', ja: 'オウンドメディア・ブログ', en: 'Blog & media' },
+  { key: 'recruit', ja: '採用サイト', en: 'Careers site' },
+  { key: 'portal', ja: 'ポータル・会員サイト', en: 'Portal & membership' },
 ];
 
 // Skills filter: two groups. Every skill listed here is always shown in the filter (greyed out until a
@@ -45,12 +45,12 @@ export const SITE_TYPES = [
 // so add new no-code tools to the second list.
 export const SKILL_GROUPS = [
   {
-    key: 'code', ja: 'コーディング（プログラミング）', en: 'Coding',
+    key: 'code', ja: 'プログラミング', en: 'Coding',
     skills: ['PHP', 'Python', 'JavaScript', 'TypeScript', 'Java', 'Laravel', 'React', 'Next.js', 'Vue.js', 'Node.js',
       'MySQL', 'Firebase', 'Google Apps Script', 'LLM / AI API', 'three.js', 'Canvas'],
   },
   {
-    key: 'nocode', ja: 'ノーコード・デザイン（CMS・ツール）', en: 'No-code & design (CMS, tools)',
+    key: 'nocode', ja: 'ノーコード・デザインツール', en: 'No-code & design tools',
     skills: [
       // CMS & site builders
       'WordPress', 'WooCommerce', 'Shopify', 'Wix', 'STUDIO',
@@ -66,9 +66,9 @@ export const SKILL_GROUPS = [
 export const SEARCH_SYNONYMS = {
   wp: ['wordpress', 'ワードプレス'], 'ワードプレス': ['wordpress'],
   js: ['javascript'], ts: ['typescript'], gas: ['google apps script'],
-  hp: ['ホームページ', 'website'], 'ホームページ': ['hp', 'website'],
+  hp: ['ホームページ', 'website'], 'ホームページ': ['hp', 'website'], website: ['ホームページ', 'hp'],
   lp: ['ランディングページ', 'landing page'], 'ランディングページ': ['lp'],
-  ec: ['ecサイト', 'e-commerce', 'online shop', 'ネットショップ'], 'ネットショップ': ['ec'],
+  ec: ['ecサイト', 'e-commerce', 'online store', 'ネットショップ'], 'ネットショップ': ['ec', 'online store'], store: ['ecサイト', 'online store'], shop: ['ecサイト', 'online store'],
   ai: ['ai', 'llm'], 'エーアイ': ['ai'],
   'エクセル': ['excel'], 'フィグマ': ['figma'], 'フォトショップ': ['photoshop'], 'イラストレーター': ['illustrator'],
 };
