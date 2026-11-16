@@ -74,6 +74,7 @@ export const SEARCH_SYNONYMS = {
   ai: ['ai', 'llm'], 'エーアイ': ['ai'],
   line: ['line公式', 'ライン'], 'ライン': ['line'],
   'ドメイン': ['domain setup', 'server migration'], 'スタジオ': ['studio'],
+  '音楽': ['music'], 'ジャズ': ['jazz'], '教室': ['school', 'スクール'], 'スクール': ['school', '教室'],
   'サーバー移転': ['server migration'], '移転': ['server migration'], 'ドメイン移管': ['server migration'], '静的': ['静的サイト', 'static'], static: ['静的'],
   'エクセル': ['excel'], 'フィグマ': ['figma'], 'フォトショップ': ['photoshop'], 'イラストレーター': ['illustrator'],
 };
