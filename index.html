@@ -30,7 +30,7 @@
     <nav id="site-nav">
       <a href="#about" data-i18n="nav.about"></a>
       <a href="#services" data-i18n="nav.services"></a>
-      <a href="#work" data-i18n="nav.work"></a>
+      <a href="works.html" data-i18n="nav.work"></a>
       </nav>
     <div class="clock" role="timer" data-i18n-attr="aria-label:clock.label">
       <span class="clock-time">--:--:--</span>
@@ -108,14 +108,13 @@
 
     <section id="work" class="section">
       <p class="sec-no reveal" data-i18n="work.no"></p>
-      <h2 class="reveal" data-i18n="work.title"></h2>
-      <div class="grid">
-        <article class="card reveal"><div class="thumb" style="--h:200"></div><h3 data-i18n="p1.title"></h3><p data-i18n="p1.desc"></p></article>
-        <article class="card reveal"><div class="thumb" style="--h:150"></div><h3 data-i18n="p2.title"></h3><p data-i18n="p2.desc"></p></article>
-        <article class="card reveal"><div class="thumb" style="--h:110"></div><h3 data-i18n="p3.title"></h3><p data-i18n="p3.desc"></p></article>
-        <article class="card reveal"><div class="thumb" style="--h:250"></div><h3 data-i18n="p4.title"></h3><p data-i18n="p4.desc"></p></article>
+      <div class="sec-head">
+        <h2 class="reveal" data-i18n="work.title"></h2>
+        <a class="link-more reveal" href="works.html" data-i18n="feat.all"></a>
       </div>
-      <p class="note reveal" data-i18n="work.note"></p>
+      <div class="w-grid featured" id="featured-grid"></div>
+      <p class="note reveal" id="featured-note" data-i18n="work.note" hidden></p>
+      <div class="center reveal"><a class="btn" href="works.html" data-i18n="feat.all"></a></div>
     </section>
 
     <section id="values" class="section">

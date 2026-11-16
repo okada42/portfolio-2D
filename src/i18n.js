@@ -39,19 +39,28 @@ export const DICT = {
     'w4.t': '既存システムの保守・機能拡張', 'w4.d': '今の環境を活かした機能追加や改善。',
     'w5.t': 'デザイン制作', 'w5.d': 'Figma・Photoshop・Illustrator を使ったWebデザイン、UI設計、バナー・グラフィック制作。',
 
-    'work.no': '03 — WORKS', 'work.title': '制作実績',
-    'p1.title': '社内文書のAI要約・分類ツール', 'p1.desc': 'Python · LLM API · 社内システム連携',
-    'p2.title': '売上CSVの自動集計・レポート', 'p2.desc': 'Python · Excel 出力 · 定期実行',
-    'p3.title': 'スプレッドシート業務の自動化', 'p3.desc': 'Google Apps Script · 通知連携',
-    'p4.title': '業務管理Webシステム', 'p4.desc': 'PHP · MySQL · 保守・機能拡張',
-    'work.note': '※ 実績はサンプルです。実際の案件に差し替えてください。',
-
     'values.no': '04 — VALUES', 'values.title': '「次回もお願いしたい」と<br />言っていただけることが、何よりの喜びです。',
     'values.body': 'まずは、現在のお悩みや状況をお聞かせください。一緒に考えながら、今本当に必要なことを整理し、最適な一歩を見つけていきます。',
     'skills.title': 'つかえる技術',
 
     'contact.no': '05 — CONTACT', 'contact.title': 'まずは、お気軽にご相談ください。',
     'contact.body': 'ご相談・お見積りは無料です。内容を確認のうえ、ご連絡いたします。',
+    'work.no': '03 — WORKS', 'work.title': '注目の制作実績',
+    'work.note': '※ 「サンプル」と表示された実績は見本です。実際の案件に差し替えてください。',
+    'feat.all': 'すべての実績を見る →',
+    'works.meta.title': '制作実績 — Your Name',
+    'works.meta.desc': 'Web開発・システム導入・ゲーム開発・モバイル開発の制作実績。業種・サイト種別・技術で絞り込めます。',
+    'works.no': 'WORKS', 'works.title': '制作実績',
+    'works.lead': 'サービスと業種から、ご要望に近い事例を探せます。サイト種別や使用技術でさらに絞り込めます。',
+    'wf.search': 'キーワードで検索（例：予約、WordPress）', 'wf.filters': '絞り込み',
+    'wf.service': 'サービス', 'wf.industry': '業種', 'wf.siteType': 'サイト種別', 'wf.skills': '使用技術',
+    'wf.all': 'すべて', 'wf.more': 'もっと見る ▾', 'wf.less': '閉じる ▴', 'wf.clear': '条件をクリア',
+    'wf.count': '{n}件の実績', 'wf.sort': '並び順', 'wf.sort.featured': 'おすすめ順', 'wf.sort.new': '新しい順',
+    'wf.apply': '結果を見る', 'wf.sample': 'サンプル',
+    'wf.empty': '条件に合う実績が見つかりませんでした。条件を減らすか、お気軽にご相談ください。',
+    'wm.role': '担当範囲', 'wm.result': '成果', 'wm.skills': '使用技術', 'wm.visit': 'サイトを見る',
+    'wm.contact': 'この内容で相談する', 'wm.close': '閉じる',
+    'wm.sampleNote': '※ この事例はサンプルです。実際の案件に差し替えてください。',
     'shape.show': '{label} を表示',
     shapes: {
       crane: ['鶴', '技術で、高く遠くへ'],
@@ -96,19 +105,28 @@ export const DICT = {
     'w4.t': 'Maintenance & new features', 'w4.d': 'Improving and extending the systems you already have.',
     'w5.t': 'Design', 'w5.d': 'Web design, UI layouts, banners and graphics in Figma, Photoshop and Illustrator.',
 
-    'work.no': '03 — WORK', 'work.title': 'Selected work',
-    'p1.title': 'AI summarizer for internal documents', 'p1.desc': 'Python · LLM API · internal system integration',
-    'p2.title': 'Automated sales CSV reporting', 'p2.desc': 'Python · Excel output · scheduled runs',
-    'p3.title': 'Spreadsheet workflow automation', 'p3.desc': 'Google Apps Script · notifications',
-    'p4.title': 'Business management web system', 'p4.desc': 'PHP · MySQL · maintenance & features',
-    'work.note': '* These are sample projects. Replace them with your real work.',
-
     'values.no': '04 — VALUES', 'values.title': 'Nothing makes me happier than hearing<br />"I\'d like to work with you again."',
     'values.body': "Start by telling me about your situation and what's bothering you. We'll work out together what you really need now, and find the best first step.",
     'skills.title': 'Toolbox',
 
     'contact.no': '05 — CONTACT', 'contact.title': "Let's talk about your challenge.",
     'contact.body': "Consultations and quotes are free. I'll review your message and get back to you.",
+    'work.no': '03 — WORK', 'work.title': 'Featured work',
+    'work.note': '* Projects marked "Sample" are placeholders. Replace them with your real work.',
+    'feat.all': 'See all projects →',
+    'works.meta.title': 'Works — Your Name',
+    'works.meta.desc': 'Projects in web development, system implementation, game and mobile development. Filter by industry, site type and skills.',
+    'works.no': 'WORKS', 'works.title': 'Projects',
+    'works.lead': 'Find projects close to what you need by service and industry, then narrow down by site type and skills.',
+    'wf.search': 'Search keywords (e.g. booking, WordPress)', 'wf.filters': 'Filters',
+    'wf.service': 'Service', 'wf.industry': 'Industry', 'wf.siteType': 'Site type', 'wf.skills': 'Skills',
+    'wf.all': 'All', 'wf.more': 'More ▾', 'wf.less': 'Less ▴', 'wf.clear': 'Clear all',
+    'wf.count': '{n} projects', 'wf.sort': 'Sort', 'wf.sort.featured': 'Featured first', 'wf.sort.new': 'Newest first',
+    'wf.apply': 'Show results', 'wf.sample': 'Sample',
+    'wf.empty': 'No projects match these filters. Try removing some, or just get in touch.',
+    'wm.role': 'My role', 'wm.result': 'Results', 'wm.skills': 'Skills used', 'wm.visit': 'Visit site',
+    'wm.contact': 'Ask about a project like this', 'wm.close': 'Close',
+    'wm.sampleNote': '* This is a sample project. Replace it with your real work.',
     'shape.show': 'Show {label}',
     shapes: {
       crane: ['CRANE', 'Technology that takes you further'],
@@ -137,8 +155,9 @@ export const onLangChange = (fn) => listeners.add(fn);
 
 export function apply() {
   document.documentElement.lang = lang;
-  document.title = t('meta.title');
-  document.querySelector('meta[name="description"]')?.setAttribute('content', t('meta.desc'));
+  const meta = document.body.dataset.meta || 'meta';
+  document.title = t(meta + '.title');
+  document.querySelector('meta[name="description"]')?.setAttribute('content', t(meta + '.desc'));
   document.querySelectorAll('[data-i18n]').forEach((el) => (el.innerHTML = t(el.dataset.i18n)));
   document.querySelectorAll('[data-i18n-attr]').forEach((el) => {
     el.dataset.i18nAttr.split(',').forEach((pair) => {

@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>制作実績 — Your Name</title>
+  <meta name="description" content="Web開発・システム導入・ゲーム開発・モバイル開発の制作実績。業種・サイト種別・技術で絞り込めます。" />
+  <link rel="icon" type="image/png" href="./favicon.png" />
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+  <meta property="og:image" content="./avatar.webp" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;600&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body class="page-works" data-meta="works.meta">
+  <a class="skip" href="#main" data-i18n="skip">本文へ移動</a>
+
+  <header class="header">
+    <a class="logo" href="index.html"><img src="./avatar-256.webp" alt="" width="36" height="36" /><span class="logo-text">YN<span>.</span></span></a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" data-i18n-attr="aria-label:menu"><span></span><span></span></button>
+    <nav id="site-nav">
+      <a href="index.html#about" data-i18n="nav.about"></a>
+      <a href="index.html#services" data-i18n="nav.services"></a>
+      <a href="works.html" data-i18n="nav.work" aria-current="page"></a>
+    </nav>
+    <div class="clock" role="timer" data-i18n-attr="aria-label:clock.label">
+      <span class="clock-time">--:--:--</span>
+      <span class="clock-date"></span>
+    </div>
+    <a href="index.html#contact" class="nav-cta status-pill"><span class="pill-dot" aria-hidden="true"></span><span data-i18n="nav.contact"></span></a>
+    <div class="lang-switch" role="group" aria-label="Language">
+      <button type="button" data-lang="ja" aria-pressed="true">JP</button>
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </header>
+
+  <main id="main" class="works-page">
+    <section class="works-head">
+      <p class="sec-no" data-i18n="works.no"></p>
+      <h1 data-i18n="works.title"></h1>
+      <p class="works-lead" data-i18n="works.lead"></p>
+      <label class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="f-q" type="search" autocomplete="off" data-i18n-attr="placeholder:wf.search,aria-label:wf.search" />
+      </label>
+    </section>
+
+    <section class="filters" aria-labelledby="f-title">
+      <h2 id="f-title" class="sr-only" data-i18n="wf.filters"></h2>
+      <div class="frow">
+        <span class="flabel" data-i18n="wf.service"></span>
+        <div class="chips scroll" id="f-service" role="group" data-i18n-attr="aria-label:wf.service"></div>
+      </div>
+      <div class="frow">
+        <span class="flabel" data-i18n="wf.industry"></span>
+        <div class="chips scroll" id="f-industry" role="group" data-i18n-attr="aria-label:wf.industry"></div>
+      </div>
+
+      <div class="fbar">
+        <button type="button" class="sheet-btn" id="f-sheet-btn" aria-expanded="false" aria-controls="f-sheet">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+          <span data-i18n="wf.filters"></span><span class="n"></span>
+        </button>
+        <div class="sheet" id="f-sheet">
+          <div class="sheet-backdrop" data-sheet-close></div>
+          <div class="sheet-panel">
+            <div class="sheet-head"><strong data-i18n="wf.filters"></strong><button type="button" class="sheet-x" data-sheet-close aria-label="×">×</button></div>
+            <div class="drop" id="d-site">
+              <button type="button" class="drop-btn" aria-expanded="false"><span class="drop-label"></span><span class="drop-n"></span><span class="caret" aria-hidden="true">▾</span></button>
+              <div class="drop-panel"><div class="drop-options chips"></div></div>
+            </div>
+            <div class="drop" id="d-skill">
+              <button type="button" class="drop-btn" aria-expanded="false"><span class="drop-label"></span><span class="drop-n"></span><span class="caret" aria-hidden="true">▾</span></button>
+              <div class="drop-panel"><div class="drop-options chips"></div></div>
+            </div>
+            <button type="button" class="btn sheet-done" data-sheet-close data-i18n="wf.apply"></button>
+          </div>
+        </div>
+        <label class="sort">
+          <span data-i18n="wf.sort"></span>
+          <select id="f-sort">
+            <option value="featured" data-i18n="wf.sort.featured"></option>
+            <option value="new" data-i18n="wf.sort.new"></option>
+          </select>
+        </label>
+        <p class="fcount" id="f-count" aria-live="polite"></p>
+      </div>
+      <div class="factive">
+        <div id="f-active" class="pills"></div>
+        <button type="button" class="clear" id="f-clear" data-i18n="wf.clear" hidden></button>
+      </div>
+    </section>
+
+    <section class="w-grid" id="w-grid" aria-live="polite"></section>
+    <div class="w-empty" id="w-empty" hidden>
+      <p data-i18n="wf.empty"></p>
+      <div class="actions">
+        <button type="button" class="btn ghost" id="w-empty-clear" data-i18n="wf.clear"></button>
+        <a class="btn" href="index.html#contact" data-i18n="wm.contact"></a>
+      </div>
+    </div>
+  </main>
+
+  <dialog class="w-modal" id="w-modal" aria-labelledby="m-title">
+    <button type="button" class="m-close" data-close data-i18n-attr="aria-label:wm.close">×</button>
+    <div class="m-content"></div>
+  </dialog>
+
+  <footer class="footer">© <span class="year"></span> Your Name</footer>
+  <script type="module" src="/src/works.js"></script>
+</body>
+</html>
