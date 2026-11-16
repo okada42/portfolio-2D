@@ -386,6 +386,133 @@ export function drawWebDev(size = 640) {
   for (const r of [34, 48]) { g.beginPath(); g.arc(...HUB, r, 0, Math.PI * 2); g.stroke(); }
   return c;
 }
+// ---------- System development: gear + </> core, orbiting service icons, wireframe open hand ----------
+export function drawSysDev(size = 640) {
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  const g = c.getContext('2d');
+  g.scale(size / 640, size / 640);
+  g.fillStyle = '#000'; g.fillRect(0, 0, 640, 640);
+  g.lineCap = 'round'; g.lineJoin = 'round';
+  const CY = '#5fd4ff', WH = '#eaf8ff', CX = 320, CYY = 250;
+
+  // HUD rings with tick marks
+  g.strokeStyle = 'rgba(95,212,255,.35)'; g.lineWidth = 2;
+  g.beginPath(); g.arc(CX, CYY, 210, Math.PI * 0.95, Math.PI * 2.05); g.stroke();
+  for (let i = 0; i < 72; i++) {
+    const a = Math.PI * 0.95 + (i / 72) * Math.PI * 1.1, r0 = 214, r1 = i % 6 ? 222 : 232;
+    g.beginPath(); g.moveTo(CX + Math.cos(a) * r0, CYY + Math.sin(a) * r0); g.lineTo(CX + Math.cos(a) * r1, CYY + Math.sin(a) * r1); g.stroke();
+  }
+  g.strokeStyle = 'rgba(95,212,255,.55)'; g.lineWidth = 3;
+  g.beginPath(); g.arc(CX, CYY, 150, Math.PI * 0.85, Math.PI * 2.15); g.stroke();
+
+  // core glow
+  const glow = g.createRadialGradient(CX, CYY, 20, CX, CYY, 130);
+  glow.addColorStop(0, 'rgba(95,212,255,.55)'); glow.addColorStop(1, 'rgba(95,212,255,0)');
+  g.fillStyle = glow; g.beginPath(); g.arc(CX, CYY, 130, 0, Math.PI * 2); g.fill();
+  g.strokeStyle = CY; g.lineWidth = 4; g.beginPath(); g.arc(CX, CYY, 104, 0, Math.PI * 2); g.stroke();
+
+  // gear
+  const teeth = 10, rO = 82, rI = 66;
+  g.beginPath();
+  for (let i = 0; i < teeth * 2; i++) {
+    const a0 = (i / (teeth * 2)) * Math.PI * 2, a1 = ((i + 1) / (teeth * 2)) * Math.PI * 2, r = i % 2 ? rI : rO;
+    g.arc(CX, CYY, r, a0 + 0.04, a1 - 0.04);
+  }
+  g.closePath(); g.fillStyle = WH; g.fill();
+  g.fillStyle = '#000'; g.beginPath(); g.arc(CX, CYY, 50, 0, Math.PI * 2); g.fill();
+  // </> inside the gear
+  g.strokeStyle = WH; g.lineWidth = 7;
+  g.beginPath(); g.moveTo(CX - 14, CYY - 20); g.lineTo(CX - 32, CYY); g.lineTo(CX - 14, CYY + 20); g.stroke();
+  g.beginPath(); g.moveTo(CX + 14, CYY - 20); g.lineTo(CX + 32, CYY); g.lineTo(CX + 14, CYY + 20); g.stroke();
+  g.lineWidth = 5; g.beginPath(); g.moveTo(CX + 6, CYY - 24); g.lineTo(CX - 6, CYY + 24); g.stroke();
+
+  // orbiting icon circles on the 150px arc
+  const icons = ['loop', 'shield', 'globe', 'list', 'cloud'];
+  icons.forEach((name, i) => {
+    const a = Math.PI * 0.95 + (i / (icons.length - 1)) * Math.PI * 1.1;
+    const x = CX + Math.cos(a) * 170, y = CYY + Math.sin(a) * 170;
+    g.fillStyle = '#000'; g.beginPath(); g.arc(x, y, 34, 0, Math.PI * 2); g.fill();
+    g.strokeStyle = CY; g.lineWidth = 4; g.beginPath(); g.arc(x, y, 34, 0, Math.PI * 2); g.stroke();
+    g.strokeStyle = WH; g.fillStyle = WH; g.lineWidth = 4;
+    if (name === 'loop') { // infinity
+      g.beginPath(); for (let t = 0; t <= Math.PI * 2 + 0.01; t += 0.1) { const d = 1 + Math.sin(t) ** 2; g[t ? 'lineTo' : 'moveTo'](x + 17 * Math.cos(t) / d, y + 17 * Math.sin(t) * Math.cos(t) / d); } g.stroke();
+    } else if (name === 'shield') {
+      g.beginPath(); g.moveTo(x, y - 18); g.lineTo(x + 14, y - 12); g.lineTo(x + 13, y + 2); g.quadraticCurveTo(x + 10, y + 13, x, y + 18); g.quadraticCurveTo(x - 10, y + 13, x - 13, y + 2); g.lineTo(x - 14, y - 12); g.closePath(); g.stroke();
+      g.beginPath(); g.moveTo(x - 6, y); g.lineTo(x - 1, y + 5); g.lineTo(x + 7, y - 5); g.stroke();
+    } else if (name === 'globe') {
+      g.beginPath(); g.arc(x, y, 16, 0, Math.PI * 2); g.stroke();
+      g.beginPath(); g.ellipse(x, y, 7, 16, 0, 0, Math.PI * 2); g.stroke();
+      g.beginPath(); g.moveTo(x - 16, y); g.lineTo(x + 16, y); g.stroke();
+    } else if (name === 'list') {
+      g.strokeRect(x - 12, y - 16, 24, 32);
+      for (const dy of [-7, 1, 9]) { g.beginPath(); g.moveTo(x - 6, y + dy); g.lineTo(x + 7, y + dy); g.stroke(); }
+    } else if (name === 'cloud') {
+      g.beginPath(); g.arc(x - 8, y + 3, 9, Math.PI * 0.5, Math.PI * 1.5); g.arc(x + 1, y - 5, 11, Math.PI, Math.PI * 1.95); g.arc(x + 10, y + 3, 8, Math.PI * 1.5, Math.PI * 0.5); g.closePath(); g.stroke();
+    }
+  });
+
+  // wireframe open hand, side view: palm up, fingers pointing left and curling up slightly, thumb raised,
+  // wrist at the right. Parts are drawn into a mask, then filled with a mesh and outlined.
+  const taper = (x1, y1, qx, qy, x2, y2, r0, r1) => {
+    const p = new Path2D(), L = [], R = [], N = 24;
+    for (let i = 0; i <= N; i++) {
+      const t = i / N, u = 1 - t;
+      const x = u * u * x1 + 2 * u * t * qx + t * t * x2, y = u * u * y1 + 2 * u * t * qy + t * t * y2;
+      const dx = 2 * u * (qx - x1) + 2 * t * (x2 - qx), dy = 2 * u * (qy - y1) + 2 * t * (y2 - qy);
+      const l = Math.hypot(dx, dy) || 1, r = r0 + (r1 - r0) * t;
+      L.push([x - dy / l * r, y + dx / l * r]); R.push([x + dy / l * r, y - dx / l * r]);
+    }
+    p.moveTo(...L[0]); L.forEach((q) => p.lineTo(...q));
+    p.arc(x2, y2, r1, Math.atan2(L[N][1] - y2, L[N][0] - x2), Math.atan2(R[N][1] - y2, R[N][0] - x2), false);
+    for (let i = N; i >= 0; i--) p.lineTo(...R[i]);
+    p.closePath();
+    return p;
+  };
+  const forearm = new Path2D();
+  forearm.moveTo(640, 446); forearm.bezierCurveTo(580, 446, 520, 440, 468, 432);
+  forearm.lineTo(474, 486); forearm.bezierCurveTo(530, 500, 590, 512, 640, 516); forearm.closePath();
+  const palm = new Path2D();
+  palm.moveTo(476, 430);
+  palm.bezierCurveTo(440, 424, 400, 420, 372, 412);   // cupped top edge
+  palm.bezierCurveTo(350, 408, 334, 418, 336, 436);   // toward finger roots
+  palm.bezierCurveTo(338, 456, 360, 468, 392, 474);   // underside
+  palm.bezierCurveTo(420, 480, 452, 488, 478, 490);
+  palm.closePath();
+  // fingers stacked in depth (index on top), rear ones a little shorter
+  const fingers = [
+    taper(354, 414, 278, 418, 214, 380, 11, 8),     // index: highest, tip curls up
+    taper(350, 428, 262, 436, 194, 404, 11.5, 8.5), // middle (longest)
+    taper(352, 442, 268, 452, 206, 426, 11, 8),     // ring
+    taper(356, 456, 290, 466, 232, 450, 9.5, 7),    // little
+  ];
+  const thumb = taper(404, 420, 392, 388, 372, 352, 12.5, 9);
+  const parts = [forearm, palm, ...fingers.slice().reverse(), thumb];
+
+  const mesh = document.createElement('canvas'); mesh.width = mesh.height = 640;
+  const m = mesh.getContext('2d');
+  const hg = m.createLinearGradient(180, 0, 640, 0);
+  hg.addColorStop(0, 'rgba(130,210,255,.32)'); hg.addColorStop(1, 'rgba(130,210,255,.12)');
+  m.fillStyle = hg; m.fillRect(0, 0, 640, 640);
+  m.strokeStyle = 'rgba(160,225,255,.9)'; m.lineWidth = 1.4;
+  for (let i = -6; i < 22; i++) { const y0 = 360 + i * 8; m.beginPath(); m.moveTo(180, y0 + 30); m.bezierCurveTo(320, y0 + 34, 470, y0 + 8, 640, y0 + 52); m.stroke(); }
+  for (let x = 180; x < 640; x += 12) { m.beginPath(); m.moveTo(x, 340); m.lineTo(x - 10, 540); m.stroke(); }
+  // one combined mask (union of all parts), then keep the mesh only inside it
+  const mask = document.createElement('canvas'); mask.width = mask.height = 640;
+  const mk = mask.getContext('2d'); mk.fillStyle = '#fff'; parts.forEach((q) => mk.fill(q));
+  m.globalCompositeOperation = 'destination-in';
+  m.drawImage(mask, 0, 0);
+  g.drawImage(mesh, 0, 0);
+  // outlines: drawn back-to-front so each finger edge stays visible over the one behind
+  g.lineWidth = 2.6;
+  for (const q of parts) { g.strokeStyle = CY; g.stroke(q); }
+  // light beam from palm to core
+  const beam = g.createLinearGradient(0, 400, 0, 330);
+  beam.addColorStop(0, 'rgba(95,212,255,.0)'); beam.addColorStop(1, 'rgba(95,212,255,.35)');
+  g.fillStyle = beam; g.beginPath(); g.moveTo(250, 405); g.lineTo(380, 405); g.lineTo(358, 330); g.lineTo(282, 330); g.closePath(); g.fill();
+  return c;
+}
+
 function sampleDrawing(c, n, { width = 3.7, depth = 0.35, threshold = 0.18 } = {}) {
   const W = c.width, H = c.height;
   const d = c.getContext('2d').getImageData(0, 0, W, H).data;
@@ -414,7 +541,7 @@ export const SHAPES = [
   { key: 'crane', build: (n) => image(avatarUrl, n, { width: 3.7, depth: 0.22, threshold: 0.5 }) },
   { key: 'heart', build: heart },
   { key: 'webdev', build: (n) => sampleDrawing(drawWebDev(640), n) },
-  { key: 'data', build: helix },
+  { key: 'sysdev', build: (n) => sampleDrawing(drawSysDev(640), n, { width: 3.8 }) },
   { key: 'web', build: globe },
   { key: 'system', build: cubeGrid },
 ];
