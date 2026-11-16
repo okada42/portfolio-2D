@@ -354,17 +354,30 @@ function badge(g, x, y, w, h, name, icon, col, fontPx) {
   g.fillText(name, x, y + h * 0.28);
 }
 
-// ---------- Design: Figma + Photoshop ----------
-export function drawDesignTools(size = 640) {
+// ---------- Design: Figma + Photoshop (logo images supplied by the site owner) ----------
+import figmaLogoUrl from './logo-figma.png';
+import psLogoUrl from './logo-photoshop.png';
+const loadImg = async (url) => { const im = new Image(); im.src = url; await im.decode(); return im; };
+export async function drawDesignTools(size = 640) {
   const [c, g] = badgeCanvas(size);
-  // connecting dashed arc: idea -> design
+  const [fig, ps] = await Promise.all([loadImg(figmaLogoUrl), loadImg(psLogoUrl)]);
+  // dashed arc linking the two tools
   g.strokeStyle = PAL.pu; g.lineWidth = 4; g.setLineDash([12, 10]);
-  g.beginPath(); g.moveTo(196, 400); g.quadraticCurveTo(320, 470, 444, 400); g.stroke(); g.setLineDash([]);
-  badge(g, 180, 290, 220, 240, 'Figma', 'pen', PAL.cy, 54);
-  badge(g, 460, 290, 220, 240, 'Photoshop', 'layers', PAL.pu, 48);
+  g.beginPath(); g.moveTo(200, 528); g.quadraticCurveTo(320, 590, 450, 528); g.stroke(); g.setLineDash([]);
+  // Figma mark (keeps its proportions)
+  const fh = 300, fw = fh * fig.width / fig.height;
+  g.drawImage(fig, 190 - fw / 2, 140, fw, fh);
+  // Photoshop tile; its dark navy face is too dark to turn into particles, so outline the tile
+  const ts = 270, tx = 455 - ts / 2, ty = 155;
+  g.drawImage(ps, tx, ty, ts, ts);
+  g.strokeStyle = '#31a8ff'; g.lineWidth = 6; g.beginPath(); g.roundRect(tx + 3, ty + 3, ts - 6, ts - 6, ts * 0.18); g.stroke();
+  // tool names
+  g.fillStyle = PAL.wh; g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.font = "800 40px 'Space Grotesk', system-ui, sans-serif";
+  g.fillText('Figma', 190, 500 - 20); g.fillText('Photoshop', 455, 500 - 20);
   // small sparkles in the warm accent
   g.fillStyle = PAL.am;
-  for (const [x, y, r] of [[320, 180, 14], [92, 140, 9], [560, 450, 10]]) {
+  for (const [x, y, r] of [[320, 110, 14], [70, 120, 9], [590, 520, 10]]) {
     g.beginPath(); for (let i = 0; i < 8; i++) { const a = (i / 8) * Math.PI * 2 - Math.PI / 2, rr = i % 2 ? r * 0.3 : r; g.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr); } g.closePath(); g.fill();
   }
   return c;
@@ -573,7 +586,7 @@ export const SHAPES = [
 // Captions come from i18n.js (DICT[lang].shapes[key]).
   { key: 'crane', build: (n) => image(avatarUrl, n, { width: 3.7, depth: 0.22, threshold: 0.5 }) },
   { key: 'heart', build: heart },
-  { key: 'design', build: (n) => sampleDrawing(drawDesignTools(640), n), crisp: true },
+  { key: 'design', build: async (n) => sampleDrawing(await drawDesignTools(640), n), crisp: true },
   { key: 'webdev', build: (n) => sampleDrawing(drawTechStack(640), n), crisp: true },
   { key: 'auto', build: (n) => sampleDrawing(drawAutomation(640), n), crisp: true },
   { key: 'rose', build: (n) => sampleDrawing(drawRose(640), n, { width: 4.0, threshold: 0.24 }), crisp: true },
