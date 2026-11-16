@@ -596,6 +596,84 @@ export function drawDesign(size = 640) {
   return c;
 }
 
+// ---------- Rose in full bloom (gratitude): illustrated, layered petals with bright rims ----------
+export function drawRose(size = 640) {
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  const g = c.getContext('2d');
+  g.scale(size / 640, size / 640);
+  g.fillStyle = '#000'; g.fillRect(0, 0, 640, 640);
+  g.lineCap = 'round'; g.lineJoin = 'round';
+  const CX = 320, CY = 225;
+  const P = (r, a) => [CX + Math.cos(a) * r, CY + Math.sin(a) * r * 0.86]; // slight top-down squash
+
+  // stem with thorns
+  g.strokeStyle = '#3f8f46'; g.lineWidth = 13;
+  g.beginPath(); g.moveTo(CX, CY + 110); g.bezierCurveTo(CX + 10, 420, CX - 22, 520, CX - 6, 630); g.stroke();
+  g.strokeStyle = '#8fdc8a'; g.lineWidth = 3;
+  g.beginPath(); g.moveTo(CX - 4, CY + 115); g.bezierCurveTo(CX + 6, 420, CX - 26, 520, CX - 10, 630); g.stroke();
+  g.fillStyle = '#6fc46b';
+  for (const [x, y, d] of [[CX + 9, 400, 1], [CX - 16, 488, -1], [CX - 10, 575, 1]]) {
+    g.beginPath(); g.moveTo(x, y - 8); g.lineTo(x + d * 16, y - 14); g.lineTo(x, y + 4); g.closePath(); g.fill();
+  }
+  // leaves: serrated edge, bright rim, center vein and side veins
+  const leaf = (bx, by, ang, len, wid) => {
+    g.save(); g.translate(bx, by); g.rotate(ang);
+    const edge = (side) => { const pts = []; for (let i = 0; i <= 20; i++) { const t = i / 20, w = Math.sin(Math.PI * t) * wid * (1 + (i % 2 ? 0.12 : 0)); pts.push([t * len, side * w]); } return pts; };
+    const top = edge(-1), bot = edge(1);
+    g.beginPath(); g.moveTo(0, 0); top.forEach((q) => g.lineTo(...q)); bot.reverse().forEach((q) => g.lineTo(...q)); g.closePath();
+    const lg = g.createLinearGradient(0, -wid, 0, wid); lg.addColorStop(0, '#4fb258'); lg.addColorStop(1, '#2f7a3a');
+    g.fillStyle = lg; g.fill();
+    g.strokeStyle = '#a9eaa2'; g.lineWidth = 3.5; g.stroke();
+    g.save(); g.clip();
+    g.strokeStyle = '#c8f5c2'; g.lineWidth = 3; g.beginPath(); g.moveTo(4, 0); g.lineTo(len - 6, 0); g.stroke();
+    g.lineWidth = 2;
+    for (let t = 0.2; t < 0.85; t += 0.16) { g.beginPath(); g.moveTo(t * len, 0); g.lineTo(t * len + 22, -wid * 0.62); g.moveTo(t * len, 0); g.lineTo(t * len + 22, wid * 0.62); g.stroke(); }
+    g.restore();
+    g.restore();
+  };
+  leaf(CX + 2, 455, Math.PI + 0.45, 150, 40);
+  leaf(CX - 14, 530, -0.35, 140, 36);
+
+  // one petal: rounded, slightly wavy tip, radial shading, bright rim along its outer edge
+  const petal = (ang, r0, r1, halfW, dark, light) => {
+    const a0 = ang - halfW, a1 = ang + halfW;
+    const path = new Path2D();
+    path.moveTo(...P(r0, ang - halfW * 0.5));
+    path.quadraticCurveTo(...P(r1 * 0.92, a0 - 0.08), ...P(r1, ang - halfW * 0.35));
+    path.quadraticCurveTo(...P(r1 * 1.07, ang), ...P(r1, ang + halfW * 0.35));
+    path.quadraticCurveTo(...P(r1 * 0.92, a1 + 0.08), ...P(r0, ang + halfW * 0.5));
+    path.closePath();
+    const gr = g.createRadialGradient(CX, CY, r0, CX, CY, r1 * 1.05);
+    gr.addColorStop(0, dark); gr.addColorStop(1, light);
+    g.fillStyle = gr; g.fill(path);
+    // rim: only the outer edge, so neighbouring petals stay separated
+    const rim = new Path2D();
+    rim.moveTo(...P(r1 * 0.8, a0 + 0.02));
+    rim.quadraticCurveTo(...P(r1 * 0.92, a0 - 0.08), ...P(r1, ang - halfW * 0.35));
+    rim.quadraticCurveTo(...P(r1 * 1.07, ang), ...P(r1, ang + halfW * 0.35));
+    rim.quadraticCurveTo(...P(r1 * 0.92, a1 + 0.08), ...P(r1 * 0.8, a1 - 0.02));
+    g.strokeStyle = '#000'; g.lineWidth = 7; g.stroke(rim);       // thin dark gap behind the rim
+    g.strokeStyle = '#ffe1e9'; g.lineWidth = 4; g.stroke(rim);
+  };
+  // back to front: outer layers first, each layer rotated so petals overlap like a real rose
+  const layers = [
+    { n: 6, r0: 50, r1: 150, w: 0.62, off: 0.0, dark: '#b8204a', light: '#ff5a86' },
+    { n: 5, r0: 40, r1: 120, w: 0.66, off: 0.55, dark: '#c4264f', light: '#ff6b92' },
+    { n: 5, r0: 30, r1: 92, w: 0.66, off: 0.15, dark: '#cc2b55', light: '#ff7d9e' },
+    { n: 4, r0: 22, r1: 66, w: 0.78, off: 0.9, dark: '#d4325c', light: '#ff8fab' },
+  ];
+  for (const L of layers) for (let i = 0; i < L.n; i++) petal(L.off + (i / L.n) * Math.PI * 2, L.r0, L.r1, L.w, L.dark, L.light);
+
+  // spiral center: tightly wrapped inner petals
+  g.fillStyle = '#c0244d'; g.beginPath(); g.ellipse(CX, CY, 44, 38, 0, 0, Math.PI * 2); g.fill();
+  g.strokeStyle = '#ffd3de'; g.lineWidth = 4;
+  g.beginPath();
+  for (let t = 0; t < Math.PI * 5; t += 0.08) { const r = 4 + t * 2.6; const q = [CX + Math.cos(t) * r, CY + Math.sin(t) * r * 0.86]; t ? g.lineTo(...q) : g.moveTo(...q); }
+  g.stroke();
+  return c;
+}
+
 function sampleDrawing(c, n, { width = 4.2, depth = 0.1, threshold = 0.3 } = {}) {
   const W = c.width, H = c.height;
   const d = c.getContext('2d').getImageData(0, 0, W, H).data;
@@ -621,87 +699,6 @@ function sampleDrawing(c, n, { width = 4.2, depth = 0.1, threshold = 0.3 } = {})
   return { pos, col };
 }
 
-// ---------- Rose: a bud that blooms (gratitude) ----------
-// Procedural 3D rose. Each particle keeps fixed petal parameters; only "openness" changes between
-// the bud (pos/col) and the open rose (pos2/col2), so the engine can morph one into the other.
-function rose(n) {
-  const LAYERS = [2, 3, 4, 5, 5, 6, 7];              // petals per layer, inner -> outer
-  const petals = [];
-  let k = 0;
-  LAYERS.forEach((cnt, l) => {
-    for (let j = 0; j < cnt; j++) petals.push({ l, phi: k++ * 2.39996 + l * 0.4, len: 0.34 + 0.1 * l, span: Math.PI / cnt * 1.3 });
-  });
-  const L = LAYERS.length - 1;
-  const nPetal = Math.floor(n * 0.8), nStem = Math.floor(n * 0.06), nLeaf = Math.floor(n * 0.1);
-  const pos = new Float32Array(n * 3), pos2 = new Float32Array(n * 3);
-  const col = new Float32Array(n * 3), col2 = new Float32Array(n * 3), bloomDelay = new Float32Array(n);
-  const HEAD_Y = 0.55, TILT = -0.55;                   // rose head tipped toward the viewer
-  const cT = Math.cos(TILT), sT = Math.sin(TILT);
-  const HS = 1.3; // head size
-  const head = (x, y, z) => [x * HS, HEAD_Y + (y * cT - z * sT) * HS, (y * sT + z * cT) * HS];
-
-  // point on one petal for a given openness (0 = bud, 1 = full bloom)
-  function petalPoint(pt, u, v, open) {
-    const lf = pt.l / L;
-    // inner petals stay wrapped in a tight spiral (the rose's signature); outer ones open wide
-    const tilt = (0.06 + 0.1 * lf) + open * (0.04 + 1.55 * Math.pow(lf, 1.7));
-    const curl = open * (0.1 + 1.1 * Math.pow(lf, 1.5));             // outer petal tips roll back
-    let rad = 0.02 + 0.06 * lf * (0.3 + open), h = 0;
-    const steps = 10, ds = pt.len * u / steps;
-    for (let i = 1; i <= steps; i++) { const uu = (i / steps) * u, a = tilt * uu + curl * uu * uu * uu; rad += Math.sin(a) * ds; h += Math.cos(a) * ds; }
-    const halfW = pt.span * (0.35 + 0.65 * Math.pow(Math.sin(Math.PI * Math.min(1, u * 0.85 + 0.15)), 0.7));
-    // inner petals overlap more (wrapped spiral); a twist that grows toward the center reads as a swirl
-    const ang = pt.phi + v * halfW * (0.55 + 0.45 * open) + (1 - lf) * u * 0.9;
-    rad *= 1 - 0.12 * v * v * (1 - 0.5 * open);                     // cupped petal edges
-    return head(Math.cos(ang) * rad, h - 0.25, Math.sin(ang) * rad);
-  }
-  function petalColor(pt, u, v, open) {
-    const lf = pt.l / L;
-    // a bright rim on every petal so each one reads as its own shape; deeper red toward the center
-    const rim = Math.abs(v) > 0.86 || u > 0.94;
-    const light = rim ? 0.62 + 0.08 * open : 0.24 + 0.14 * u + 0.08 * lf * open - 0.06 * (1 - open);
-    return hsl(rim ? 350 : 346 + 6 * lf, rim ? 0.95 : 0.85, light);
-  }
-
-  let i = 0;
-  for (; i < nPetal; i++) {
-    const pt = petals[(rnd() * petals.length) | 0];
-    // more particles on petal rims and tips (they outline the petal), fewer in the middle
-    const u = Math.pow(rnd(), 0.55), v = (rnd() < 0.5 ? -1 : 1) * Math.pow(rnd(), 0.45);
-    pos.set(petalPoint(pt, u, v, 0.05), i * 3); col.set(petalColor(pt, u, v, 0.05), i * 3);
-    pos2.set(petalPoint(pt, u, v, 1), i * 3); col2.set(petalColor(pt, u, v, 1), i * 3);
-    bloomDelay[i] = Math.min(1, (1 - pt.l / L) * 0.75 + rnd() * 0.15);   // outer petals open first
-  }
-  // sepals: small green leaves cupping the base of the bloom
-  const nSepal = Math.floor(n * 0.03);
-  for (let e = 0; e < nSepal; e++, i++) {
-    const a = ((rnd() * 5) | 0) * (Math.PI * 2 / 5) + (rnd() - 0.5) * 0.35, u = rnd();
-    const bud = head(Math.cos(a) * (0.06 + 0.12 * u), -0.25 + 0.18 * u, Math.sin(a) * (0.06 + 0.12 * u));
-    const open = head(Math.cos(a) * (0.06 + 0.3 * u), -0.25 - 0.05 * u, Math.sin(a) * (0.06 + 0.3 * u));
-    const c = hsl(128, 0.5, 0.3 + 0.1 * u);
-    pos.set(bud, i * 3); pos2.set(open, i * 3); col.set(c, i * 3); col2.set(c, i * 3); bloomDelay[i] = rnd() * 0.3;
-  }
-  // stem: gentle S-curve down from the head
-  for (let e = 0; e < nStem; e++, i++) {
-    const t = rnd(), y = HEAD_Y - 0.28 - t * 1.9, x = Math.sin(t * 2.2) * 0.12;
-    const a = rnd() * Math.PI * 2, r = 0.035;
-    const p = [x + Math.cos(a) * r, y, Math.sin(a) * r];
-    const c = hsl(122, 0.45, 0.26 + 0.1 * Math.max(0, Math.cos(a)));
-    pos.set(p, i * 3); pos2.set(p, i * 3); col.set(c, i * 3); col2.set(c, i * 3); bloomDelay[i] = rnd() * 0.2;
-  }
-  // two leaves with a center vein and serrated edges; they unfold slightly as the rose opens
-  for (; i < n; i++) {
-    const side = rnd() < 0.5 ? -1 : 1, u = rnd(), v = rnd() * 2 - 1;
-    const baseY = side < 0 ? HEAD_Y - 1.05 : HEAD_Y - 1.45, baseX = Math.sin((HEAD_Y - 0.28 - baseY) / 1.9 * 2.2) * 0.12;
-    const width = 0.17 * Math.sin(Math.PI * u) * (1 + 0.08 * Math.sin(u * 40));
-    const vein = Math.abs(v) < 0.08;
-    const leaf = (spread) => [baseX + side * (u * 0.62 * spread), baseY + u * 0.22 + v * width * 0.55 - u * u * 0.12, v * width * 0.8 + u * 0.1];
-    const c = vein ? hsl(110, 0.4, 0.42) : hsl(125, 0.5, 0.24 + 0.12 * (1 - Math.abs(v)));
-    pos.set(leaf(0.75), i * 3); pos2.set(leaf(1), i * 3); col.set(c, i * 3); col2.set(c, i * 3); bloomDelay[i] = 0.2 + rnd() * 0.3;
-  }
-  return { pos, col, pos2, col2, bloomDelay };
-}
-
 // Edit this list to make the hero about you. build() may return a Promise.
 export const SHAPES = [
 // Captions come from i18n.js (DICT[lang].shapes[key]).
@@ -710,5 +707,5 @@ export const SHAPES = [
   { key: 'webdev', build: (n) => sampleDrawing(drawWebDev(640), n), crisp: true },
   { key: 'sysdev', build: (n) => sampleDrawing(drawSysDev(640), n), crisp: true },
   { key: 'design', build: (n) => sampleDrawing(drawDesign(640), n), crisp: true },
-  { key: 'rose', build: rose, bloom: true, crisp: true },
+  { key: 'rose', build: (n) => sampleDrawing(drawRose(640), n, { width: 4.0, threshold: 0.24 }), crisp: true },
 ];
