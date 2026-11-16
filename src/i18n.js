@@ -20,13 +20,12 @@ export const DICT = {
     'avatar.alt': 'Serion のロゴ（鶴と富士山）',
     'about.no': '01 — ABOUT', 'about.title': '「こんなこと頼めるかな？」から、<br />一緒にかたちにします。',
     'about.body': '「こういう仕組みを作りたい」「今の作業を効率化したい」。そんな抽象的なご要望からでも大丈夫です。10年以上のWeb・システム開発の経験をもとに、ビジネスの目的を丁寧に汲み取り、要件定義から実装、公開後の運用まで一貫してサポートします。技術のことがよく分からない段階での「まずは壁打ちから」というご相談も大歓迎です。',
-    stat1: '年以上の開発経験', stat2: '主な開発言語（PHP / JS / Java / Python）', stat3: '% 成果を重視したご提案',
+    stat1: '年以上の開発経験', stat2: '主な開発言語（PHP / JS / Python）', stat3: '% 成果を重視したご提案',
 
     'svc.no': '02 — SERVICES', 'svc.title': '主な対応領域',
 
     'values.no': '04 — VALUES', 'values.title': '「また次もお願いしたい」と<br />言っていただけることが、何よりの喜びです。',
     'values.body': 'まずは、今のお悩みや状況をお気軽にお聞かせください。一緒に整理しながら、本当に必要なことを見極め、最適な一歩をご提案します。',
-    'skills.title': '対応できる技術・ツール',
 
     'contact.no': '05 — CONTACT', 'contact.title': '「こんなこと頼めるかな？」<br />ということでも、お気軽にどうぞ。',
     'contact.body': '技術のことがよく分からない段階からの壁打ちも大歓迎です。ご相談・お見積もりは無料、内容を確認のうえ折り返しご連絡いたします。',
@@ -98,13 +97,12 @@ export const DICT = {
     'avatar.alt': 'Serion logo: a crane and Mt. Fuji',
     'about.no': '01 — ABOUT', 'about.title': 'Start with an idea.<br />We\'ll shape it together.',
     'about.body': "\"I want a system that does this.\" \"I'm tired of doing this by hand.\" A rough idea is all you need to get started. With 10+ years in web and systems development, I take the time to understand your business goals, then handle everything from requirements to launch and beyond. Not sure where to begin? I'm happy to just brainstorm with you first.",
-    stat1: '+ years in development', stat2: 'core languages (PHP / JS / Java / Python)', stat3: '% focused on results',
+    stat1: '+ years in development', stat2: 'core languages (PHP / JS / Python)', stat3: '% focused on results',
 
     'svc.no': '02 — SERVICES', 'svc.title': 'What I can help with',
 
     'values.no': '04 — VALUES', 'values.title': 'Nothing beats hearing,<br />"Let\'s work together again."',
     'values.body': "Tell me where things stand and what's getting in the way. Together, we'll figure out what you actually need right now and find the best first step.",
-    'skills.title': 'Tools & tech',
 
     'contact.no': '05 — CONTACT', 'contact.title': 'Not sure if I can help?<br />Just ask.',
     'contact.body': "Even if you're not sure what you need yet, I'm happy to brainstorm. Consultations and quotes are always free, and I'll get back to you soon.",
