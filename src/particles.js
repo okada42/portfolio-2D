@@ -109,7 +109,7 @@ void main(){
   gl_FragColor = vec4(uColor, smoothstep(.5,0.,d)*uOpacity*vA);
 }`;
 
-const TIMING = { form: 3.2, hold: 6.5, scatter: 2.6 };
+const TIMING = { form: 3.2, hold: 6.5, scatter: 2.6, budHold: 1.6, bloom: 5 };
 
 export function createScene(canvas, shapes, { count, small, reduceMotion, onShape, intro }) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
@@ -206,7 +206,7 @@ export function createScene(canvas, shapes, { count, small, reduceMotion, onShap
   // state machine: form -> hold -> scatter -> form(next)
   const state = { idx: -1, phase: 'idle', t0: 0, next: null };
   const clock = new THREE.Clock();
-  const T = reduceMotion ? { form: 1.2, hold: 12, scatter: 1 } : TIMING;
+  const T = reduceMotion ? { form: 1.2, hold: 12, scatter: 1, budHold: 0, bloom: 0.01 } : TIMING;
 
   function form(now) {
     const idx = state.next ?? (state.idx + 1) % shapes.length;
@@ -222,7 +222,18 @@ export function createScene(canvas, shapes, { count, small, reduceMotion, onShap
     touch();
     U.uT.value = 0;
     state.phase = 'form'; state.t0 = now;
+    state.bloomed = false;
     onShape?.(idx);
+  }
+  // for blooming shapes: glide from the bud (pos) to the open form (pos2) without scattering
+  function startBloom(now) {
+    const s = shapes[state.idx];
+    from.set(s.pos); cFrom.set(s.col);
+    to.set(s.pos2); cTo.set(s.col2);
+    delay.set(s.bloomDelay);
+    touch();
+    U.uT.value = 0;
+    state.phase = 'bloom'; state.t0 = now;
   }
   // ---------- intro ----------
   // crane swoops in from the distance -> AI materializes ahead -> AI flies onto the crane's back
@@ -287,7 +298,7 @@ export function createScene(canvas, shapes, { count, small, reduceMotion, onShap
 
   function scatter(now) {
     const s = shapes[state.idx];
-    from.set(s.pos); cFrom.set(s.col);
+    if (state.bloomed) { from.set(s.pos2); cFrom.set(s.col2); } else { from.set(s.pos); cFrom.set(s.col); }
     makeCloud(); to.set(cloud);
     for (let i = 0; i < count; i++) delay[i] = rnd();
     touch();
@@ -361,7 +372,12 @@ export function createScene(canvas, shapes, { count, small, reduceMotion, onShap
       if (e >= T.form) { state.phase = 'hold'; state.t0 = now; }
     } else if (state.phase === 'hold') {
       U.uChaos.value = 0;
-      if (e >= T.hold) scatter(now);
+      if (shapes[state.idx]?.bloom && !state.bloomed) { if (e >= T.budHold) startBloom(now); }
+      else if (e >= T.hold) scatter(now);
+    } else if (state.phase === 'bloom') {
+      U.uT.value = Math.min(1, e / T.bloom);
+      U.uChaos.value = 0;
+      if (e >= T.bloom) { state.bloomed = true; state.phase = 'hold'; state.t0 = now; }
     } else if (state.phase === 'scatter') {
       U.uT.value = Math.min(1, e / T.scatter);
       U.uChaos.value = U.uT.value;
