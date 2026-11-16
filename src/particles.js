@@ -332,6 +332,18 @@ export function createScene(canvas, shapes, { count, small, reduceMotion, onShap
     if (state.phase.startsWith('intro')) U.uAIHover.value.copy(HOVER);
     group.position.set(narrow ? 0 : 1.3, narrow ? 0.9 : 0.1, 0);
     group.scale.setScalar(narrow ? Math.min(1, (w / h) * 1.1) : 1);
+    if (portrait) {
+      // phones: fit the scene into the free band between the shape caption and the hero text
+      const ppw = (2 * camera.position.z * Math.tan((camera.fov * Math.PI) / 360)) / h; // world units per pixel
+      const cTop = canvas.getBoundingClientRect().top;
+      const ui = document.querySelector('.shape-ui'), copy = document.querySelector('.hero-copy');
+      const top = (ui && !ui.hidden ? ui.getBoundingClientRect().bottom : 90) - cTop + 10;
+      const bottom = (copy ? copy.getBoundingClientRect().top : h * 0.55) - cTop - 14;
+      const band = Math.max(140, bottom - top);
+      const scale = Math.min(1, (band * ppw) / 4.2, (w * ppw) / 4.5);
+      group.scale.setScalar(scale);
+      group.position.set(0, (h / 2 - (top + bottom) / 2) * ppw, 0);
+    }
   }
   layout();
   const ro = new ResizeObserver(() => {
@@ -425,6 +437,7 @@ export function createScene(canvas, shapes, { count, small, reduceMotion, onShap
       if (introDone) form(clock.getElapsedTime());
       else introForm(clock.getElapsedTime());
     },
+    relayout() { layout(); },
     goTo(i) {
       state.next = i;
       if (state.phase === 'hold') scatter(clock.getElapsedTime());

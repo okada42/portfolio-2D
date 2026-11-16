@@ -85,6 +85,10 @@ function hasWebGL() {
     renderShapeUI(false);
     dots.addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) scene.goTo(+b.dataset.i); });
     ui.hidden = false;
+    // re-fit the scene on phones once the caption is visible, and whenever the text changes size
+    scene.relayout();
+    onLangChange(() => requestAnimationFrame(() => scene.relayout()));
+    document.fonts?.ready.then(() => scene.relayout());
     onDone = () => scene.start();
     if (finished) scene.start();
     bump(10);
