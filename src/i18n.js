@@ -66,6 +66,7 @@ export const DICT = {
     'sv2.t': 'Webアプリケーション開発', 'sv2.d': '業務やサービスの内容に合わせたWebアプリを、要件定義から開発します。',
     'sv3.t': 'API連携・システム連携', 'sv3.d': '外部サービスや今お使いのシステムをつなぎ、データのやり取りを自動化します。',
     'sv4.t': '既存システムの保守・機能追加', 'sv4.d': '今の環境を活かしながら、改善や機能追加を行います。',
+    'sv12.t': 'Webサイトのリニューアル', 'sv12.d': '古くなったサイトを、見やすく・更新しやすく・成果につながるデザインと構成に一新します。',
     'sv5.t': 'デザイン制作', 'sv5.d': 'Figma・Photoshop・Illustrator で、Webデザイン・UI設計・バナーなどを制作します。',
     'sv6.t': '業務プロセスの自動化', 'sv6.d': '受付・集計・転記・通知など、毎日の定型業務を仕組み化し、手作業とミスを減らします。',
     'sv7.t': '予約・顧客管理システム', 'sv7.d': 'Web予約の受付から顧客情報の管理、リマインド連絡まで、お店や事業に合わせて構築します。',
@@ -76,7 +77,7 @@ export const DICT = {
     'shape.show': '{label}を表示',
     shapes: {
       crane: ['鶴', '技術で、より高く、より遠くへ'],
-      heart: ['真心', 'ひとつひとつ、心を込めて'], auto: ['自動化', '手作業を、もっと少なく'],
+      heart: ['真心', 'ひとつひとつ、心を込めて'], webdev: ['Web開発', 'つながる仕組みを、ひとつに'],
       data: ['データ', '集計もレポートも自動で'], web: ['Web', 'ホームページ・LP・Webアプリ'], system: ['システム連携', '今ある仕組みに、安全につなぐ'],
     },
   },
@@ -143,6 +144,7 @@ export const DICT = {
     'sv2.t': 'Web applications', 'sv2.d': 'Custom web apps built around your business, from requirements to launch.',
     'sv3.t': 'API & system integrations', 'sv3.d': 'Connecting your tools and services so data flows between them automatically.',
     'sv4.t': 'Maintenance & upgrades', 'sv4.d': 'Improving and extending the systems you already have.',
+    'sv12.t': 'Website redesigns', 'sv12.d': 'Refreshing outdated sites with a modern look, easier updates, and a layout built to convert.',
     'sv5.t': 'Design', 'sv5.d': 'Web design, UI, banners, and graphics in Figma, Photoshop, and Illustrator.',
     'sv6.t': 'Business process automation', 'sv6.d': 'Turning routine work like intake, data entry, and notifications into automated workflows, with less manual effort and fewer errors.',
     'sv7.t': 'Booking & customer management', 'sv7.d': 'Online booking, customer records, and appointment reminders, set up to fit the way your business runs.',
@@ -153,7 +155,7 @@ export const DICT = {
     'shape.show': 'Show {label}',
     shapes: {
       crane: ['CRANE', 'Technology that takes you further'],
-      heart: ['WITH HEART', 'Care in every detail'], auto: ['AUTOMATE', 'Less busywork'],
+      heart: ['WITH HEART', 'Care in every detail'], webdev: ['WEB DEV', 'Everything connected, built as one'],
       data: ['DATA', 'Reports that run themselves'], web: ['WEB', 'Websites, landing pages & web apps'], system: ['INTEGRATE', 'Secure connections to the systems you have'],
     },
   },

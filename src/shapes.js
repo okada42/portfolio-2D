@@ -304,12 +304,116 @@ function heart(n) {
   return { pos, col };
 }
 
+// ---------- Web development: hexagon nodes with web icons on a circuit network ----------
+// Original drawing (2D canvas), sampled into particles with its colors. No text.
+export function drawWebDev(size = 640) {
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  const g = c.getContext('2d');
+  const k = size / 640;
+  g.scale(k, k);
+  g.fillStyle = '#000'; g.fillRect(0, 0, 640, 640);
+  g.lineCap = 'round'; g.lineJoin = 'round';
+  const CYAN = '#5fd4ff', WHITE = '#eaf8ff', HUB = [320, 330];
+
+  const nodes = [
+    { x: 320, y: 120, icon: 'code' }, { x: 505, y: 215, icon: 'cloud' }, { x: 505, y: 440, icon: 'db' },
+    { x: 320, y: 545, icon: 'laptop' }, { x: 135, y: 440, icon: 'phone' }, { x: 135, y: 215, icon: 'browser' },
+  ];
+  // circuit traces: hub -> each node with an elbow, plus a ring between neighbours
+  g.strokeStyle = 'rgba(95,212,255,.75)'; g.lineWidth = 3;
+  for (const n of nodes) {
+    const mx = (HUB[0] + n.x) / 2;
+    g.beginPath(); g.moveTo(...HUB); g.lineTo(mx, HUB[1]); g.lineTo(mx, n.y); g.lineTo(n.x, n.y); g.stroke();
+  }
+  g.strokeStyle = 'rgba(95,212,255,.35)'; g.lineWidth = 2;
+  for (let i = 0; i < nodes.length; i++) {
+    const a = nodes[i], b = nodes[(i + 1) % nodes.length];
+    g.beginPath(); g.moveTo(a.x, a.y); g.lineTo(b.x, b.y); g.stroke();
+  }
+  // short branch traces ending in dots (the "circuit" texture)
+  const rand = (() => { let t = 7; return () => ((t = (t * 9301 + 49297) % 233280) / 233280); })();
+  g.fillStyle = WHITE;
+  for (let i = 0; i < 26; i++) {
+    const n = nodes[i % nodes.length], ang = rand() * Math.PI * 2, r0 = 62, r1 = 90 + rand() * 60;
+    const x0 = n.x + Math.cos(ang) * r0, y0 = n.y + Math.sin(ang) * r0, x1 = n.x + Math.cos(ang) * r1, y1 = n.y + Math.sin(ang) * r1;
+    if (x1 < 20 || x1 > 620 || y1 < 20 || y1 > 620) continue;
+    g.strokeStyle = 'rgba(95,212,255,.5)'; g.lineWidth = 2;
+    g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke();
+    g.beginPath(); g.arc(x1, y1, 4, 0, Math.PI * 2); g.fill();
+  }
+
+  const hex = (x, y, r) => { g.beginPath(); for (let i = 0; i < 6; i++) { const a = Math.PI / 6 + i * Math.PI / 3; g[i ? 'lineTo' : 'moveTo'](x + Math.cos(a) * r, y + Math.sin(a) * r); } g.closePath(); };
+  const icon = (n) => {
+    const { x, y } = n;
+    g.strokeStyle = WHITE; g.fillStyle = WHITE; g.lineWidth = 5;
+    if (n.icon === 'code') { // </>
+      g.beginPath(); g.moveTo(x - 12, y - 16); g.lineTo(x - 28, y); g.lineTo(x - 12, y + 16); g.stroke();
+      g.beginPath(); g.moveTo(x + 12, y - 16); g.lineTo(x + 28, y); g.lineTo(x + 12, y + 16); g.stroke();
+      g.beginPath(); g.moveTo(x + 6, y - 20); g.lineTo(x - 6, y + 20); g.stroke();
+    } else if (n.icon === 'cloud') {
+      g.beginPath(); g.arc(x - 12, y + 4, 13, Math.PI * 0.5, Math.PI * 1.5); g.arc(x + 2, y - 8, 17, Math.PI, Math.PI * 1.95); g.arc(x + 16, y + 4, 12, Math.PI * 1.5, Math.PI * 0.5); g.closePath(); g.fill();
+    } else if (n.icon === 'db') {
+      for (const dy of [-14, 0, 14]) { g.beginPath(); g.ellipse(x, y + dy, 22, 7, 0, 0, Math.PI * 2); g.stroke(); }
+      g.beginPath(); g.moveTo(x - 22, y - 14); g.lineTo(x - 22, y + 14); g.moveTo(x + 22, y - 14); g.lineTo(x + 22, y + 14); g.stroke();
+    } else if (n.icon === 'laptop') {
+      g.strokeRect(x - 22, y - 18, 44, 28);
+      g.beginPath(); g.moveTo(x - 32, y + 18); g.lineTo(x + 32, y + 18); g.stroke();
+    } else if (n.icon === 'phone') {
+      g.beginPath(); g.roundRect(x - 13, y - 24, 26, 48, 5); g.stroke();
+      g.beginPath(); g.arc(x, y + 16, 2.5, 0, Math.PI * 2); g.fill();
+    } else if (n.icon === 'browser') {
+      g.strokeRect(x - 26, y - 18, 52, 36);
+      g.beginPath(); g.moveTo(x - 26, y - 8); g.lineTo(x + 26, y - 8); g.stroke();
+      for (const dx of [-20, -13, -6]) { g.beginPath(); g.arc(x + dx, y - 13, 1.8, 0, Math.PI * 2); g.fill(); }
+    }
+  };
+  for (const n of nodes) {
+    // soft glow behind each hexagon
+    const glow = g.createRadialGradient(n.x, n.y, 10, n.x, n.y, 80);
+    glow.addColorStop(0, 'rgba(60,160,255,.35)'); glow.addColorStop(1, 'rgba(60,160,255,0)');
+    g.fillStyle = glow; g.beginPath(); g.arc(n.x, n.y, 80, 0, Math.PI * 2); g.fill();
+    g.fillStyle = '#000'; hex(n.x, n.y, 58); g.fill();
+    g.strokeStyle = CYAN; g.lineWidth = 5; hex(n.x, n.y, 58); g.stroke();
+    g.strokeStyle = 'rgba(95,212,255,.45)'; g.lineWidth = 2; hex(n.x, n.y, 68); g.stroke();
+    icon(n);
+  }
+  // central hub: glowing core with rings (no text)
+  const core = g.createRadialGradient(...HUB, 4, ...HUB, 70);
+  core.addColorStop(0, 'rgba(230,248,255,1)'); core.addColorStop(0.35, 'rgba(95,212,255,.8)'); core.addColorStop(1, 'rgba(95,212,255,0)');
+  g.fillStyle = core; g.beginPath(); g.arc(...HUB, 70, 0, Math.PI * 2); g.fill();
+  g.strokeStyle = CYAN; g.lineWidth = 3;
+  for (const r of [34, 48]) { g.beginPath(); g.arc(...HUB, r, 0, Math.PI * 2); g.stroke(); }
+  return c;
+}
+function sampleDrawing(c, n, { width = 3.7, depth = 0.35, threshold = 0.18 } = {}) {
+  const W = c.width, H = c.height;
+  const d = c.getContext('2d').getImageData(0, 0, W, H).data;
+  const pts = [];
+  for (let y = 0; y < H; y += 2)
+    for (let x = 0; x < W; x += 2) {
+      const i = (y * W + x) * 4, r = d[i] / 255, gg = d[i + 1] / 255, b = d[i + 2] / 255;
+      const lum = 0.3 * r + 0.55 * gg + 0.15 * b;
+      if (lum > threshold || (lum > 0.06 && rnd() < lum * 2)) pts.push(x, y, r, gg, b, lum);
+    }
+  const pos = new Float32Array(n * 3), col = new Float32Array(n * 3);
+  const count = pts.length / 6, s = width / W;
+  for (let i = 0; i < n; i++) {
+    const k = (rnd() * count | 0) * 6;
+    pos[i * 3] = (pts[k] + rnd() * 2 - W / 2) * s;
+    pos[i * 3 + 1] = -(pts[k + 1] + rnd() * 2 - H / 2) * s;
+    pos[i * 3 + 2] = (pts[k + 5] - 0.5) * depth + gauss() * 0.04; // brighter = closer
+    col.set([pts[k + 2], pts[k + 3], pts[k + 4]], i * 3);
+  }
+  return { pos, col };
+}
+
 // Edit this list to make the hero about you. build() may return a Promise.
 export const SHAPES = [
 // Captions come from i18n.js (DICT[lang].shapes[key]).
   { key: 'crane', build: (n) => image(avatarUrl, n, { width: 3.7, depth: 0.22, threshold: 0.5 }) },
   { key: 'heart', build: heart },
-  { key: 'auto', build: knot },
+  { key: 'webdev', build: (n) => sampleDrawing(drawWebDev(640), n) },
   { key: 'data', build: helix },
   { key: 'web', build: globe },
   { key: 'system', build: cubeGrid },
