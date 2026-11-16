@@ -175,7 +175,8 @@ function renderActive() {
 // ---------- render results ----------
 function sorted(list) {
   const byYear = (a, b) => (b.year || 0) - (a.year || 0);
-  return [...list].sort(state.sort === 'new' ? (a, b) => byYear(a, b) || b.featured - a.featured : (a, b) => b.featured - a.featured || byYear(a, b));
+  // real projects always come before samples
+  return [...list].sort(state.sort === 'new' ? (a, b) => a.sample - b.sample || byYear(a, b) || b.featured - a.featured : (a, b) => a.sample - b.sample || b.featured - a.featured || byYear(a, b));
 }
 
 function renderGrid() {

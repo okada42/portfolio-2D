@@ -54,6 +54,8 @@ export const SKILL_GROUPS = [
     skills: [
       // CMS & site builders
       'WordPress', 'WooCommerce', 'Shopify', 'Wix', 'STUDIO',
+      // hosting & operations
+      'Server migration',
       // business & automation
       'kintone', 'Zapier', 'Make', 'Notion', 'Google Workspace', 'Excel / CSV',
       // design
@@ -71,6 +73,7 @@ export const SEARCH_SYNONYMS = {
   ec: ['ecサイト', 'e-commerce', 'online store', 'ネットショップ'], 'ネットショップ': ['ec', 'online store'], store: ['ecサイト', 'online store'], shop: ['ecサイト', 'online store'],
   ai: ['ai', 'llm'], 'エーアイ': ['ai'],
   line: ['line公式', 'ライン'], 'ライン': ['line'],
+  'サーバー移転': ['server migration'], '移転': ['server migration'], 'ドメイン移管': ['server migration'], '静的': ['静的サイト', 'static'], static: ['静的'],
   'エクセル': ['excel'], 'フィグマ': ['figma'], 'フォトショップ': ['photoshop'], 'イラストレーター': ['illustrator'],
 };
 

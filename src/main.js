@@ -6,7 +6,8 @@ import { WORKS, cardHTML } from './works-render.js';
 // ---------- featured works (projects marked featured in data/works.csv) ----------
 function renderFeatured() {
   const grid = document.querySelector('#featured-grid');
-  const list = WORKS.filter((w) => w.featured).sort((a, b) => (b.year || 0) - (a.year || 0)).slice(0, 8);
+  // real projects always before samples, then newest first
+  const list = WORKS.filter((w) => w.featured).sort((a, b) => a.sample - b.sample || (b.year || 0) - (a.year || 0)).slice(0, 8);
   grid.innerHTML = list.map((w) => cardHTML(w, `works.html?p=${encodeURIComponent(w.id)}`).replace('class="w-card"', 'class="w-card reveal"')).join('');
   document.querySelector('#featured-note').hidden = !list.some((w) => w.sample);
   observeReveal(grid);
