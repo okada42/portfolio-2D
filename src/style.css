@@ -455,3 +455,21 @@ html[lang='ja'] .eyebrow { font-family: var(--sans); font-weight: 500; letter-sp
 .c-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; display: block; }
 .c-gh { background: rgba(255,255,255,.08); color: #f0f4fa; }
 .c-gh svg { width: 24px; height: 24px; }
+
+/* ================= Gradient card borders ================= */
+/* A thin cyan -> purple -> amber line drawn with a masked ::before, so card backgrounds stay as they are.
+   Soft at rest; brighter on hover with a slow drift of the gradient. */
+:is(.svc, .w-card, .why-card, .brand, .c-link, .contact-form, .filters) { position: relative; border-color: transparent !important; }
+:is(.svc, .w-card, .why-card, .brand, .c-link, .contact-form, .filters)::before {
+  content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  border-radius: inherit; padding: 1.5px;
+  background: linear-gradient(135deg, #5fd4ff, #b98cff 45%, #ffb86b 75%, #5fd4ff) 0 0 / 220% 220%;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  opacity: .45; transition: opacity .35s ease;
+}
+:is(.svc, .w-card, .why-card, .c-link):hover::before { opacity: 1; animation: border-drift 3.5s linear infinite; }
+:is(.brand, .contact-form)::before { opacity: .6; }
+.contact-form:focus-within::before { opacity: .9; }
+@keyframes border-drift { to { background-position: 220% 220%; } }
+@media (prefers-reduced-motion: reduce) { :is(.svc, .w-card, .why-card, .c-link):hover::before { animation: none; } }
