@@ -70,6 +70,7 @@ export const SEARCH_SYNONYMS = {
   lp: ['ランディングページ', 'landing page'], 'ランディングページ': ['lp'],
   ec: ['ecサイト', 'e-commerce', 'online store', 'ネットショップ'], 'ネットショップ': ['ec', 'online store'], store: ['ecサイト', 'online store'], shop: ['ecサイト', 'online store'],
   ai: ['ai', 'llm'], 'エーアイ': ['ai'],
+  line: ['line公式', 'ライン'], 'ライン': ['line'],
   'エクセル': ['excel'], 'フィグマ': ['figma'], 'フォトショップ': ['photoshop'], 'イラストレーター': ['illustrator'],
 };
 
