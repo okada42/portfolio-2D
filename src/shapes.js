@@ -321,7 +321,7 @@ export function drawWebDev(size = 640) {
     { x: 320, y: 545, icon: 'laptop' }, { x: 135, y: 440, icon: 'phone' }, { x: 135, y: 215, icon: 'browser' },
   ];
   // circuit traces: hub -> each node with an elbow, plus a ring between neighbours
-  g.strokeStyle = 'rgba(95,212,255,.75)'; g.lineWidth = 3;
+  g.strokeStyle = 'rgba(95,212,255,.85)'; g.lineWidth = 4;
   for (const n of nodes) {
     const mx = (HUB[0] + n.x) / 2;
     g.beginPath(); g.moveTo(...HUB); g.lineTo(mx, HUB[1]); g.lineTo(mx, n.y); g.lineTo(n.x, n.y); g.stroke();
@@ -346,7 +346,7 @@ export function drawWebDev(size = 640) {
   const hex = (x, y, r) => { g.beginPath(); for (let i = 0; i < 6; i++) { const a = Math.PI / 6 + i * Math.PI / 3; g[i ? 'lineTo' : 'moveTo'](x + Math.cos(a) * r, y + Math.sin(a) * r); } g.closePath(); };
   const icon = (n) => {
     const { x, y } = n;
-    g.strokeStyle = WHITE; g.fillStyle = WHITE; g.lineWidth = 5;
+    g.strokeStyle = WHITE; g.fillStyle = WHITE; g.lineWidth = 7;
     if (n.icon === 'code') { // </>
       g.beginPath(); g.moveTo(x - 12, y - 16); g.lineTo(x - 28, y); g.lineTo(x - 12, y + 16); g.stroke();
       g.beginPath(); g.moveTo(x + 12, y - 16); g.lineTo(x + 28, y); g.lineTo(x + 12, y + 16); g.stroke();
@@ -371,19 +371,19 @@ export function drawWebDev(size = 640) {
   for (const n of nodes) {
     // soft glow behind each hexagon
     const glow = g.createRadialGradient(n.x, n.y, 10, n.x, n.y, 80);
-    glow.addColorStop(0, 'rgba(60,160,255,.35)'); glow.addColorStop(1, 'rgba(60,160,255,0)');
+    glow.addColorStop(0, 'rgba(60,160,255,.12)'); glow.addColorStop(1, 'rgba(60,160,255,0)');
     g.fillStyle = glow; g.beginPath(); g.arc(n.x, n.y, 80, 0, Math.PI * 2); g.fill();
     g.fillStyle = '#000'; hex(n.x, n.y, 58); g.fill();
-    g.strokeStyle = CYAN; g.lineWidth = 5; hex(n.x, n.y, 58); g.stroke();
-    g.strokeStyle = 'rgba(95,212,255,.45)'; g.lineWidth = 2; hex(n.x, n.y, 68); g.stroke();
+    g.strokeStyle = CYAN; g.lineWidth = 7; hex(n.x, n.y, 58); g.stroke();
+    g.strokeStyle = 'rgba(95,212,255,.6)'; g.lineWidth = 2.5; hex(n.x, n.y, 70); g.stroke();
     icon(n);
   }
   // central hub: glowing core with rings (no text)
   const core = g.createRadialGradient(...HUB, 4, ...HUB, 70);
-  core.addColorStop(0, 'rgba(230,248,255,1)'); core.addColorStop(0.35, 'rgba(95,212,255,.8)'); core.addColorStop(1, 'rgba(95,212,255,0)');
-  g.fillStyle = core; g.beginPath(); g.arc(...HUB, 70, 0, Math.PI * 2); g.fill();
-  g.strokeStyle = CYAN; g.lineWidth = 3;
-  for (const r of [34, 48]) { g.beginPath(); g.arc(...HUB, r, 0, Math.PI * 2); g.stroke(); }
+  core.addColorStop(0, 'rgba(230,248,255,1)'); core.addColorStop(0.25, 'rgba(95,212,255,.7)'); core.addColorStop(1, 'rgba(95,212,255,0)');
+  g.fillStyle = core; g.beginPath(); g.arc(...HUB, 26, 0, Math.PI * 2); g.fill();
+  g.strokeStyle = CYAN; g.lineWidth = 5;
+  for (const r of [34, 50]) { g.beginPath(); g.arc(...HUB, r, 0, Math.PI * 2); g.stroke(); }
   return c;
 }
 // ---------- System development: gear + </> core, orbiting service icons, wireframe open hand ----------
@@ -397,20 +397,20 @@ export function drawSysDev(size = 640) {
   const CY = '#5fd4ff', WH = '#eaf8ff', CX = 320, CYY = 250;
 
   // HUD rings with tick marks
-  g.strokeStyle = 'rgba(95,212,255,.35)'; g.lineWidth = 2;
+  g.strokeStyle = 'rgba(95,212,255,.6)'; g.lineWidth = 3;
   g.beginPath(); g.arc(CX, CYY, 210, Math.PI * 0.95, Math.PI * 2.05); g.stroke();
   for (let i = 0; i < 72; i++) {
     const a = Math.PI * 0.95 + (i / 72) * Math.PI * 1.1, r0 = 214, r1 = i % 6 ? 222 : 232;
     g.beginPath(); g.moveTo(CX + Math.cos(a) * r0, CYY + Math.sin(a) * r0); g.lineTo(CX + Math.cos(a) * r1, CYY + Math.sin(a) * r1); g.stroke();
   }
-  g.strokeStyle = 'rgba(95,212,255,.55)'; g.lineWidth = 3;
+  g.strokeStyle = 'rgba(95,212,255,.75)'; g.lineWidth = 4;
   g.beginPath(); g.arc(CX, CYY, 150, Math.PI * 0.85, Math.PI * 2.15); g.stroke();
 
   // core glow
   const glow = g.createRadialGradient(CX, CYY, 20, CX, CYY, 130);
-  glow.addColorStop(0, 'rgba(95,212,255,.55)'); glow.addColorStop(1, 'rgba(95,212,255,0)');
+  glow.addColorStop(0, 'rgba(95,212,255,.15)'); glow.addColorStop(1, 'rgba(95,212,255,0)');
   g.fillStyle = glow; g.beginPath(); g.arc(CX, CYY, 130, 0, Math.PI * 2); g.fill();
-  g.strokeStyle = CY; g.lineWidth = 4; g.beginPath(); g.arc(CX, CYY, 104, 0, Math.PI * 2); g.stroke();
+  g.strokeStyle = CY; g.lineWidth = 6; g.beginPath(); g.arc(CX, CYY, 104, 0, Math.PI * 2); g.stroke();
 
   // gear
   const teeth = 10, rO = 82, rI = 66;
@@ -433,8 +433,8 @@ export function drawSysDev(size = 640) {
     const a = Math.PI * 0.95 + (i / (icons.length - 1)) * Math.PI * 1.1;
     const x = CX + Math.cos(a) * 170, y = CYY + Math.sin(a) * 170;
     g.fillStyle = '#000'; g.beginPath(); g.arc(x, y, 34, 0, Math.PI * 2); g.fill();
-    g.strokeStyle = CY; g.lineWidth = 4; g.beginPath(); g.arc(x, y, 34, 0, Math.PI * 2); g.stroke();
-    g.strokeStyle = WH; g.fillStyle = WH; g.lineWidth = 4;
+    g.strokeStyle = CY; g.lineWidth = 6; g.beginPath(); g.arc(x, y, 36, 0, Math.PI * 2); g.stroke();
+    g.strokeStyle = WH; g.fillStyle = WH; g.lineWidth = 5.5;
     if (name === 'loop') { // infinity
       g.beginPath(); for (let t = 0; t <= Math.PI * 2 + 0.01; t += 0.1) { const d = 1 + Math.sin(t) ** 2; g[t ? 'lineTo' : 'moveTo'](x + 17 * Math.cos(t) / d, y + 17 * Math.sin(t) * Math.cos(t) / d); } g.stroke();
     } else if (name === 'shield') {
@@ -492,9 +492,9 @@ export function drawSysDev(size = 640) {
   const mesh = document.createElement('canvas'); mesh.width = mesh.height = 640;
   const m = mesh.getContext('2d');
   const hg = m.createLinearGradient(180, 0, 640, 0);
-  hg.addColorStop(0, 'rgba(130,210,255,.32)'); hg.addColorStop(1, 'rgba(130,210,255,.12)');
+  hg.addColorStop(0, 'rgba(130,210,255,.06)'); hg.addColorStop(1, 'rgba(130,210,255,.03)');
   m.fillStyle = hg; m.fillRect(0, 0, 640, 640);
-  m.strokeStyle = 'rgba(160,225,255,.9)'; m.lineWidth = 1.4;
+  m.strokeStyle = 'rgba(170,230,255,1)'; m.lineWidth = 2;
   for (let i = -6; i < 22; i++) { const y0 = 360 + i * 8; m.beginPath(); m.moveTo(180, y0 + 30); m.bezierCurveTo(320, y0 + 34, 470, y0 + 8, 640, y0 + 52); m.stroke(); }
   for (let x = 180; x < 640; x += 12) { m.beginPath(); m.moveTo(x, 340); m.lineTo(x - 10, 540); m.stroke(); }
   // one combined mask (union of all parts), then keep the mesh only inside it
@@ -504,11 +504,11 @@ export function drawSysDev(size = 640) {
   m.drawImage(mask, 0, 0);
   g.drawImage(mesh, 0, 0);
   // outlines: drawn back-to-front so each finger edge stays visible over the one behind
-  g.lineWidth = 2.6;
+  g.lineWidth = 4;
   for (const q of parts) { g.strokeStyle = CY; g.stroke(q); }
   // light beam from palm to core
   const beam = g.createLinearGradient(0, 400, 0, 330);
-  beam.addColorStop(0, 'rgba(95,212,255,.0)'); beam.addColorStop(1, 'rgba(95,212,255,.35)');
+  beam.addColorStop(0, 'rgba(95,212,255,.0)'); beam.addColorStop(1, 'rgba(95,212,255,.12)');
   g.fillStyle = beam; g.beginPath(); g.moveTo(250, 405); g.lineTo(380, 405); g.lineTo(358, 330); g.lineTo(282, 330); g.closePath(); g.fill();
   return c;
 }
@@ -537,20 +537,20 @@ export function drawDesign(size = 640) {
   const sheet = (cx, cy, w, h, rot, fill) => {
     g.save(); g.translate(cx, cy); g.rotate(rot);
     g.fillStyle = fill; g.fillRect(-w / 2, -h / 2, w, h);
-    g.strokeStyle = 'rgba(200,225,255,.55)'; g.lineWidth = 2; g.strokeRect(-w / 2, -h / 2, w, h);
+    g.strokeStyle = 'rgba(200,225,255,.75)'; g.lineWidth = 3; g.strokeRect(-w / 2, -h / 2, w, h);
     g.restore();
   };
   // back sheet: small thumbnail sketches
   sheet(250, 290, 330, 400, -0.16, 'rgba(160,190,230,.03)');
   g.save(); g.translate(250, 290); g.rotate(-0.16);
-  g.strokeStyle = 'rgba(190,215,250,.55)'; g.lineWidth = 2;
+  g.strokeStyle = 'rgba(190,215,250,.7)'; g.lineWidth = 3;
   for (let i = 0; i < 3; i++) for (let j = 0; j < 2; j++) { const x = -140 + j * 140, y = -170 + i * 115; box(x, y, 120, 90); line(x + 10, y + 70, x + 70, y + 70); }
   g.restore();
 
   // front sheet: website wireframe in progress
   sheet(350, 320, 360, 440, 0.06, 'rgba(235,242,255,.05)');
   g.save(); g.translate(350, 320); g.rotate(0.06);
-  g.strokeStyle = 'rgba(230,240,255,.95)'; g.lineWidth = 2.6;
+  g.strokeStyle = 'rgba(235,244,255,1)'; g.lineWidth = 3.6;
   const L = -150, T = -190;
   box(L, T, 300, 34);                                  // header bar
   sketch([[L + 12, T + 12], [L + 50, T + 12], [L + 50, T + 22], [L + 12, T + 22]], true); // logo
@@ -561,12 +561,12 @@ export function drawDesign(size = 640) {
   sketch([[L, T + 222], [L + 90, T + 222], [L + 96, T + 234], [L + 90, T + 246], [L, T + 246], [L - 6, T + 234]], true); // button
   for (let i = 0; i < 3; i++) { const x = L + i * 104; box(x, T + 268, 92, 80); g.beginPath(); g.arc(x + 22, T + 290, 11, 0, Math.PI * 2); g.stroke(); line(x + 10, T + 318, x + 76, T + 318); line(x + 10, T + 332, x + 60, T + 332); }
   // margin notes and an arrow, like a designer's annotations
-  g.strokeStyle = 'rgba(255,190,120,.95)'; g.lineWidth = 2.4;
+  g.strokeStyle = 'rgba(255,190,120,1)'; g.lineWidth = 3.4;
   sketch([[L + 228, T + 210], [L + 262, T + 200], [L + 286, T + 214]]);
   sketch([[L + 286, T + 214], [L + 278, T + 206]]); sketch([[L + 286, T + 214], [L + 276, T + 218]]);
   g.beginPath(); g.ellipse(L + 45, T + 234, 66, 22, -0.05, 0, Math.PI * 2); g.stroke(); // circled button
   // the line being drawn right now (ends where the pencil tip is)
-  g.strokeStyle = 'rgba(230,240,255,.95)'; g.lineWidth = 2.6;
+  g.strokeStyle = 'rgba(235,244,255,1)'; g.lineWidth = 3.6;
   line(L, T + 372, L + 150, T + 372);
   g.restore();
 
@@ -590,29 +590,32 @@ export function drawDesign(size = 640) {
   g.fillStyle = '#ff8fa3'; g.beginPath(); g.roundRect(len - 24, -w / 2, 26, w, [0, 8, 8, 0]); g.fill();
   g.restore();
   // a small spark at the tip: the moment of drawing
-  const sp = g.createRadialGradient(tx, ty, 1, tx, ty, 22);
+  const sp = g.createRadialGradient(tx, ty, 1, tx, ty, 10);
   sp.addColorStop(0, 'rgba(255,255,255,1)'); sp.addColorStop(1, 'rgba(255,255,255,0)');
-  g.fillStyle = sp; g.beginPath(); g.arc(tx, ty, 22, 0, Math.PI * 2); g.fill();
+  g.fillStyle = sp; g.beginPath(); g.arc(tx, ty, 10, 0, Math.PI * 2); g.fill();
   return c;
 }
 
-function sampleDrawing(c, n, { width = 3.7, depth = 0.35, threshold = 0.18 } = {}) {
+function sampleDrawing(c, n, { width = 4.2, depth = 0.1, threshold = 0.3 } = {}) {
   const W = c.width, H = c.height;
   const d = c.getContext('2d').getImageData(0, 0, W, H).data;
+  // candidates: every pixel bright enough to be part of a line or fill (no faint glow haze)
   const pts = [];
-  for (let y = 0; y < H; y += 2)
-    for (let x = 0; x < W; x += 2) {
+  for (let y = 0; y < H; y++)
+    for (let x = 0; x < W; x++) {
       const i = (y * W + x) * 4, r = d[i] / 255, gg = d[i + 1] / 255, b = d[i + 2] / 255;
       const lum = 0.3 * r + 0.55 * gg + 0.15 * b;
-      if (lum > threshold || (lum > 0.06 && rnd() < lum * 2)) pts.push(x, y, r, gg, b, lum);
+      if (lum > threshold) pts.push(x, y, r, gg, b, lum);
     }
   const pos = new Float32Array(n * 3), col = new Float32Array(n * 3);
   const count = pts.length / 6, s = width / W;
   for (let i = 0; i < n; i++) {
-    const k = (rnd() * count | 0) * 6;
-    pos[i * 3] = (pts[k] + rnd() * 2 - W / 2) * s;
-    pos[i * 3 + 1] = -(pts[k + 1] + rnd() * 2 - H / 2) * s;
-    pos[i * 3 + 2] = (pts[k + 5] - 0.5) * depth + gauss() * 0.04; // brighter = closer
+    // brighter pixels are picked more often, so crisp strokes get the most particles
+    let k;
+    do { k = (rnd() * count | 0) * 6; } while (rnd() > 0.35 + 0.65 * pts[k + 5]);
+    pos[i * 3] = (pts[k] + rnd() - W / 2) * s;
+    pos[i * 3 + 1] = -(pts[k + 1] + rnd() - H / 2) * s;
+    pos[i * 3 + 2] = (pts[k + 5] - 0.5) * depth + gauss() * 0.01;
     col.set([pts[k + 2], pts[k + 3], pts[k + 4]], i * 3);
   }
   return { pos, col };
@@ -629,12 +632,13 @@ function rose(n) {
     for (let j = 0; j < cnt; j++) petals.push({ l, phi: k++ * 2.39996 + l * 0.4, len: 0.34 + 0.1 * l, span: Math.PI / cnt * 1.3 });
   });
   const L = LAYERS.length - 1;
-  const nPetal = Math.floor(n * 0.72), nStem = Math.floor(n * 0.08), nLeaf = Math.floor(n * 0.14);
+  const nPetal = Math.floor(n * 0.8), nStem = Math.floor(n * 0.06), nLeaf = Math.floor(n * 0.1);
   const pos = new Float32Array(n * 3), pos2 = new Float32Array(n * 3);
   const col = new Float32Array(n * 3), col2 = new Float32Array(n * 3), bloomDelay = new Float32Array(n);
   const HEAD_Y = 0.55, TILT = -0.55;                   // rose head tipped toward the viewer
   const cT = Math.cos(TILT), sT = Math.sin(TILT);
-  const head = (x, y, z) => [x, HEAD_Y + y * cT - z * sT, y * sT + z * cT];
+  const HS = 1.3; // head size
+  const head = (x, y, z) => [x * HS, HEAD_Y + (y * cT - z * sT) * HS, (y * sT + z * cT) * HS];
 
   // point on one petal for a given openness (0 = bud, 1 = full bloom)
   function petalPoint(pt, u, v, open) {
@@ -652,15 +656,18 @@ function rose(n) {
     return head(Math.cos(ang) * rad, h - 0.25, Math.sin(ang) * rad);
   }
   function petalColor(pt, u, v, open) {
-    const lf = pt.l / L, edge = Math.abs(v) * 0.5 + u * 0.5;
-    const light = 0.28 + 0.2 * edge + 0.12 * lf * open - 0.08 * (1 - open);
-    return hsl(348 + 6 * lf - 4 * edge, 0.88, Math.min(0.62, light));
+    const lf = pt.l / L;
+    // a bright rim on every petal so each one reads as its own shape; deeper red toward the center
+    const rim = Math.abs(v) > 0.86 || u > 0.94;
+    const light = rim ? 0.62 + 0.08 * open : 0.24 + 0.14 * u + 0.08 * lf * open - 0.06 * (1 - open);
+    return hsl(rim ? 350 : 346 + 6 * lf, rim ? 0.95 : 0.85, light);
   }
 
   let i = 0;
   for (; i < nPetal; i++) {
     const pt = petals[(rnd() * petals.length) | 0];
-    const u = Math.sqrt(rnd()), v = rnd() * 2 - 1;
+    // more particles on petal rims and tips (they outline the petal), fewer in the middle
+    const u = Math.pow(rnd(), 0.55), v = (rnd() < 0.5 ? -1 : 1) * Math.pow(rnd(), 0.45);
     pos.set(petalPoint(pt, u, v, 0.05), i * 3); col.set(petalColor(pt, u, v, 0.05), i * 3);
     pos2.set(petalPoint(pt, u, v, 1), i * 3); col2.set(petalColor(pt, u, v, 1), i * 3);
     bloomDelay[i] = Math.min(1, (1 - pt.l / L) * 0.75 + rnd() * 0.15);   // outer petals open first
@@ -700,8 +707,8 @@ export const SHAPES = [
 // Captions come from i18n.js (DICT[lang].shapes[key]).
   { key: 'crane', build: (n) => image(avatarUrl, n, { width: 3.7, depth: 0.22, threshold: 0.5 }) },
   { key: 'heart', build: heart },
-  { key: 'webdev', build: (n) => sampleDrawing(drawWebDev(640), n) },
-  { key: 'sysdev', build: (n) => sampleDrawing(drawSysDev(640), n, { width: 3.8 }) },
-  { key: 'design', build: (n) => sampleDrawing(drawDesign(640), n, { width: 3.8, threshold: 0.22 }) },
-  { key: 'rose', build: rose, bloom: true },
+  { key: 'webdev', build: (n) => sampleDrawing(drawWebDev(640), n), crisp: true },
+  { key: 'sysdev', build: (n) => sampleDrawing(drawSysDev(640), n), crisp: true },
+  { key: 'design', build: (n) => sampleDrawing(drawDesign(640), n), crisp: true },
+  { key: 'rose', build: rose, bloom: true, crisp: true },
 ];

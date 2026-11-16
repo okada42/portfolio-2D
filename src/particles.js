@@ -26,6 +26,7 @@ uniform vec3 uBack;       // seat on the crane's back (crane-local)
 uniform float uAIScale;
 uniform float uAIGlow;
 uniform float uT;
+uniform float uCrisp;   // 1 = sharp mode for detailed drawings (uniform size, no drift)
 uniform float uTime;
 uniform float uSize;
 uniform float uPR;
@@ -65,7 +66,7 @@ void main(){
   // swirl mid-flight, faint breathing at rest
   float mid = sin(t*3.14159);
   float ph = aRand*6.2831 + uTime*.6;
-  p += vec3(sin(ph+p.y*2.), cos(ph*1.3+p.x*2.), sin(ph*.7+p.z*2.)) * (mid*.6 + uChaos*.5 + .004);
+  p += vec3(sin(ph+p.y*2.), cos(ph*1.3+p.x*2.), sin(ph*.7+p.z*2.)) * (mid*.6 + uChaos*.5 + .004 * (1. - uCrisp));
 
   // cursor pushes particles away
   vec3 d = p - uMouse;
@@ -73,12 +74,12 @@ void main(){
   p.xy += normalize(d.xy + 1e-4) * exp(-l*l*5.) * .55 * uMouseOn;
 
   vCol = mix(aColFrom, aColTo, t);
-  vAlpha = mix(.35, 1., 1. - uChaos) * (.55 + .45*aRand) * mix(1., .1 + .9*t, isAI);
+  vAlpha = mix(.35, 1., 1. - uChaos) * mix(.55 + .45*aRand, 1., uCrisp) * mix(1., .1 + .9*t, isAI);
   vec4 mv = modelViewMatrix * vec4(p, 1.);
   gl_Position = projectionMatrix * mv;
   float glow = isAI * uAIGlow * (.5 + .5 * sin(uTime * 3. + aRand * 6.2831));
   vCol += glow * vec3(.15, .3, .45);
-  gl_PointSize = uSize * uPR * (.6 + aRand*.8) * (6. / -mv.z) * (1. + glow * .8);
+  gl_PointSize = uSize * uPR * mix(.6 + aRand*.8, 1.02, uCrisp) * (6. / -mv.z) * (1. + glow * .8);
 }`;
 
 const frag = /* glsl */ `
@@ -162,7 +163,7 @@ export function createScene(canvas, shapes, { count, small, reduceMotion, onShap
   const U = {
     uIntro: { value: 0 }, uOff: { value: new THREE.Vector3() }, uRoll: { value: 0 },
     uFlap: { value: 0 }, uFlapPh: { value: 0 }, uAIT: { value: 0 }, uAIHover: { value: new THREE.Vector3() },
-    uRide: { value: 0 }, uBack: { value: new THREE.Vector3(0.05, 0.52, 0) }, uAIScale: { value: 0.42 }, uAIGlow: { value: 0 },
+    uRide: { value: 0 }, uCrisp: { value: 0 }, uBack: { value: new THREE.Vector3(0.05, 0.52, 0) }, uAIScale: { value: 0.42 }, uAIGlow: { value: 0 },
     uT: { value: 1 }, uTime: { value: 0 }, uSize: { value: small ? 2.4 : 2.6 }, uPR: { value: pr },
     uChaos: { value: 1 }, uMouse: { value: new THREE.Vector3(99, 99, 0) }, uMouseOn: { value: 0 },
   };
@@ -383,10 +384,14 @@ export function createScene(canvas, shapes, { count, small, reduceMotion, onShap
       U.uChaos.value = U.uT.value;
       if (e >= T.scatter) form(now);
     }
+    // sharp mode for detailed drawings: uniform still particles, less glow, almost no sway
+    const crispOn = shapes[state.idx]?.crisp && state.phase !== 'scatter' ? 1 : 0;
+    U.uCrisp.value += (crispOn - U.uCrisp.value) * 0.06;
+    bloom.strength = (small ? 0.35 : 0.45) * (1 - 0.3 * U.uCrisp.value);
     // hold the camera angle steady during the flight, then ease into the slow sway
     sway += ((introDone ? 1 : 0) - sway) * 0.015;
-    group.rotation.y = Math.sin(now * 0.18) * 0.22 * sway; // gentle, keeps flat shapes legible
-    group.rotation.x = Math.sin(now * 0.13) * 0.08 * sway + 0.35 * (1 - sway);
+    group.rotation.y = Math.sin(now * 0.18) * 0.22 * sway * (1 - 0.8 * U.uCrisp.value); // flat drawings stay square-on
+    group.rotation.x = Math.sin(now * 0.13) * 0.08 * sway * (1 - 0.8 * U.uCrisp.value) + 0.35 * (1 - sway);
     dust.rotation.y = -now * 0.02;
     stars.rotation.y = now * 0.005;
 
