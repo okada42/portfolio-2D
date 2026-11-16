@@ -165,7 +165,7 @@ h2 { font-size: clamp(30px, 4.5vw, 54px); line-height: 1.15; margin: 12px 0 20px
   .menu-btn span { display: block; width: 16px; height: 1.5px; background: var(--fg); transition: transform .3s; }
   .header.open .menu-btn span:first-child { transform: translateY(3.25px) rotate(45deg); }
   .header.open .menu-btn span:last-child { transform: translateY(-3.25px) rotate(-45deg); }
-  .header nav { position: absolute; top: 100%; left: 12px; right: 12px; margin: 0; flex-direction: column; gap: 0; padding: 8px; border: 1px solid var(--line); border-radius: 16px; background: rgba(8,11,20,.96); backdrop-filter: blur(12px); opacity: 0; visibility: hidden; transform: translateY(-8px); transition: opacity .25s, transform .25s, visibility .25s; }
+  .header nav { position: absolute; top: 100%; left: 12px; right: 12px; margin: 0; flex-direction: column; gap: 0; padding: 8px; border: 1px solid var(--line); border-radius: 16px; background: #080b14; box-shadow: 0 18px 40px rgba(0,0,0,.55); opacity: 0; visibility: hidden; transform: translateY(-8px); transition: opacity .25s, transform .25s, visibility .25s; }
   .header.open nav { opacity: 1; visibility: visible; transform: none; }
   .header nav a { padding: 14px 16px; font-size: 16px; border-radius: 10px; opacity: 1; }
   .header nav a:active { background: rgba(255,255,255,.06); }
