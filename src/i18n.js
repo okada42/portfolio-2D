@@ -21,10 +21,6 @@ export const DICT = {
     'about.no': '01 — ABOUT', 'about.title': '「こんなこと頼めるかな？」から、<br />一緒にかたちにします。',
     'about.body': '「こういう仕組みを作りたい」「今の作業を効率化したい」。そんな抽象的なご要望からでも大丈夫です。10年以上のWeb・システム開発の経験をもとに、ビジネスの目的を丁寧に汲み取り、要件定義から実装、公開後の運用まで一貫してサポートします。技術のことがよく分からない段階での「まずは壁打ちから」というご相談も大歓迎です。',
     stat1: '年以上の開発経験', stat2: '主な開発言語（PHP / JS / Java / Python）', stat3: '% 成果を重視したご提案',
-    'q.title': 'こんなお悩みはありませんか？',
-    q1: 'AIを自社の業務にどう活かせばいいのか分からない',
-    q2: '手作業を減らして、業務を効率化したい',
-    q3: 'セキュリティに配慮しながら、今のシステムとAIを連携させたい',
 
     'svc.no': '02 — SERVICES', 'svc.title': '主な対応領域',
 
@@ -102,10 +98,6 @@ export const DICT = {
     'about.no': '01 — ABOUT', 'about.title': 'Start with an idea.<br />We\'ll shape it together.',
     'about.body': "\"I want a system that does this.\" \"I'm tired of doing this by hand.\" A rough idea is all you need to get started. With 10+ years in web and systems development, I take the time to understand your business goals, then handle everything from requirements to launch and beyond. Not sure where to begin? I'm happy to just brainstorm with you first.",
     stat1: '+ years in development', stat2: 'core languages (PHP / JS / Java / Python)', stat3: '% focused on results',
-    'q.title': 'Sound familiar?',
-    q1: "You're not sure where AI fits in your business",
-    q2: 'You want to spend less time on manual work',
-    q3: 'You want to connect AI to your existing systems without putting your data at risk',
 
     'svc.no': '02 — SERVICES', 'svc.title': 'What I can help with',
 

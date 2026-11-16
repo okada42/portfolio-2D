@@ -119,12 +119,6 @@ h2 { font-size: clamp(30px, 4.5vw, 54px); line-height: 1.15; margin: 12px 0 20px
   .reveal, .hero-copy > * { transition: none; opacity: 1; transform: none; }
 }
 
-/* about: concerns */
-.concerns { margin-top: 56px; padding: 28px; border: 1px solid var(--line); border-radius: 16px; background: linear-gradient(135deg, rgba(106,215,255,.06), rgba(185,140,255,.04)); }
-.concerns h3 { font-size: 18px; margin-bottom: 14px; }
-.concerns ul { list-style: none; padding: 0; display: grid; gap: 10px; }
-.concerns li { padding-left: 22px; position: relative; color: var(--fg); }
-.concerns li::before { content: ''; position: absolute; left: 0; top: .6em; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--accent); }
 
 /* services */
 .svc-head { margin: 44px 0 18px; font-size: 15px; color: var(--accent2); letter-spacing: .08em; }
@@ -179,7 +173,6 @@ h2 { font-size: clamp(30px, 4.5vw, 54px); line-height: 1.15; margin: 12px 0 20px
   .stats { grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 32px; }
   .stats b { font-size: 36px; }
   .stats span { font-size: 12px; line-height: 1.4; display: block; }
-  .concerns { padding: 20px; }
   .svc { padding: 20px; }
   .btn.big { font-size: 17px; padding: 16px 26px; }
 }
