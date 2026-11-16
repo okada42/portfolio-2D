@@ -473,3 +473,10 @@ html[lang='ja'] .eyebrow { font-family: var(--sans); font-weight: 500; letter-sp
 .contact-form:focus-within::before { opacity: .9; }
 @keyframes border-drift { to { background-position: 220% 220%; } }
 @media (prefers-reduced-motion: reduce) { :is(.svc, .w-card, .why-card, .c-link):hover::before { animation: none; } }
+
+/* nav: keep each label on one line; tighter spacing on narrower desktops with 5 items */
+#site-nav a, .nav-ja { white-space: nowrap; }
+@media (min-width: 641px) and (max-width: 1150px) {
+  .header nav { gap: 14px; }
+  .header .nav-ja { font-size: 9px; letter-spacing: 0; }
+}
