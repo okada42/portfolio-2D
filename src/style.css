@@ -225,7 +225,13 @@ h2 { font-size: clamp(30px, 4.5vw, 54px); line-height: 1.15; margin: 12px 0 20px
 .sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .link-more { color: var(--accent); font-size: 14px; }
 .link-more:hover { text-decoration: underline; }
-.w-grid.featured { margin-top: 28px; }
+.w-grid.featured { margin-top: 28px; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+.w-grid.featured .w-body h3 { font-size: 15.5px; }
+@media (max-width: 1100px) { .w-grid.featured { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .w-grid.featured { grid-template-columns: 1fr; } }
+.drop-group { font: 11px var(--mono); letter-spacing: .1em; color: var(--accent2); margin: 4px 0 8px; text-transform: uppercase; }
+.drop-group ~ .drop-group { margin-top: 16px; }
+html[lang='ja'] .drop-group { font: 600 12px var(--sans); letter-spacing: .04em; }
 .center { text-align: center; margin-top: 40px; }
 
 /* =================== Works page =================== */
@@ -263,7 +269,7 @@ html[lang='ja'] .flabel { letter-spacing: .05em; font-family: var(--sans); font-
 .drop-n:not(:empty) { min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px; background: var(--accent); color: var(--bg); font: 600 11px/20px var(--mono); text-align: center; }
 .caret { font-size: 10px; color: var(--muted); transition: transform .2s; }
 .drop.open .caret { transform: rotate(180deg); }
-.drop-panel { position: absolute; z-index: 15; top: calc(100% + 8px); left: 0; width: min(440px, 80vw); max-height: 320px; overflow: auto; padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: rgba(10,14,24,.98); box-shadow: 0 20px 50px rgba(0,0,0,.5); opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity .2s, transform .2s, visibility .2s; }
+.drop-panel { position: absolute; z-index: 15; top: calc(100% + 8px); left: 0; width: min(520px, 86vw); max-height: 420px; overflow: auto; padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: rgba(10,14,24,.98); box-shadow: 0 20px 50px rgba(0,0,0,.5); opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity .2s, transform .2s, visibility .2s; }
 .drop.open .drop-panel { opacity: 1; visibility: visible; transform: none; }
 .sort { display: inline-flex; align-items: center; gap: 8px; margin-left: auto; font-size: 13px; color: var(--muted); }
 .sort select { background: rgba(255,255,255,.03); color: var(--fg); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; font: 14px var(--sans); }

@@ -1,6 +1,6 @@
 import { initCommon } from './common.js';
 import { t, onLangChange } from './i18n.js';
-import { SERVICES, INDUSTRIES, SITE_TYPES } from './taxonomy.js';
+import { SERVICES, INDUSTRIES, SITE_TYPES, SKILL_GROUPS, SEARCH_SYNONYMS } from './taxonomy.js';
 import { WORKS, SERVICE, INDUSTRY, SITE_TYPE, label, text, esc, cardHTML, thumbHTML } from './works-render.js';
 
 initCommon();
@@ -40,12 +40,46 @@ function syncURL() {
 }
 
 // ---------- matching ----------
-const norm = (s) => String(s || '').normalize('NFKC').toLowerCase();
-const haystack = new Map(WORKS.map((w) => [w.id, norm([
-  w.ja.title, w.ja.summary, w.ja.role, w.ja.result, w.en.title, w.en.summary, w.en.role, w.en.result,
-  ...w.skills, SERVICE[w.service]?.ja, SERVICE[w.service]?.en, INDUSTRY[w.industry]?.ja, INDUSTRY[w.industry]?.en,
-  ...w.siteType.flatMap((k) => [SITE_TYPE[k]?.ja, SITE_TYPE[k]?.en]),
-].join(' '))]));
+// Normalize: full/half-width (NFKC), lower case, hiragana -> katakana, so ワードプレス = わーどぷれす.
+const toKata = (s) => s.replace(/[ぁ-ゖ]/g, (c) => String.fromCharCode(c.charCodeAt(0) + 0x60));
+const norm = (s) => toKata(String(s ?? '').normalize('NFKC').toLowerCase()).replace(/\s+/g, ' ').trim();
+const reEsc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const LATIN = /^[a-z0-9][a-z0-9.+#/\- ]*$/;
+const SYN = Object.fromEntries(Object.entries(SEARCH_SYNONYMS).map(([k, v]) => [norm(k), v.map(norm)]));
+
+const allSkillNames = new Set([...SKILL_GROUPS.flatMap((g) => g.skills), ...WORKS.flatMap((w) => w.skills)].map(norm));
+const index = new Map(WORKS.map((w) => [w.id, {
+  skills: new Set(w.skills.map(norm)),
+  text: norm([
+    w.ja.title, w.ja.summary, w.ja.role, w.ja.result, w.en.title, w.en.summary, w.en.role, w.en.result,
+    ...w.skills, w.year, SERVICE[w.service]?.ja, SERVICE[w.service]?.en, INDUSTRY[w.industry]?.ja, INDUSTRY[w.industry]?.en,
+    ...w.siteType.flatMap((k) => [SITE_TYPE[k]?.ja, SITE_TYPE[k]?.en]),
+  ].join(' \u0001 ')),
+}]));
+
+// One search term matches a project if any of its forms (the term itself or a synonym) matches:
+//  - a known skill name ("java", "php") must match that skill exactly, or the same whole word in the text
+//    (so "java" never matches "javascript")
+//  - other Latin words match at the start of a word ("book" -> "booking")
+//  - Japanese has no spaces, so it matches anywhere in the text
+function termMatches(ix, term) {
+  return [term, ...(SYN[term] || [])].some((t) => {
+    if (allSkillNames.has(t)) return ix.skills.has(t) || new RegExp(`(^|[^a-z0-9])${reEsc(t)}([^a-z0-9]|$)`).test(ix.text);
+    if (LATIN.test(t)) return new RegExp(`(^|[^a-z0-9])${reEsc(t)}`).test(ix.text);
+    return ix.text.includes(t);
+  });
+}
+// Multi-word skills ("google apps script", "llm / ai api") are kept together as one term.
+const multiWordSkills = [...allSkillNames].filter((n) => n.includes(' ')).sort((a, b) => b.length - a.length);
+function parseQuery(q) {
+  let rest = ` ${norm(q)} `;
+  const terms = [];
+  for (const m of multiWordSkills) {
+    if (rest.includes(` ${m} `)) { terms.push(m); rest = rest.replace(` ${m} `, ' '); }
+  }
+  return [...terms, ...rest.split(' ').filter(Boolean)];
+}
+let queryTerms = parseQuery(state.q);
 
 // site type only applies while "Web Development" is selected
 const siteTypeOn = () => state.service === 'web';
@@ -55,21 +89,34 @@ function match(w, skip) {
   if (skip !== 'industry' && state.industry !== 'all' && w.industry !== state.industry) return false;
   if (skip !== 'siteType' && siteTypeOn() && state.siteType.length && !state.siteType.some((k) => w.siteType.includes(k))) return false;
   if (skip !== 'skills' && state.skills.length && !state.skills.some((k) => w.skills.includes(k))) return false;
-  if (state.q) {
-    const h = haystack.get(w.id);
-    if (!norm(state.q).split(/\s+/).filter(Boolean).every((tok) => h.includes(tok))) return false;
+  if (queryTerms.length) {
+    const ix = index.get(w.id);
+    if (!queryTerms.every((term) => termMatches(ix, term))) return false; // every term must match (AND)
   }
   return true;
 }
 const countBy = (skip, pred) => WORKS.reduce((n, w) => n + (match(w, skip) && pred(w) ? 1 : 0), 0);
 
-// industries / site types / skills that exist in the data at all (others are never shown)
+// industries / site types that exist in the data (others are never shown)
 const usedIndustries = INDUSTRIES.filter((i) => WORKS.some((w) => w.industry === i.key))
   .sort((a, b) => WORKS.filter((w) => w.industry === b.key).length - WORKS.filter((w) => w.industry === a.key).length);
 const usedSiteTypes = SITE_TYPES.filter((s) => WORKS.some((w) => w.siteType.includes(s.key)));
+
+// skills: grouped; every listed skill is shown, used ones first. Unlisted skills from the data join "Development".
 const skillFreq = WORKS.flatMap((w) => w.skills).reduce((m, s) => m.set(s, (m.get(s) || 0) + 1), new Map());
-const usedSkills = [...skillFreq.keys()].sort((a, b) => skillFreq.get(b) - skillFreq.get(a) || a.localeCompare(b));
-state.skills = state.skills.filter((s) => skillFreq.has(s));
+const listed = new Set(SKILL_GROUPS.flatMap((g) => g.skills).map(norm));
+const skillGroups = SKILL_GROUPS.map((g, gi) => {
+  const extra = gi === 0 ? [...skillFreq.keys()].filter((s) => !listed.has(norm(s))) : [];
+  // use the spelling from the data when it differs only in case
+  const names = [...g.skills, ...extra].map((n) => [...skillFreq.keys()].find((k) => norm(k) === norm(n)) || n);
+  names.sort((a, b) => (skillFreq.get(b) || 0) - (skillFreq.get(a) || 0) || a.localeCompare(b));
+  return { ...g, names };
+});
+const allSkills = skillGroups.flatMap((g) => g.names);
+
+// URL values: skills are case-insensitive, and site types only make sense for Web
+state.skills = state.skills.map((s) => allSkills.find((k) => norm(k) === norm(s))).filter(Boolean);
+if (!siteTypeOn()) state.siteType = [];
 
 const TOP_INDUSTRIES = 8;
 
@@ -96,15 +143,19 @@ function renderIndustries() {
     visible.map(({ i, n }) => chip({ key: i.key, text: esc(label(i)), count: n, active: state.industry === i.key, disabled: !n && state.industry !== i.key })).join('') + more;
 }
 
-function renderDrop(el, items, selected, skip, field, title) {
+const optionChips = (items, selected, skip, field) => items.map(({ key, text: txt }) => {
+  const n = countBy(skip, (w) => w[field].includes(key));
+  const on = selected.includes(key);
+  return chip({ key, text: esc(txt), count: n, active: on, disabled: !n && !on });
+}).join('');
+
+function renderDrop(el, items, selected, skip, field, title, groups) {
   const btn = el.querySelector('.drop-btn'), panel = el.querySelector('.drop-options');
   btn.querySelector('.drop-label').textContent = title;
   btn.querySelector('.drop-n').textContent = selected.length ? selected.length : '';
-  panel.innerHTML = items.map(({ key, text: txt }) => {
-    const n = countBy(skip, (w) => w[field].includes(key));
-    const on = selected.includes(key);
-    return chip({ key, text: esc(txt), count: n, active: on, disabled: !n && !on });
-  }).join('');
+  panel.innerHTML = groups
+    ? groups.map((g) => `<p class="drop-group">${esc(label(g))}</p><div class="chips">${optionChips(g.names.map((n) => ({ key: n, text: n })), selected, skip, field)}</div>`).join('')
+    : `<div class="chips">${optionChips(items, selected, skip, field)}</div>`;
 }
 
 function renderActive() {
@@ -139,7 +190,7 @@ function render() {
   renderServices();
   renderIndustries();
   renderDrop(els.site, usedSiteTypes.map((s) => ({ key: s.key, text: label(s) })), state.siteType, 'siteType', 'siteType', t('wf.siteType'));
-  renderDrop(els.skill, usedSkills.map((s) => ({ key: s, text: s })), state.skills, 'skills', 'skills', t('wf.skills'));
+  renderDrop(els.skill, null, state.skills, 'skills', 'skills', t('wf.skills'), skillGroups);
   els.sort.value = state.sort;
   renderActive();
   renderGrid();
@@ -190,7 +241,7 @@ document.querySelectorAll('[data-sheet-close]').forEach((b) => b.addEventListene
 
 let qTimer;
 els.q.value = state.q;
-els.q.addEventListener('input', () => { clearTimeout(qTimer); qTimer = setTimeout(() => { state.q = els.q.value.trim(); render(); }, 150); });
+els.q.addEventListener('input', () => { clearTimeout(qTimer); qTimer = setTimeout(() => { state.q = els.q.value.trim(); queryTerms = parseQuery(state.q); render(); }, 150); });
 els.sort.addEventListener('change', () => { state.sort = els.sort.value; render(); });
 
 els.active.addEventListener('click', (e) => {
@@ -198,13 +249,14 @@ els.active.addEventListener('click', (e) => {
   const { type, key } = b.dataset;
   if (type === 'service') { state.service = 'all'; state.siteType = []; }
   else if (type === 'industry') state.industry = 'all';
-  else if (type === 'q') { state.q = ''; els.q.value = ''; }
+  else if (type === 'q') { state.q = ''; els.q.value = ''; queryTerms = []; }
   else state[type] = state[type].filter((x) => x !== key);
   render();
 });
 const clearAll = () => {
   Object.assign(state, { service: 'all', industry: 'all', siteType: [], skills: [], q: '' });
   els.q.value = '';
+  queryTerms = [];
   render();
 };
 els.clear.addEventListener('click', clearAll);

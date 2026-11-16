@@ -8,10 +8,10 @@ Push to `main`, and the site rebuilds automatically. The build stops with a clea
 | `id` | yes | Short unique name in English, used in links: `clinic-booking` |
 | `service` | yes | `web` · `system` · `game` · `mobile` |
 | `industry` | yes | `medical` `beauty` `food` `realestate` `construction` `manufacturing` `retail` `education` `professional` `it` `hospitality` `logistics` `staffing` `entertainment` `public` `personal` `other` |
-| `siteType` | web only | `corporate` `lp` `ec` `booking` `media` `recruit` `portal`. Several: `corporate\|booking` |
-| `skills` | | Separate with `\|`: `WordPress\|PHP\|MySQL` (new skills appear in the filter automatically) |
+| `siteType` | web only | `hp` `corporate` `lp` `ec` `booking` `media` `recruit` `portal`. Several: `corporate\|booking` |
+| `skills` | | Separate with `\|`: `WordPress\|PHP\|MySQL` (new skills appear in the filter automatically). Skill groups (development / design & no-code tools) are listed in `src/taxonomy.js` |
 | `year` | | `2025` |
-| `featured` | | `yes` to show on the homepage (up to 6, newest first) |
+| `featured` | | `yes` to show on the homepage (up to 8, newest first) |
 | `sample` | | `yes` shows a "Sample" badge. Leave empty for real projects |
 | `thumb` | | Image path, e.g. `works/clinic-booking.webp` (put the file in `public/works/`). Empty = auto-generated placeholder |
 | `url` | | Live site link (optional) |

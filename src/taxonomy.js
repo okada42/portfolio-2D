@@ -30,6 +30,7 @@ export const INDUSTRIES = [
 
 // Only used for Web Development projects.
 export const SITE_TYPES = [
+  { key: 'hp', ja: 'ホームページ（HP）', en: 'Website (HP)' },
   { key: 'corporate', ja: 'コーポレートサイト', en: 'Corporate site' },
   { key: 'lp', ja: 'ランディングページ', en: 'Landing page' },
   { key: 'ec', ja: 'ECサイト', en: 'E-commerce' },
@@ -38,5 +39,31 @@ export const SITE_TYPES = [
   { key: 'recruit', ja: '採用サイト', en: 'Recruitment' },
   { key: 'portal', ja: 'ポータル・会員サイト', en: 'Portal / Membership' },
 ];
+
+// Skills filter groups. Every skill listed here is always shown in the filter (greyed out until a
+// project uses it). Skills used in works.csv but not listed here go into "Development" automatically.
+export const SKILL_GROUPS = [
+  {
+    key: 'dev', ja: 'プログラミング・開発', en: 'Development',
+    skills: ['PHP', 'Python', 'JavaScript', 'TypeScript', 'Java', 'HTML', 'CSS', 'Laravel', 'React', 'Next.js', 'Vue.js', 'Node.js',
+      'WordPress', 'WooCommerce', 'MySQL', 'Firebase', 'Google Apps Script', 'LLM / AI API', 'three.js', 'Canvas'],
+  },
+  {
+    key: 'tools', ja: 'デザイン・ノーコードツール', en: 'Design & no-code tools',
+    skills: ['Figma', 'Photoshop', 'Illustrator', 'Adobe XD', 'Canva', 'Premiere Pro', 'After Effects',
+      'Excel / CSV', 'Google Workspace', 'Notion', 'Wix', 'STUDIO', 'Shopify', 'kintone', 'Zapier', 'Make'],
+  },
+];
+
+// Search shortcuts: typing the key also finds the values.
+export const SEARCH_SYNONYMS = {
+  wp: ['wordpress', 'ワードプレス'], 'ワードプレス': ['wordpress'],
+  js: ['javascript'], ts: ['typescript'], gas: ['google apps script'],
+  hp: ['ホームページ', 'website'], 'ホームページ': ['hp', 'website'],
+  lp: ['ランディングページ', 'landing page'], 'ランディングページ': ['lp'],
+  ec: ['ecサイト', 'e-commerce', 'online shop', 'ネットショップ'], 'ネットショップ': ['ec'],
+  ai: ['ai', 'llm'], 'エーアイ': ['ai'],
+  'エクセル': ['excel'], 'フィグマ': ['figma'], 'フォトショップ': ['photoshop'], 'イラストレーター': ['illustrator'],
+};
 
 export const keysOf = (list) => list.map((x) => x.key);
