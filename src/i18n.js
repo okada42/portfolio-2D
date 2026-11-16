@@ -78,7 +78,7 @@ export const DICT = {
     shapes: {
       crane: ['鶴', '技術で、より高く、より遠くへ'],
       heart: ['真心', 'ひとつひとつ、心を込めて'], webdev: ['Web開発', 'つながる仕組みを、ひとつに'],
-      sysdev: ['システム開発', '安心して使える仕組みを、手のひらに'], web: ['Web', 'ホームページ・LP・Webアプリ'], system: ['システム連携', '今ある仕組みに、安全につなぐ'],
+      sysdev: ['システム開発', '安心して使える仕組みを、手のひらに'], design: ['デザイン', 'まずは鉛筆で、アイデアをかたちに'], system: ['システム連携', '今ある仕組みに、安全につなぐ'],
     },
   },
   en: {
@@ -156,7 +156,7 @@ export const DICT = {
     shapes: {
       crane: ['CRANE', 'Technology that takes you further'],
       heart: ['WITH HEART', 'Care in every detail'], webdev: ['WEB DEV', 'Everything connected, built as one'],
-      sysdev: ['SYSTEM DEV', 'Reliable systems, right in your hands'], web: ['WEB', 'Websites, landing pages & web apps'], system: ['INTEGRATE', 'Secure connections to the systems you have'],
+      sysdev: ['SYSTEM DEV', 'Reliable systems, right in your hands'], design: ['DESIGN', 'Every great site starts as a sketch'], system: ['INTEGRATE', 'Secure connections to the systems you have'],
     },
   },
 };

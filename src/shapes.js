@@ -513,6 +513,89 @@ export function drawSysDev(size = 640) {
   return c;
 }
 
+// ---------- Design: pencil sketching a website wireframe on paper (first drafts) ----------
+export function drawDesign(size = 640) {
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  const g = c.getContext('2d');
+  g.scale(size / 640, size / 640);
+  g.fillStyle = '#000'; g.fillRect(0, 0, 640, 640);
+  g.lineCap = 'round'; g.lineJoin = 'round';
+  let seed = 11; const r = () => ((seed = (seed * 9301 + 49297) % 233280) / 233280) - 0.5;
+  // hand-drawn line: two slightly wobbly passes, like a real pencil stroke
+  const sketch = (pts, close = false) => {
+    for (let pass = 0; pass < 2; pass++) {
+      g.beginPath();
+      pts.forEach(([x, y], i) => { const jx = x + r() * 3, jy = y + r() * 3; i ? g.lineTo(jx, jy) : g.moveTo(jx, jy); });
+      if (close) g.closePath();
+      g.stroke();
+    }
+  };
+  const box = (x, y, w, h) => sketch([[x, y], [x + w, y], [x + w, y + h], [x, y + h]], true);
+  const line = (x1, y1, x2, y2) => sketch([[x1, y1], [(x1 + x2) / 2, (y1 + y2) / 2 + r() * 2], [x2, y2]]);
+
+  const sheet = (cx, cy, w, h, rot, fill) => {
+    g.save(); g.translate(cx, cy); g.rotate(rot);
+    g.fillStyle = fill; g.fillRect(-w / 2, -h / 2, w, h);
+    g.strokeStyle = 'rgba(200,225,255,.55)'; g.lineWidth = 2; g.strokeRect(-w / 2, -h / 2, w, h);
+    g.restore();
+  };
+  // back sheet: small thumbnail sketches
+  sheet(250, 290, 330, 400, -0.16, 'rgba(160,190,230,.03)');
+  g.save(); g.translate(250, 290); g.rotate(-0.16);
+  g.strokeStyle = 'rgba(190,215,250,.55)'; g.lineWidth = 2;
+  for (let i = 0; i < 3; i++) for (let j = 0; j < 2; j++) { const x = -140 + j * 140, y = -170 + i * 115; box(x, y, 120, 90); line(x + 10, y + 70, x + 70, y + 70); }
+  g.restore();
+
+  // front sheet: website wireframe in progress
+  sheet(350, 320, 360, 440, 0.06, 'rgba(235,242,255,.05)');
+  g.save(); g.translate(350, 320); g.rotate(0.06);
+  g.strokeStyle = 'rgba(230,240,255,.95)'; g.lineWidth = 2.6;
+  const L = -150, T = -190;
+  box(L, T, 300, 34);                                  // header bar
+  sketch([[L + 12, T + 12], [L + 50, T + 12], [L + 50, T + 22], [L + 12, T + 22]], true); // logo
+  for (const x of [130, 175, 220]) line(L + x, T + 17, L + x + 32, T + 17); // nav items
+  box(L, T + 50, 300, 120);                            // hero image
+  line(L, T + 50, L + 300, T + 170); line(L + 300, T + 50, L, T + 170); // image placeholder X
+  line(L, T + 190, L + 210, T + 190); line(L, T + 206, L + 170, T + 206); // headline + text
+  sketch([[L, T + 222], [L + 90, T + 222], [L + 96, T + 234], [L + 90, T + 246], [L, T + 246], [L - 6, T + 234]], true); // button
+  for (let i = 0; i < 3; i++) { const x = L + i * 104; box(x, T + 268, 92, 80); g.beginPath(); g.arc(x + 22, T + 290, 11, 0, Math.PI * 2); g.stroke(); line(x + 10, T + 318, x + 76, T + 318); line(x + 10, T + 332, x + 60, T + 332); }
+  // margin notes and an arrow, like a designer's annotations
+  g.strokeStyle = 'rgba(255,190,120,.95)'; g.lineWidth = 2.4;
+  sketch([[L + 228, T + 210], [L + 262, T + 200], [L + 286, T + 214]]);
+  sketch([[L + 286, T + 214], [L + 278, T + 206]]); sketch([[L + 286, T + 214], [L + 276, T + 218]]);
+  g.beginPath(); g.ellipse(L + 45, T + 234, 66, 22, -0.05, 0, Math.PI * 2); g.stroke(); // circled button
+  // the line being drawn right now (ends where the pencil tip is)
+  g.strokeStyle = 'rgba(230,240,255,.95)'; g.lineWidth = 2.6;
+  line(L, T + 372, L + 150, T + 372);
+  g.restore();
+
+  // pencil, mid-stroke: tip at the end of the line in progress
+  // tip = end of the in-progress line, point (0, 182) on the front sheet, rotated with the sheet
+  const tx = 350 - 182 * Math.sin(0.06), ty = 320 + 182 * Math.cos(0.06);
+  g.save(); g.translate(tx, ty); g.rotate(-0.85);         // pencil points down-left toward the tip
+  const len = 300, w = 26;
+  // graphite + sharpened wood cone
+  g.fillStyle = '#3a3f4a'; g.beginPath(); g.moveTo(0, 0); g.lineTo(14, -6); g.lineTo(14, 6); g.closePath(); g.fill();
+  g.fillStyle = '#f2d2a2'; g.beginPath(); g.moveTo(10, -4.5); g.lineTo(46, -w / 2); g.lineTo(46, w / 2); g.lineTo(10, 4.5); g.closePath(); g.fill();
+  // body with facets
+  const body = g.createLinearGradient(0, -w / 2, 0, w / 2);
+  body.addColorStop(0, '#ffe27a'); body.addColorStop(0.5, '#ffc93c'); body.addColorStop(1, '#e8a91c');
+  g.fillStyle = body; g.fillRect(46, -w / 2, len - 90, w);
+  g.strokeStyle = 'rgba(160,100,10,.7)'; g.lineWidth = 2;
+  g.beginPath(); g.moveTo(46, -4); g.lineTo(len - 44, -4); g.moveTo(46, 5); g.lineTo(len - 44, 5); g.stroke();
+  // ferrule + eraser
+  g.fillStyle = '#c9d2dc'; g.fillRect(len - 44, -w / 2 - 1, 20, w + 2);
+  g.strokeStyle = '#8a96a6'; for (const x of [len - 38, len - 30]) { g.beginPath(); g.moveTo(x, -w / 2); g.lineTo(x, w / 2); g.stroke(); }
+  g.fillStyle = '#ff8fa3'; g.beginPath(); g.roundRect(len - 24, -w / 2, 26, w, [0, 8, 8, 0]); g.fill();
+  g.restore();
+  // a small spark at the tip: the moment of drawing
+  const sp = g.createRadialGradient(tx, ty, 1, tx, ty, 22);
+  sp.addColorStop(0, 'rgba(255,255,255,1)'); sp.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = sp; g.beginPath(); g.arc(tx, ty, 22, 0, Math.PI * 2); g.fill();
+  return c;
+}
+
 function sampleDrawing(c, n, { width = 3.7, depth = 0.35, threshold = 0.18 } = {}) {
   const W = c.width, H = c.height;
   const d = c.getContext('2d').getImageData(0, 0, W, H).data;
@@ -542,6 +625,6 @@ export const SHAPES = [
   { key: 'heart', build: heart },
   { key: 'webdev', build: (n) => sampleDrawing(drawWebDev(640), n) },
   { key: 'sysdev', build: (n) => sampleDrawing(drawSysDev(640), n, { width: 3.8 }) },
-  { key: 'web', build: globe },
+  { key: 'design', build: (n) => sampleDrawing(drawDesign(640), n, { width: 3.8, threshold: 0.22 }) },
   { key: 'system', build: cubeGrid },
 ];
