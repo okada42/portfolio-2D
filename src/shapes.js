@@ -294,10 +294,10 @@ function heart(n) {
       const H = [light[0], light[1], light[2] + 1], hl = Math.hypot(...H);
       const spec = Math.pow(Math.max(0, (N[0] * H[0] + N[1] * H[1] + N[2] * H[2]) / hl), 40);
       const rim = Math.pow(1 - Math.max(0, N[2]), 2.5);
-      const base = hsl(348 + 10 * (z + 1) / 2, 0.95, 0.5 + 0.1 * (z + 1) / 2);
+      const base = hsl(330 + 10 * (z + 1) / 2, 0.9, 0.52 + 0.1 * (z + 1) / 2);
       c = base.map((v, k) => Math.min(1, v * (0.45 + 0.85 * diff) + spec * 0.9 + rim * [1, 0.55, 0.7][k] * 0.35));
     } else {
-      c = hsl(345, 0.9, 0.42); // inner glow
+      c = hsl(328, 0.85, 0.44); // inner glow
     }
     col.set(c, i * 3);
   }
@@ -333,7 +333,7 @@ export function drawWebDev(size = 640) {
   }
   // short branch traces ending in dots (the "circuit" texture)
   const rand = (() => { let t = 7; return () => ((t = (t * 9301 + 49297) % 233280) / 233280); })();
-  g.fillStyle = WHITE;
+  g.fillStyle = '#ffb86b';
   for (let i = 0; i < 26; i++) {
     const n = nodes[i % nodes.length], ang = rand() * Math.PI * 2, r0 = 62, r1 = 90 + rand() * 60;
     const x0 = n.x + Math.cos(ang) * r0, y0 = n.y + Math.sin(ang) * r0, x1 = n.x + Math.cos(ang) * r1, y1 = n.y + Math.sin(ang) * r1;
@@ -386,130 +386,77 @@ export function drawWebDev(size = 640) {
   for (const r of [34, 50]) { g.beginPath(); g.arc(...HUB, r, 0, Math.PI * 2); g.stroke(); }
   return c;
 }
-// ---------- System development: gear + </> core, orbiting service icons, wireframe open hand ----------
-export function drawSysDev(size = 640) {
+// ---------- Automation & AI: input -> AI gear -> chat / booking / report, with data flowing along ----------
+// Site palette: cyan + purple base, warm amber accent.
+export function drawAutomation(size = 640) {
   const c = document.createElement('canvas');
   c.width = c.height = size;
   const g = c.getContext('2d');
   g.scale(size / 640, size / 640);
   g.fillStyle = '#000'; g.fillRect(0, 0, 640, 640);
   g.lineCap = 'round'; g.lineJoin = 'round';
-  const CY = '#5fd4ff', WH = '#eaf8ff', CX = 320, CYY = 250;
+  const CY = '#5fd4ff', PU = '#b98cff', WH = '#eef6ff', AM = '#ffb86b', TEAL = '#3ddcb4';
+  const GX = 320, GY = 300;
 
-  // HUD rings with tick marks
-  g.strokeStyle = 'rgba(95,212,255,.6)'; g.lineWidth = 3;
-  g.beginPath(); g.arc(CX, CYY, 210, Math.PI * 0.95, Math.PI * 2.05); g.stroke();
-  for (let i = 0; i < 72; i++) {
-    const a = Math.PI * 0.95 + (i / 72) * Math.PI * 1.1, r0 = 214, r1 = i % 6 ? 222 : 232;
-    g.beginPath(); g.moveTo(CX + Math.cos(a) * r0, CYY + Math.sin(a) * r0); g.lineTo(CX + Math.cos(a) * r1, CYY + Math.sin(a) * r1); g.stroke();
-  }
-  g.strokeStyle = 'rgba(95,212,255,.75)'; g.lineWidth = 4;
-  g.beginPath(); g.arc(CX, CYY, 150, Math.PI * 0.85, Math.PI * 2.15); g.stroke();
-
-  // core glow
-  const glow = g.createRadialGradient(CX, CYY, 20, CX, CYY, 130);
-  glow.addColorStop(0, 'rgba(95,212,255,.15)'); glow.addColorStop(1, 'rgba(95,212,255,0)');
-  g.fillStyle = glow; g.beginPath(); g.arc(CX, CYY, 130, 0, Math.PI * 2); g.fill();
-  g.strokeStyle = CY; g.lineWidth = 6; g.beginPath(); g.arc(CX, CYY, 104, 0, Math.PI * 2); g.stroke();
-
-  // gear
-  const teeth = 10, rO = 82, rI = 66;
-  g.beginPath();
-  for (let i = 0; i < teeth * 2; i++) {
-    const a0 = (i / (teeth * 2)) * Math.PI * 2, a1 = ((i + 1) / (teeth * 2)) * Math.PI * 2, r = i % 2 ? rI : rO;
-    g.arc(CX, CYY, r, a0 + 0.04, a1 - 0.04);
-  }
-  g.closePath(); g.fillStyle = WH; g.fill();
-  g.fillStyle = '#000'; g.beginPath(); g.arc(CX, CYY, 50, 0, Math.PI * 2); g.fill();
-  // </> inside the gear
-  g.strokeStyle = WH; g.lineWidth = 7;
-  g.beginPath(); g.moveTo(CX - 14, CYY - 20); g.lineTo(CX - 32, CYY); g.lineTo(CX - 14, CYY + 20); g.stroke();
-  g.beginPath(); g.moveTo(CX + 14, CYY - 20); g.lineTo(CX + 32, CYY); g.lineTo(CX + 14, CYY + 20); g.stroke();
-  g.lineWidth = 5; g.beginPath(); g.moveTo(CX + 6, CYY - 24); g.lineTo(CX - 6, CYY + 24); g.stroke();
-
-  // orbiting icon circles on the 150px arc
-  const icons = ['loop', 'shield', 'globe', 'list', 'cloud'];
-  icons.forEach((name, i) => {
-    const a = Math.PI * 0.95 + (i / (icons.length - 1)) * Math.PI * 1.1;
-    const x = CX + Math.cos(a) * 170, y = CYY + Math.sin(a) * 170;
-    g.fillStyle = '#000'; g.beginPath(); g.arc(x, y, 34, 0, Math.PI * 2); g.fill();
-    g.strokeStyle = CY; g.lineWidth = 6; g.beginPath(); g.arc(x, y, 36, 0, Math.PI * 2); g.stroke();
-    g.strokeStyle = WH; g.fillStyle = WH; g.lineWidth = 5.5;
-    if (name === 'loop') { // infinity
-      g.beginPath(); for (let t = 0; t <= Math.PI * 2 + 0.01; t += 0.1) { const d = 1 + Math.sin(t) ** 2; g[t ? 'lineTo' : 'moveTo'](x + 17 * Math.cos(t) / d, y + 17 * Math.sin(t) * Math.cos(t) / d); } g.stroke();
-    } else if (name === 'shield') {
-      g.beginPath(); g.moveTo(x, y - 18); g.lineTo(x + 14, y - 12); g.lineTo(x + 13, y + 2); g.quadraticCurveTo(x + 10, y + 13, x, y + 18); g.quadraticCurveTo(x - 10, y + 13, x - 13, y + 2); g.lineTo(x - 14, y - 12); g.closePath(); g.stroke();
-      g.beginPath(); g.moveTo(x - 6, y); g.lineTo(x - 1, y + 5); g.lineTo(x + 7, y - 5); g.stroke();
-    } else if (name === 'globe') {
-      g.beginPath(); g.arc(x, y, 16, 0, Math.PI * 2); g.stroke();
-      g.beginPath(); g.ellipse(x, y, 7, 16, 0, 0, Math.PI * 2); g.stroke();
-      g.beginPath(); g.moveTo(x - 16, y); g.lineTo(x + 16, y); g.stroke();
-    } else if (name === 'list') {
-      g.strokeRect(x - 12, y - 16, 24, 32);
-      for (const dy of [-7, 1, 9]) { g.beginPath(); g.moveTo(x - 6, y + dy); g.lineTo(x + 7, y + dy); g.stroke(); }
-    } else if (name === 'cloud') {
-      g.beginPath(); g.arc(x - 8, y + 3, 9, Math.PI * 0.5, Math.PI * 1.5); g.arc(x + 1, y - 5, 11, Math.PI, Math.PI * 1.95); g.arc(x + 10, y + 3, 8, Math.PI * 1.5, Math.PI * 0.5); g.closePath(); g.stroke();
+  // flow arrows (drawn first, behind the nodes): dashed line + arrowhead + amber data packets
+  const arrow = (pts, packets) => {
+    g.strokeStyle = CY; g.lineWidth = 4; g.setLineDash([14, 10]);
+    g.beginPath(); pts.forEach((q, i) => (i ? g.lineTo(...q) : g.moveTo(...q))); g.stroke();
+    g.setLineDash([]);
+    const [x1, y1] = pts[pts.length - 2], [x2, y2] = pts[pts.length - 1], a = Math.atan2(y2 - y1, x2 - x1);
+    g.fillStyle = CY; g.beginPath(); g.moveTo(x2, y2); g.lineTo(x2 - Math.cos(a - 0.45) * 18, y2 - Math.sin(a - 0.45) * 18); g.lineTo(x2 - Math.cos(a + 0.45) * 18, y2 - Math.sin(a + 0.45) * 18); g.closePath(); g.fill();
+    g.fillStyle = AM;
+    for (const t of packets) {
+      const seg = t * (pts.length - 1), i = Math.min(pts.length - 2, seg | 0), f = seg - i;
+      const x = pts[i][0] + (pts[i + 1][0] - pts[i][0]) * f, y = pts[i][1] + (pts[i + 1][1] - pts[i][1]) * f;
+      g.beginPath(); g.arc(x, y, 7, 0, Math.PI * 2); g.fill();
     }
-  });
-
-  // wireframe open hand, side view: palm up, fingers pointing left and curling up slightly, thumb raised,
-  // wrist at the right. Parts are drawn into a mask, then filled with a mesh and outlined.
-  const taper = (x1, y1, qx, qy, x2, y2, r0, r1) => {
-    const p = new Path2D(), L = [], R = [], N = 24;
-    for (let i = 0; i <= N; i++) {
-      const t = i / N, u = 1 - t;
-      const x = u * u * x1 + 2 * u * t * qx + t * t * x2, y = u * u * y1 + 2 * u * t * qy + t * t * y2;
-      const dx = 2 * u * (qx - x1) + 2 * t * (x2 - qx), dy = 2 * u * (qy - y1) + 2 * t * (y2 - qy);
-      const l = Math.hypot(dx, dy) || 1, r = r0 + (r1 - r0) * t;
-      L.push([x - dy / l * r, y + dx / l * r]); R.push([x + dy / l * r, y - dx / l * r]);
-    }
-    p.moveTo(...L[0]); L.forEach((q) => p.lineTo(...q));
-    p.arc(x2, y2, r1, Math.atan2(L[N][1] - y2, L[N][0] - x2), Math.atan2(R[N][1] - y2, R[N][0] - x2), false);
-    for (let i = N; i >= 0; i--) p.lineTo(...R[i]);
-    p.closePath();
-    return p;
   };
-  const forearm = new Path2D();
-  forearm.moveTo(640, 446); forearm.bezierCurveTo(580, 446, 520, 440, 468, 432);
-  forearm.lineTo(474, 486); forearm.bezierCurveTo(530, 500, 590, 512, 640, 516); forearm.closePath();
-  const palm = new Path2D();
-  palm.moveTo(476, 430);
-  palm.bezierCurveTo(440, 424, 400, 420, 372, 412);   // cupped top edge
-  palm.bezierCurveTo(350, 408, 334, 418, 336, 436);   // toward finger roots
-  palm.bezierCurveTo(338, 456, 360, 468, 392, 474);   // underside
-  palm.bezierCurveTo(420, 480, 452, 488, 478, 490);
-  palm.closePath();
-  // fingers stacked in depth (index on top), rear ones a little shorter
-  const fingers = [
-    taper(354, 414, 278, 418, 214, 380, 11, 8),     // index: highest, tip curls up
-    taper(350, 428, 262, 436, 194, 404, 11.5, 8.5), // middle (longest)
-    taper(352, 442, 268, 452, 206, 426, 11, 8),     // ring
-    taper(356, 456, 290, 466, 232, 450, 9.5, 7),    // little
-  ];
-  const thumb = taper(404, 420, 392, 388, 372, 352, 12.5, 9);
-  const parts = [forearm, palm, ...fingers.slice().reverse(), thumb];
+  arrow([[180, GY], [238, GY]], [0.45]);
+  arrow([[402, GY - 30], [450, GY - 30], [450, 150], [478, 150]], [0.3, 0.75]);
+  arrow([[404, GY], [478, GY]], [0.5]);
+  arrow([[402, GY + 30], [450, GY + 30], [450, 450], [478, 450]], [0.35, 0.8]);
 
-  const mesh = document.createElement('canvas'); mesh.width = mesh.height = 640;
-  const m = mesh.getContext('2d');
-  const hg = m.createLinearGradient(180, 0, 640, 0);
-  hg.addColorStop(0, 'rgba(130,210,255,.06)'); hg.addColorStop(1, 'rgba(130,210,255,.03)');
-  m.fillStyle = hg; m.fillRect(0, 0, 640, 640);
-  m.strokeStyle = 'rgba(170,230,255,1)'; m.lineWidth = 2;
-  for (let i = -6; i < 22; i++) { const y0 = 360 + i * 8; m.beginPath(); m.moveTo(180, y0 + 30); m.bezierCurveTo(320, y0 + 34, 470, y0 + 8, 640, y0 + 52); m.stroke(); }
-  for (let x = 180; x < 640; x += 12) { m.beginPath(); m.moveTo(x, 340); m.lineTo(x - 10, 540); m.stroke(); }
-  // one combined mask (union of all parts), then keep the mesh only inside it
-  const mask = document.createElement('canvas'); mask.width = mask.height = 640;
-  const mk = mask.getContext('2d'); mk.fillStyle = '#fff'; parts.forEach((q) => mk.fill(q));
-  m.globalCompositeOperation = 'destination-in';
-  m.drawImage(mask, 0, 0);
-  g.drawImage(mesh, 0, 0);
-  // outlines: drawn back-to-front so each finger edge stays visible over the one behind
-  g.lineWidth = 4;
-  for (const q of parts) { g.strokeStyle = CY; g.stroke(q); }
-  // light beam from palm to core
-  const beam = g.createLinearGradient(0, 400, 0, 330);
-  beam.addColorStop(0, 'rgba(95,212,255,.0)'); beam.addColorStop(1, 'rgba(95,212,255,.12)');
-  g.fillStyle = beam; g.beginPath(); g.moveTo(250, 405); g.lineTo(380, 405); g.lineTo(358, 330); g.lineTo(282, 330); g.closePath(); g.fill();
+  // input: a form / document card
+  g.strokeStyle = CY; g.lineWidth = 6; g.beginPath(); g.roundRect(48, 205, 128, 190, 14); g.stroke();
+  g.strokeStyle = WH; g.lineWidth = 5;
+  g.beginPath(); g.moveTo(72, 240); g.lineTo(150, 240); g.stroke();
+  for (const y of [282, 322]) { g.strokeRect(72, y - 12, 24, 24); g.beginPath(); g.moveTo(108, y); g.lineTo(152, y); g.stroke(); }
+  g.strokeStyle = AM; g.beginPath(); g.moveTo(77, 282); g.lineTo(83, 289); g.lineTo(92, 275); g.stroke(); // ticked box
+  g.strokeStyle = PU; g.lineWidth = 6; g.beginPath(); g.roundRect(72, 352, 80, 22, 11); g.stroke();      // submit button
+
+  // AI gear in the middle with a spark
+  const teeth = 12, rO = 86, rI = 70;
+  g.beginPath();
+  for (let i = 0; i < teeth * 2; i++) { const a0 = (i / (teeth * 2)) * Math.PI * 2, a1 = ((i + 1) / (teeth * 2)) * Math.PI * 2; g.arc(GX, GY, i % 2 ? rI : rO, a0 + 0.03, a1 - 0.03); }
+  g.closePath(); g.strokeStyle = CY; g.lineWidth = 7; g.stroke();
+  g.strokeStyle = PU; g.lineWidth = 6; g.beginPath(); g.arc(GX, GY, 50, 0, Math.PI * 2); g.stroke();
+  const spark = (x, y, r, col) => {
+    g.fillStyle = col; g.beginPath();
+    for (let i = 0; i < 8; i++) { const a = (i / 8) * Math.PI * 2 - Math.PI / 2, rr = i % 2 ? r * 0.28 : r; g.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr); }
+    g.closePath(); g.fill();
+  };
+  spark(GX - 6, GY + 4, 32, WH); spark(GX + 22, GY - 22, 12, AM);
+  // circular "runs by itself" arrow under the gear
+  g.strokeStyle = PU; g.lineWidth = 5; g.beginPath(); g.arc(GX, GY, 118, Math.PI * 0.25, Math.PI * 0.75); g.stroke();
+  const ex = GX + Math.cos(Math.PI * 0.75) * 118, ey = GY + Math.sin(Math.PI * 0.75) * 118;
+  g.fillStyle = PU; g.beginPath(); g.moveTo(ex - 4, ey + 14); g.lineTo(ex - 14, ey - 8); g.lineTo(ex + 12, ey - 4); g.closePath(); g.fill();
+
+  // outputs: chat message, calendar booking, report
+  const card = (x, y) => { g.strokeStyle = CY; g.lineWidth = 6; g.beginPath(); g.roundRect(x, y - 56, 112, 112, 18); g.stroke(); };
+  card(484, 150); card(484, 300); card(484, 450);
+  // chat bubble with three dots
+  g.fillStyle = TEAL; g.beginPath(); g.roundRect(504, 118, 72, 50, 14); g.fill();
+  g.beginPath(); g.moveTo(520, 166); g.lineTo(514, 184); g.lineTo(536, 166); g.closePath(); g.fill();
+  g.fillStyle = '#000'; for (const dx of [-16, 0, 16]) { g.beginPath(); g.arc(540 + dx, 143, 5, 0, Math.PI * 2); g.fill(); }
+  // calendar with a check
+  g.strokeStyle = WH; g.lineWidth = 5; g.strokeRect(508, 274, 64, 56);
+  g.beginPath(); g.moveTo(508, 290); g.lineTo(572, 290); g.moveTo(524, 266); g.lineTo(524, 280); g.moveTo(556, 266); g.lineTo(556, 280); g.stroke();
+  g.strokeStyle = AM; g.lineWidth = 6; g.beginPath(); g.moveTo(524, 310); g.lineTo(536, 321); g.lineTo(558, 300); g.stroke();
+  // bar chart report
+  g.fillStyle = PU; [[512, 30], [532, 46], [552, 22], [572, 58]].forEach(([x, h]) => g.fillRect(x - 7, 478 - h, 14, h));
+  g.strokeStyle = WH; g.lineWidth = 4; g.beginPath(); g.moveTo(500, 480); g.lineTo(584, 480); g.stroke();
+  g.strokeStyle = AM; g.lineWidth = 4; g.beginPath(); g.moveTo(508, 440); g.lineTo(530, 428); g.lineTo(552, 446); g.lineTo(578, 418); g.stroke();
   return c;
 }
 
@@ -543,7 +490,7 @@ export function drawDesign(size = 640) {
   // back sheet: small thumbnail sketches
   sheet(250, 290, 330, 400, -0.16, 'rgba(160,190,230,.03)');
   g.save(); g.translate(250, 290); g.rotate(-0.16);
-  g.strokeStyle = 'rgba(190,215,250,.7)'; g.lineWidth = 3;
+  g.strokeStyle = 'rgba(185,160,255,.8)'; g.lineWidth = 3;
   for (let i = 0; i < 3; i++) for (let j = 0; j < 2; j++) { const x = -140 + j * 140, y = -170 + i * 115; box(x, y, 120, 90); line(x + 10, y + 70, x + 70, y + 70); }
   g.restore();
 
@@ -561,7 +508,7 @@ export function drawDesign(size = 640) {
   sketch([[L, T + 222], [L + 90, T + 222], [L + 96, T + 234], [L + 90, T + 246], [L, T + 246], [L - 6, T + 234]], true); // button
   for (let i = 0; i < 3; i++) { const x = L + i * 104; box(x, T + 268, 92, 80); g.beginPath(); g.arc(x + 22, T + 290, 11, 0, Math.PI * 2); g.stroke(); line(x + 10, T + 318, x + 76, T + 318); line(x + 10, T + 332, x + 60, T + 332); }
   // margin notes and an arrow, like a designer's annotations
-  g.strokeStyle = 'rgba(255,190,120,1)'; g.lineWidth = 3.4;
+  g.strokeStyle = 'rgba(255,184,107,1)'; g.lineWidth = 3.4;
   sketch([[L + 228, T + 210], [L + 262, T + 200], [L + 286, T + 214]]);
   sketch([[L + 286, T + 214], [L + 278, T + 206]]); sketch([[L + 286, T + 214], [L + 276, T + 218]]);
   g.beginPath(); g.ellipse(L + 45, T + 234, 66, 22, -0.05, 0, Math.PI * 2); g.stroke(); // circled button
@@ -580,14 +527,14 @@ export function drawDesign(size = 640) {
   g.fillStyle = '#f2d2a2'; g.beginPath(); g.moveTo(10, -4.5); g.lineTo(46, -w / 2); g.lineTo(46, w / 2); g.lineTo(10, 4.5); g.closePath(); g.fill();
   // body with facets
   const body = g.createLinearGradient(0, -w / 2, 0, w / 2);
-  body.addColorStop(0, '#ffe27a'); body.addColorStop(0.5, '#ffc93c'); body.addColorStop(1, '#e8a91c');
+  body.addColorStop(0, '#ffd59a'); body.addColorStop(0.5, '#ffb86b'); body.addColorStop(1, '#e08a3c');
   g.fillStyle = body; g.fillRect(46, -w / 2, len - 90, w);
   g.strokeStyle = 'rgba(160,100,10,.7)'; g.lineWidth = 2;
   g.beginPath(); g.moveTo(46, -4); g.lineTo(len - 44, -4); g.moveTo(46, 5); g.lineTo(len - 44, 5); g.stroke();
   // ferrule + eraser
   g.fillStyle = '#c9d2dc'; g.fillRect(len - 44, -w / 2 - 1, 20, w + 2);
   g.strokeStyle = '#8a96a6'; for (const x of [len - 38, len - 30]) { g.beginPath(); g.moveTo(x, -w / 2); g.lineTo(x, w / 2); g.stroke(); }
-  g.fillStyle = '#ff8fa3'; g.beginPath(); g.roundRect(len - 24, -w / 2, 26, w, [0, 8, 8, 0]); g.fill();
+  g.fillStyle = '#b98cff'; g.beginPath(); g.roundRect(len - 24, -w / 2, 26, w, [0, 8, 8, 0]); g.fill();
   g.restore();
   // a small spark at the tip: the moment of drawing
   const sp = g.createRadialGradient(tx, ty, 1, tx, ty, 10);
@@ -608,11 +555,11 @@ export function drawRose(size = 640) {
   const P = (r, a) => [CX + Math.cos(a) * r, CY + Math.sin(a) * r * 0.86]; // slight top-down squash
 
   // stem with thorns
-  g.strokeStyle = '#3f8f46'; g.lineWidth = 13;
+  g.strokeStyle = '#2a9d94'; g.lineWidth = 13;
   g.beginPath(); g.moveTo(CX, CY + 110); g.bezierCurveTo(CX + 10, 420, CX - 22, 520, CX - 6, 630); g.stroke();
-  g.strokeStyle = '#8fdc8a'; g.lineWidth = 3;
+  g.strokeStyle = '#9ff3e6'; g.lineWidth = 3;
   g.beginPath(); g.moveTo(CX - 4, CY + 115); g.bezierCurveTo(CX + 6, 420, CX - 26, 520, CX - 10, 630); g.stroke();
-  g.fillStyle = '#6fc46b';
+  g.fillStyle = '#5fd4c8';
   for (const [x, y, d] of [[CX + 9, 400, 1], [CX - 16, 488, -1], [CX - 10, 575, 1]]) {
     g.beginPath(); g.moveTo(x, y - 8); g.lineTo(x + d * 16, y - 14); g.lineTo(x, y + 4); g.closePath(); g.fill();
   }
@@ -622,11 +569,11 @@ export function drawRose(size = 640) {
     const edge = (side) => { const pts = []; for (let i = 0; i <= 20; i++) { const t = i / 20, w = Math.sin(Math.PI * t) * wid * (1 + (i % 2 ? 0.12 : 0)); pts.push([t * len, side * w]); } return pts; };
     const top = edge(-1), bot = edge(1);
     g.beginPath(); g.moveTo(0, 0); top.forEach((q) => g.lineTo(...q)); bot.reverse().forEach((q) => g.lineTo(...q)); g.closePath();
-    const lg = g.createLinearGradient(0, -wid, 0, wid); lg.addColorStop(0, '#4fb258'); lg.addColorStop(1, '#2f7a3a');
+    const lg = g.createLinearGradient(0, -wid, 0, wid); lg.addColorStop(0, '#34c3b0'); lg.addColorStop(1, '#1d7f86');
     g.fillStyle = lg; g.fill();
-    g.strokeStyle = '#a9eaa2'; g.lineWidth = 3.5; g.stroke();
+    g.strokeStyle = '#9ff3e6'; g.lineWidth = 3.5; g.stroke();
     g.save(); g.clip();
-    g.strokeStyle = '#c8f5c2'; g.lineWidth = 3; g.beginPath(); g.moveTo(4, 0); g.lineTo(len - 6, 0); g.stroke();
+    g.strokeStyle = '#d2fbf4'; g.lineWidth = 3; g.beginPath(); g.moveTo(4, 0); g.lineTo(len - 6, 0); g.stroke();
     g.lineWidth = 2;
     for (let t = 0.2; t < 0.85; t += 0.16) { g.beginPath(); g.moveTo(t * len, 0); g.lineTo(t * len + 22, -wid * 0.62); g.moveTo(t * len, 0); g.lineTo(t * len + 22, wid * 0.62); g.stroke(); }
     g.restore();
@@ -654,20 +601,20 @@ export function drawRose(size = 640) {
     rim.quadraticCurveTo(...P(r1 * 1.07, ang), ...P(r1, ang + halfW * 0.35));
     rim.quadraticCurveTo(...P(r1 * 0.92, a1 + 0.08), ...P(r1 * 0.8, a1 - 0.02));
     g.strokeStyle = '#000'; g.lineWidth = 7; g.stroke(rim);       // thin dark gap behind the rim
-    g.strokeStyle = '#ffe1e9'; g.lineWidth = 4; g.stroke(rim);
+    g.strokeStyle = '#ffe3f2'; g.lineWidth = 4; g.stroke(rim);
   };
   // back to front: outer layers first, each layer rotated so petals overlap like a real rose
   const layers = [
-    { n: 6, r0: 50, r1: 150, w: 0.62, off: 0.0, dark: '#b8204a', light: '#ff5a86' },
-    { n: 5, r0: 40, r1: 120, w: 0.66, off: 0.55, dark: '#c4264f', light: '#ff6b92' },
-    { n: 5, r0: 30, r1: 92, w: 0.66, off: 0.15, dark: '#cc2b55', light: '#ff7d9e' },
-    { n: 4, r0: 22, r1: 66, w: 0.78, off: 0.9, dark: '#d4325c', light: '#ff8fab' },
+    { n: 6, r0: 50, r1: 150, w: 0.62, off: 0.0, dark: '#a8246e', light: '#ff5fae' },
+    { n: 5, r0: 40, r1: 120, w: 0.66, off: 0.55, dark: '#b42a78', light: '#ff70b7' },
+    { n: 5, r0: 30, r1: 92, w: 0.66, off: 0.15, dark: '#c03282', light: '#ff82c0' },
+    { n: 4, r0: 22, r1: 66, w: 0.78, off: 0.9, dark: '#cc3a8c', light: '#ff95ca' },
   ];
   for (const L of layers) for (let i = 0; i < L.n; i++) petal(L.off + (i / L.n) * Math.PI * 2, L.r0, L.r1, L.w, L.dark, L.light);
 
   // spiral center: tightly wrapped inner petals
-  g.fillStyle = '#c0244d'; g.beginPath(); g.ellipse(CX, CY, 44, 38, 0, 0, Math.PI * 2); g.fill();
-  g.strokeStyle = '#ffd3de'; g.lineWidth = 4;
+  g.fillStyle = '#b02a78'; g.beginPath(); g.ellipse(CX, CY, 44, 38, 0, 0, Math.PI * 2); g.fill();
+  g.strokeStyle = '#ffd9ee'; g.lineWidth = 4;
   g.beginPath();
   for (let t = 0; t < Math.PI * 5; t += 0.08) { const r = 4 + t * 2.6; const q = [CX + Math.cos(t) * r, CY + Math.sin(t) * r * 0.86]; t ? g.lineTo(...q) : g.moveTo(...q); }
   g.stroke();
@@ -704,8 +651,8 @@ export const SHAPES = [
 // Captions come from i18n.js (DICT[lang].shapes[key]).
   { key: 'crane', build: (n) => image(avatarUrl, n, { width: 3.7, depth: 0.22, threshold: 0.5 }) },
   { key: 'heart', build: heart },
+  { key: 'auto', build: (n) => sampleDrawing(drawAutomation(640), n), crisp: true },
   { key: 'webdev', build: (n) => sampleDrawing(drawWebDev(640), n), crisp: true },
-  { key: 'sysdev', build: (n) => sampleDrawing(drawSysDev(640), n), crisp: true },
   { key: 'design', build: (n) => sampleDrawing(drawDesign(640), n), crisp: true },
   { key: 'rose', build: (n) => sampleDrawing(drawRose(640), n, { width: 4.0, threshold: 0.24 }), crisp: true },
 ];
