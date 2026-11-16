@@ -360,3 +360,13 @@ html[lang='ja'] .brand-label { font: 500 13px var(--sans); letter-spacing: .1em;
 .brand-steps strong { font-size: 16px; }
 .brand-closing { font-weight: 600; color: var(--fg); padding-left: 14px; border-left: 2px solid var(--accent); }
 @media (max-width: 640px) { .brand-steps { grid-template-columns: 1fr; } .footer-tag { display: block; margin-top: 4px; } }
+
+/* nav: English label with the Japanese name underneath (Japanese mode only) */
+#site-nav a { display: inline-flex; flex-direction: column; align-items: center; line-height: 1.2; gap: 2px; }
+.nav-ja { font-size: 10px; color: var(--muted); letter-spacing: .04em; font-family: 'Noto Sans JP', var(--sans); }
+#site-nav a:hover .nav-ja, #site-nav a[aria-current='page'] .nav-ja { color: var(--accent); }
+html[lang='en'] .nav-ja { display: none; }
+@media (max-width: 640px) {
+  #site-nav a { flex-direction: row; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .nav-ja { font-size: 13px; }
+}
