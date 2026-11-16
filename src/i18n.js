@@ -3,7 +3,7 @@
 
 export const DICT = {
   ja: {
-    'meta.title': 'Your Name — AI活用・業務自動化・Web/システム開発',
+    'meta.title': 'Serion — AI活用・業務自動化・Web/システム開発',
     'meta.desc': '開発経験10年以上。PHP・Pythonによる Web/システム開発と、AI導入・業務自動化でビジネス課題の解決を支援します。',
     skip: '本文へ移動',
     'loader.msgs': ['準備しています', 'かたちを組み立てています', '色を整えています', 'まもなく始まります'],
@@ -16,7 +16,7 @@ export const DICT = {
     'hero.cta1': 'ご相談はこちら →', 'hero.cta2': '支援内容を見る',
     scroll: 'SCROLL',
 
-    'avatar.alt': 'Your Name のロゴ（鶴と富士山）',
+    'avatar.alt': 'Serion のロゴ（鶴と富士山）',
     'about.no': '01 — ABOUT', 'about.title': '導入することより、<br />「何のために、どう使うか」。',
     'about.body': '10年以上、PHPやPythonを用いたWeb・システム開発に携わってきました。これから大切なのは、AIを導入すること自体ではなく、何のために、どのように活用し、安全かつ効果的にビジネスの成果へつなげるかという視点です。技術的な実現可能性だけでなく、安全性・運用性・費用対効果まで考えたご提案をします。',
     stat1: '年以上の開発経験', stat2: '主な開発言語（PHP / JS / Java / Python）', stat3: '% 費用対効果を重視',
@@ -48,7 +48,7 @@ export const DICT = {
     'work.no': '03 — WORKS', 'work.title': '注目の制作実績',
     'work.note': '※ 「サンプル」と表示された実績は見本です。実際の案件に差し替えてください。',
     'feat.all': 'すべての実績を見る →',
-    'works.meta.title': '制作実績 — Your Name',
+    'works.meta.title': '制作実績 — Serion',
     'works.meta.desc': 'Web開発・システム導入・ゲーム開発・モバイル開発の制作実績。業種・サイト種別・技術で絞り込めます。',
     'works.no': 'WORKS', 'works.title': '制作実績',
     'works.lead': 'サービスと業種から、ご要望に近い事例を探せます。サイト種別や使用技術でさらに絞り込めます。',
@@ -61,6 +61,12 @@ export const DICT = {
     'wm.role': '担当範囲', 'wm.result': '成果', 'wm.skills': '使用技術', 'wm.visit': 'サイトを見る',
     'wm.contact': 'この内容で相談する', 'wm.close': '閉じる',
     'wm.sampleNote': '※ この事例はサンプルです。実際の案件に差し替えてください。',
+    'brand.tagline': ' — Ideas Connected. Innovation in Motion.',
+    'brand.label': 'Serion という名前について',
+    'brand.body1': 'Serion（セリオン）は、絶えず生まれ続ける創造と、イノベーションのエネルギーから生まれた名前です。意味のあるものづくりは、いつもひとつのアイデアから始まります。テクノロジーと創造力、そして丁寧な設計がつながることで、ひとつひとつのアイデアは、より大きなものへと育っていきます。',
+    'brand.body2': 'Serion という名前は、その道のりそのもの。アイデアと可能性、そしてイノベーションが連なり、かたちになっていく流れを表しています。',
+    'brand.p1': 'アイデアをつなぐ', 'brand.p2': '意味のある体験をつくる', 'brand.p3': '前へ進み続ける',
+    'brand.closing': 'Serion がつくるのは、「もの」だけではありません。その先にある「次」を、かたちにしていきます。',
     'shape.show': '{label} を表示',
     shapes: {
       crane: ['鶴', '技術で、高く遠くへ'],
@@ -69,7 +75,7 @@ export const DICT = {
     },
   },
   en: {
-    'meta.title': 'Your Name — AI Adoption, Automation & Web/System Development',
+    'meta.title': 'Serion — AI Adoption, Automation & Web/System Development',
     'meta.desc': '10+ years of PHP and Python development. I help businesses solve real problems with AI adoption, workflow automation and system integration.',
     skip: 'Skip to content',
     'loader.msgs': ['Warming up', 'Building shapes', 'Mixing colors', 'Almost there'],
@@ -82,7 +88,7 @@ export const DICT = {
     'hero.cta1': 'Start a conversation →', 'hero.cta2': 'See services',
     scroll: 'SCROLL',
 
-    'avatar.alt': 'Your Name logo (a crane and Mt. Fuji)',
+    'avatar.alt': 'Serion logo (a crane and Mt. Fuji)',
     'about.no': '01 — ABOUT', 'about.title': 'Not just adopting AI,<br />but knowing why and how.',
     'about.body': "For over ten years I've built web applications and business systems with PHP and Python. What matters now isn't adopting AI for its own sake. It's knowing what it's for, how to use it, and how to turn it into results safely. I propose solutions that weigh security, maintainability and cost-effectiveness, not just technical feasibility.",
     stat1: '+ years of development', stat2: 'core languages (PHP / JS / Java / Python)', stat3: '% focused on ROI',
@@ -114,7 +120,7 @@ export const DICT = {
     'work.no': '03 — WORK', 'work.title': 'Featured work',
     'work.note': '* Projects marked "Sample" are placeholders. Replace them with your real work.',
     'feat.all': 'See all projects →',
-    'works.meta.title': 'Works — Your Name',
+    'works.meta.title': 'Works — Serion',
     'works.meta.desc': 'Projects in web development, system implementation, game and mobile development. Filter by industry, site type and skills.',
     'works.no': 'WORKS', 'works.title': 'Projects',
     'works.lead': 'Find projects close to what you need by service and industry, then narrow down by site type and skills.',
@@ -127,6 +133,12 @@ export const DICT = {
     'wm.role': 'My role', 'wm.result': 'Results', 'wm.skills': 'Skills used', 'wm.visit': 'Visit site',
     'wm.contact': 'Ask about a project like this', 'wm.close': 'Close',
     'wm.sampleNote': '* This is a sample project. Replace it with your real work.',
+    'brand.tagline': ' — Ideas Connected. Innovation in Motion.',
+    'brand.label': 'About the name',
+    'brand.body1': 'Serion is a name inspired by the idea of continuous creation and the energy of innovation. Every meaningful creation begins with an idea. Through the connection of technology, creativity and thoughtful design, individual ideas can evolve into something greater.',
+    'brand.body2': 'The name represents this journey: a continuous series of ideas, possibilities and innovations brought to life.',
+    'brand.p1': 'Connect ideas', 'brand.p2': 'Create meaningful experiences', 'brand.p3': 'Keep moving forward',
+    'brand.closing': "Serion is not just about building things. It's about creating what comes next.",
     'shape.show': 'Show {label}',
     shapes: {
       crane: ['CRANE', 'Technology that takes you further'],
