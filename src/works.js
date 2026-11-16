@@ -181,7 +181,12 @@ function sorted(list) {
 function renderGrid() {
   const list = sorted(WORKS.filter((w) => match(w)));
   els.grid.innerHTML = list.map((w, i) => cardHTML(w, `?p=${encodeURIComponent(w.id)}`).replace('class="w-card"', `class="w-card" style="--i:${Math.min(i, 12)}"`)).join('');
-  els.count.textContent = t('wf.count').replace('{n}', list.length);
+  // "8 projects in total" when nothing narrows the list, otherwise "Showing 3 of 8 projects"
+  const filtered = list.length !== WORKS.length || state.service !== 'all' || state.industry !== 'all' || state.skills.length || state.q;
+  const total = WORKS.length;
+  els.count.textContent = filtered
+    ? t('wf.count').replace('{n}', list.length).replace('{total}', total)
+    : (total === 1 && t('wf.total1') !== 'wf.total1' ? t('wf.total1') : t('wf.total').replace('{total}', total));
   els.empty.hidden = list.length > 0;
 }
 
