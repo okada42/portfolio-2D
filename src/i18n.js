@@ -12,7 +12,7 @@ export const DICT = {
     'clock.label': '日本の現在時刻', menu: 'メニュー',
     eyebrow: 'やさしく寄り添う、フリーランスエンジニア',
     'hero.title': 'あなたの想いを、<br /><em>丁寧に</em><br />かたちにします。',
-    'hero.lead': 'つくりたいもの、効率化したい作業。まだぼんやりとしたアイデアでも大丈夫です。じっくりお話を伺い、専門用語を使わずにわかりやすくご説明しながら、一緒にかたちにしていきます。',
+    'hero.lead': '「また次もお願いしたい」と言っていただけることが、何よりの喜びです。<br />まずは、今のお悩みや状況をお気軽にお聞かせください。一緒に整理しながら、本当に必要なことを見極め、最適な一歩をご提案します。',
     'hero.status': 'ただいま新規のご相談を受け付けています',
     'hero.cta1': '無料で相談する →', 'hero.cta2': 'サービス内容を見る',
     scroll: 'SCROLL',
@@ -24,10 +24,7 @@ export const DICT = {
 
     'svc.no': '02 — SERVICES', 'svc.title': '主な対応領域',
 
-    'values.no': '04 — VALUES', 'values.title': '「また次もお願いしたい」と<br />言っていただけることが、何よりの喜びです。',
-    'values.body': 'まずは、今のお悩みや状況をお気軽にお聞かせください。一緒に整理しながら、本当に必要なことを見極め、最適な一歩をご提案します。',
-
-    'contact.no': '05 — CONTACT', 'contact.title': '「こんなこと頼めるかな？」<br />ということでも、お気軽にどうぞ。',
+    'contact.no': '04 — CONTACT', 'contact.title': '「こんなこと頼めるかな？」<br />ということでも、お気軽にどうぞ。',
     'contact.body': '技術のことがよく分からない段階からの壁打ちも大歓迎です。ご相談・お見積もりは無料、内容を確認のうえ折り返しご連絡いたします。',
     'work.no': '03 — WORKS', 'work.title': '主な制作実績',
     'work.note': '※「サンプル」と表示されている実績は見本です。',
@@ -89,7 +86,7 @@ export const DICT = {
     'clock.label': 'Current time in Japan', menu: 'Menu',
     eyebrow: 'YOUR FRIENDLY TECH PARTNER',
     'hero.title': 'Your idea,<br />built with <em>care</em>.',
-    'hero.lead': "Whether it's something you'd like to build or a task you want off your plate, a rough idea is all you need. I'll listen, explain everything in plain English, and build it with you, step by step.",
+    'hero.lead': "Nothing beats hearing, \"Let's work together again.\"<br />Tell me where things stand and what's getting in the way. Together, we'll figure out what you actually need right now and find the best first step.",
     'hero.status': 'Currently taking on new projects',
     'hero.cta1': "Let's talk →", 'hero.cta2': 'View services',
     scroll: 'SCROLL',
@@ -101,10 +98,7 @@ export const DICT = {
 
     'svc.no': '02 — SERVICES', 'svc.title': 'What I can help with',
 
-    'values.no': '04 — VALUES', 'values.title': 'Nothing beats hearing,<br />"Let\'s work together again."',
-    'values.body': "Tell me where things stand and what's getting in the way. Together, we'll figure out what you actually need right now and find the best first step.",
-
-    'contact.no': '05 — CONTACT', 'contact.title': 'Not sure if I can help?<br />Just ask.',
+    'contact.no': '04 — CONTACT', 'contact.title': 'Not sure if I can help?<br />Just ask.',
     'contact.body': "Even if you're not sure what you need yet, I'm happy to brainstorm. Consultations and quotes are always free, and I'll get back to you soon.",
     'work.no': '03 — WORK', 'work.title': 'Featured work',
     'work.note': '* Projects labeled "Sample" are placeholders.',
