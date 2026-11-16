@@ -9,7 +9,7 @@ Push to `main`, and the site rebuilds automatically. The build stops with a clea
 | `service` | yes | `web` · `system` · `game` · `mobile` |
 | `industry` | yes | `medical` `beauty` `food` `realestate` `construction` `manufacturing` `retail` `education` `professional` `it` `hospitality` `logistics` `staffing` `entertainment` `public` `personal` `other` |
 | `siteType` | web only | `hp` `corporate` `lp` `ec` `booking` `media` `recruit` `portal`. Several: `corporate\|booking` |
-| `skills` | | Separate with `\|`: `WordPress\|PHP\|MySQL` (new skills appear in the filter automatically). Skill groups (development / design & no-code tools) are listed in `src/taxonomy.js` |
+| `skills` | | Separate with `\|`: `WordPress\|PHP\|MySQL` (new skills appear in the filter automatically). Skill groups (coding / no-code & design) are listed in `src/taxonomy.js`; unlisted skills go into Coding, so add new no-code tools there |
 | `year` | | `2025` |
 | `featured` | | `yes` to show on the homepage (up to 8, newest first) |
 | `sample` | | `yes` shows a "Sample" badge. Leave empty for real projects |

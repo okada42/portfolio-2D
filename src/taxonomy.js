@@ -40,18 +40,25 @@ export const SITE_TYPES = [
   { key: 'portal', ja: 'ポータル・会員サイト', en: 'Portal / Membership' },
 ];
 
-// Skills filter groups. Every skill listed here is always shown in the filter (greyed out until a
-// project uses it). Skills used in works.csv but not listed here go into "Development" automatically.
+// Skills filter: two groups. Every skill listed here is always shown in the filter (greyed out until a
+// project uses it). Skills used in works.csv but not listed here go into "Coding" automatically,
+// so add new no-code tools to the second list.
 export const SKILL_GROUPS = [
   {
-    key: 'dev', ja: 'プログラミング・開発', en: 'Development',
-    skills: ['PHP', 'Python', 'JavaScript', 'TypeScript', 'Java', 'HTML', 'CSS', 'Laravel', 'React', 'Next.js', 'Vue.js', 'Node.js',
-      'WordPress', 'WooCommerce', 'MySQL', 'Firebase', 'Google Apps Script', 'LLM / AI API', 'three.js', 'Canvas'],
+    key: 'code', ja: 'コーディング（プログラミング）', en: 'Coding',
+    skills: ['PHP', 'Python', 'JavaScript', 'TypeScript', 'Java', 'Laravel', 'React', 'Next.js', 'Vue.js', 'Node.js',
+      'MySQL', 'Firebase', 'Google Apps Script', 'LLM / AI API', 'three.js', 'Canvas'],
   },
   {
-    key: 'tools', ja: 'デザイン・ノーコードツール', en: 'Design & no-code tools',
-    skills: ['Figma', 'Photoshop', 'Illustrator', 'Adobe XD', 'Canva', 'Premiere Pro', 'After Effects',
-      'Excel / CSV', 'Google Workspace', 'Notion', 'Wix', 'STUDIO', 'Shopify', 'kintone', 'Zapier', 'Make'],
+    key: 'nocode', ja: 'ノーコード・デザイン（CMS・ツール）', en: 'No-code & design (CMS, tools)',
+    skills: [
+      // CMS & site builders
+      'WordPress', 'WooCommerce', 'Shopify', 'Wix', 'STUDIO',
+      // business & automation
+      'kintone', 'Zapier', 'Make', 'Notion', 'Google Workspace', 'Excel / CSV',
+      // design
+      'Figma', 'Photoshop', 'Illustrator', 'Adobe XD', 'Canva', 'Premiere Pro',
+    ],
   },
 ];
 

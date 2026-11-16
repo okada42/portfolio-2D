@@ -102,14 +102,14 @@ const usedIndustries = INDUSTRIES.filter((i) => WORKS.some((w) => w.industry ===
   .sort((a, b) => WORKS.filter((w) => w.industry === b.key).length - WORKS.filter((w) => w.industry === a.key).length);
 const usedSiteTypes = SITE_TYPES.filter((s) => WORKS.some((w) => w.siteType.includes(s.key)));
 
-// skills: grouped; every listed skill is shown, used ones first. Unlisted skills from the data join "Development".
+// skills: grouped; every listed skill is shown in taxonomy order. Unlisted skills from the data join "Development".
 const skillFreq = WORKS.flatMap((w) => w.skills).reduce((m, s) => m.set(s, (m.get(s) || 0) + 1), new Map());
 const listed = new Set(SKILL_GROUPS.flatMap((g) => g.skills).map(norm));
 const skillGroups = SKILL_GROUPS.map((g, gi) => {
   const extra = gi === 0 ? [...skillFreq.keys()].filter((s) => !listed.has(norm(s))) : [];
   // use the spelling from the data when it differs only in case
   const names = [...g.skills, ...extra].map((n) => [...skillFreq.keys()].find((k) => norm(k) === norm(n)) || n);
-  names.sort((a, b) => (skillFreq.get(b) || 0) - (skillFreq.get(a) || 0) || a.localeCompare(b));
+  // keep the order from taxonomy.js (grouped by kind); unlisted skills from the data come last
   return { ...g, names };
 });
 const allSkills = skillGroups.flatMap((g) => g.names);
