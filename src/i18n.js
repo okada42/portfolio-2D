@@ -73,8 +73,8 @@ export const DICT = {
     'shape.show': '{label}を表示',
     shapes: {
       crane: ['鶴', '技術で、より高く、より遠くへ'],
-      heart: ['真心', 'ひとつひとつ、心を込めて'], auto: ['自動化・AI活用', 'いつもの作業を、自動で流れる仕組みに'], webdev: ['Web・システム開発', 'つながる仕組みを、ひとつに'],
-       design: ['デザイン', 'まずは鉛筆で、アイデアをかたちに'], rose: ['感謝', 'ありがとうの気持ちを、花ひらくかたちに'],
+      heart: ['真心', 'ひとつひとつ、心を込めて'], auto: ['自動化・AI活用', 'いつもの作業を、自動で流れる仕組みに'], webdev: ['Web・システム開発', 'サイトもシステムも、最適な技術で'],
+       design: ['デザイン', 'Figma・Photoshopで、想いをかたちに'], rose: ['感謝', 'ありがとうの気持ちを、花ひらくかたちに'],
     },
   },
   en: {
@@ -147,8 +147,8 @@ export const DICT = {
     'shape.show': 'Show {label}',
     shapes: {
       crane: ['CRANE', 'Technology that takes you further'],
-      heart: ['WITH HEART', 'Care in every detail'], auto: ['AUTOMATION & AI', 'Your routine work, running on its own'], webdev: ['WEB & SYSTEMS', 'Everything connected, built as one'],
-       design: ['DESIGN', 'Every great site starts as a sketch'], rose: ['THANK YOU', 'Gratitude, in full bloom'],
+      heart: ['WITH HEART', 'Care in every detail'], auto: ['AUTOMATION & AI', 'Your routine work, running on its own'], webdev: ['WEB & SYSTEMS', 'The right tools for every build'],
+       design: ['DESIGN', 'Designed in Figma and Photoshop'], rose: ['THANK YOU', 'Gratitude, in full bloom'],
     },
   },
 };
