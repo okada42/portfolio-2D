@@ -48,7 +48,7 @@ export const SKILL_GROUPS = [
   {
     key: 'code', ja: 'プログラミング', en: 'Coding',
     skills: ['PHP', 'Python', 'JavaScript', 'TypeScript', 'Java', 'Laravel', 'React', 'Next.js', 'Vue.js', 'Node.js',
-      'MySQL', 'Firebase', 'Google Apps Script', 'LLM / AI API', 'three.js', 'Canvas'],
+      'MySQL', 'Firebase', 'Google Apps Script', 'LLM / AI API', 'LINE API', 'Zoom API', 'three.js', 'Canvas'],
   },
   {
     key: 'nocode', ja: 'ノーコード・デザインツール', en: 'No-code & design tools',
@@ -75,7 +75,7 @@ export const SEARCH_SYNONYMS = {
   lp: ['ランディングページ', 'landing page'], 'ランディングページ': ['lp'],
   ec: ['ecサイト', 'e-commerce', 'online store', 'ネットショップ'], 'ネットショップ': ['ec', 'online store'], store: ['ecサイト', 'online store'], shop: ['ecサイト', 'online store'],
   ai: ['ai', 'llm'], 'エーアイ': ['ai'],
-  line: ['line公式', 'ライン'], 'ライン': ['line'],
+  line: ['line公式', 'ライン', 'line api'], 'ライン': ['line', 'line api'], zoom: ['zoom api'], 'ズーム': ['zoom api'], 'オンライン診療': ['zoom api', 'オンライン相談'], '連携': ['api', 'integration'], '整形外科': ['medical', 'clinic'],
   'ドメイン': ['domain setup', 'server migration'], 'スタジオ': ['studio'],
   '音楽': ['music'], 'ジャズ': ['jazz'], '教室': ['school', 'スクール'], 'スクール': ['school', '教室'],
   seo: ['seo / meo'], meo: ['seo / meo'], 'エスイーオー': ['seo / meo'], '集客': ['seo / meo'], '福祉': ['welfare'], 'グループホーム': ['welfare', 'group home'], '障がい': ['障害'], '障害': ['障がい'],
