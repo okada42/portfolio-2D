@@ -10,6 +10,7 @@ export const SERVICES = [
 
 export const INDUSTRIES = [
   { key: 'medical', ja: '医療・クリニック', en: 'Medical & Clinics' },
+  { key: 'welfare', ja: '福祉・介護', en: 'Welfare & Care' },
   { key: 'beauty', ja: '美容・サロン', en: 'Beauty & Wellness' },
   { key: 'food', ja: '飲食', en: 'Food & Restaurants' },
   { key: 'realestate', ja: '不動産', en: 'Real Estate' },
@@ -56,6 +57,8 @@ export const SKILL_GROUPS = [
       'WordPress', 'WooCommerce', 'Shopify', 'Wix', 'STUDIO',
       // hosting & operations
       'Server migration', 'Domain setup',
+      // marketing
+      'SEO / MEO',
       // business & automation
       'kintone', 'Zapier', 'Make', 'Notion', 'Google Workspace', 'Excel / CSV',
       // design
@@ -75,6 +78,7 @@ export const SEARCH_SYNONYMS = {
   line: ['line公式', 'ライン'], 'ライン': ['line'],
   'ドメイン': ['domain setup', 'server migration'], 'スタジオ': ['studio'],
   '音楽': ['music'], 'ジャズ': ['jazz'], '教室': ['school', 'スクール'], 'スクール': ['school', '教室'],
+  seo: ['seo / meo'], meo: ['seo / meo'], 'エスイーオー': ['seo / meo'], '集客': ['seo / meo'], '福祉': ['welfare'], 'グループホーム': ['welfare', 'group home'], '障がい': ['障害'], '障害': ['障がい'],
   'サーバー移転': ['server migration'], '移転': ['server migration'], 'ドメイン移管': ['server migration'], '静的': ['静的サイト', 'static'], static: ['静的'],
   'エクセル': ['excel'], 'フィグマ': ['figma'], 'フォトショップ': ['photoshop'], 'イラストレーター': ['illustrator'],
 };
