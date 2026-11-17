@@ -58,7 +58,7 @@ export const SKILL_GROUPS = [
       // hosting & operations
       'Server migration', 'Domain setup',
       // marketing
-      'SEO / MEO', 'Multilingual (JA/EN)',
+      'SEO / MEO', 'Multilingual',
       // business & automation
       'kintone', 'Zapier', 'Make', 'Notion', 'Google Workspace', 'Excel / CSV',
       // design
@@ -82,7 +82,7 @@ export const SEARCH_SYNONYMS = {
   '採用': ['recruit', 'careers'], '求人': ['recruit', 'careers'], 'リクルート': ['recruit'], 'スパ': ['spa'], 'リラクゼーション': ['relaxation'],
   'エステ': ['esthe', 'beauty'], '脱毛': ['hair removal', 'wax'],
   'リフォーム': ['renovation', 'リノベーション'], 'リノベーション': ['renovation', 'リフォーム'], 'リノベ': ['renovation', 'リノベーション'], '工務店': ['construction'], 'モルタル': ['mortar'],
-  'カフェ': ['cafe', 'café'], '飲食店': ['food', 'restaurant'], '多言語': ['multilingual (ja/en)', 'インバウンド'], 'インバウンド': ['multilingual (ja/en)', '多言語'], '英語': ['multilingual (ja/en)'],
+  'カフェ': ['cafe', 'café'], '飲食店': ['food', 'restaurant'], '多言語': ['multilingual', 'インバウンド'], 'インバウンド': ['multilingual', '多言語'], '英語': ['multilingual'], 'ギフト': ['gift'], 'アイス': ['gelato', 'ice cream'], 'ジェラート': ['gelato'], 'ショッピファイ': ['shopify'],
   'サーバー移転': ['server migration'], '移転': ['server migration'], 'ドメイン移管': ['server migration'], '静的': ['静的サイト', 'static'], static: ['静的'],
   'エクセル': ['excel'], 'フィグマ': ['figma'], 'フォトショップ': ['photoshop'], 'イラストレーター': ['illustrator'],
 };
