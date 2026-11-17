@@ -82,6 +82,7 @@ export const SEARCH_SYNONYMS = {
   '採用': ['recruit', 'careers'], '求人': ['recruit', 'careers'], 'リクルート': ['recruit'], 'スパ': ['spa'], 'リラクゼーション': ['relaxation'],
   'エステ': ['esthe', 'beauty'], '脱毛': ['hair removal', 'wax'],
   'リフォーム': ['renovation', 'リノベーション'], 'リノベーション': ['renovation', 'リフォーム'], 'リノベ': ['renovation', 'リノベーション'], '工務店': ['construction'], 'モルタル': ['mortar'],
+  'カフェ': ['cafe', 'café'], '飲食店': ['food', 'restaurant'], '多言語': ['multilingual', 'インバウンド'], 'インバウンド': ['multilingual', '多言語'],
   'サーバー移転': ['server migration'], '移転': ['server migration'], 'ドメイン移管': ['server migration'], '静的': ['静的サイト', 'static'], static: ['静的'],
   'エクセル': ['excel'], 'フィグマ': ['figma'], 'フォトショップ': ['photoshop'], 'イラストレーター': ['illustrator'],
 };
