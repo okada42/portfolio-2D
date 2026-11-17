@@ -15,6 +15,7 @@ Push to `main`, and the site rebuilds automatically. The build stops with a clea
 | `sample` | | `yes` shows a "Sample" badge. Leave empty for real projects |
 | `thumb` | | Image path, e.g. `works/clinic-booking.webp` (put the file in `public/works/`). Empty = auto-generated placeholder |
 | `url` | | Live site link (optional) |
+| `figma` | | Figma design link (optional). Adds a "View Figma design" button. Set the file to "Anyone with the link can view" |
 | `title_ja` / `title_en` | ja required | Project title |
 | `summary_ja` / `summary_en` | | One or two sentences |
 | `role_ja` / `role_en` | | What you did |

@@ -43,7 +43,7 @@ function worksFromCSV(text, file) {
       id: r.id, service: r.service, industry: r.industry,
       siteType: list(r.siteType), skills: list(r.skills),
       year: Number(r.year) || null, featured: bool(r.featured), sample: bool(r.sample),
-      thumb: r.thumb || '', url: r.url || '',
+      thumb: r.thumb || '', url: r.url || '', figma: r.figma || '',
       ja: { title: r.title_ja, summary: r.summary_ja, role: r.role_ja, result: r.result_ja },
       en: { title: r.title_en || r.title_ja, summary: r.summary_en || r.summary_ja, role: r.role_en || r.role_ja, result: r.result_en || r.result_ja },
     };
@@ -54,6 +54,7 @@ function worksFromCSV(text, file) {
     if (!valid.industry.includes(w.industry)) errors.push(`line ${line}: industry "${w.industry}" must be one of ${valid.industry.join(', ')}`);
     for (const s of w.siteType) if (!valid.siteType.includes(s)) errors.push(`line ${line}: siteType "${s}" must be one of ${valid.siteType.join(', ')}`);
     if (!w.ja.title) errors.push(`line ${line}: missing title_ja`);
+    if (w.figma && !/^https:\/\/(www\.)?figma\.com\//.test(w.figma)) errors.push(`line ${line}: figma must be a https://www.figma.com/ link`);
     return w;
   });
   if (errors.length) throw new Error(`${file}\n  ` + errors.join('\n  '));
