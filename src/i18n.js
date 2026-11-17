@@ -84,6 +84,9 @@ export const DICT = {
     'cf.sent': 'お問い合わせありがとうございます。内容を確認のうえ、折り返しご連絡いたします。',
     'cf.failed': '送信できませんでした。お手数ですが、時間をおいて再度お試しいただくか、Lancers からご連絡ください。',
     'cf.mailto': 'メールアプリが開きます。内容をご確認のうえ、そのまま送信してください。',
+    'tm.title': 'お問い合わせありがとうございます', 'tm.body': 'メッセージを受け取りました。内容を確認のうえ、ご入力いただいたメールアドレスへ折り返しご連絡いたします。',
+    'tm.note': '通常1営業日以内にご返信します。数日たっても返信がない場合は、お手数ですが Lancers からご連絡ください。',
+    'tm.close': '閉じる', 'tm.works': '制作実績を見る',
     'shape.show': '{label}を表示',
     shapes: {
       crane: ['鶴', '技術で、より高く、より遠くへ'],
@@ -172,6 +175,9 @@ export const DICT = {
     'cf.sent': "Thanks for reaching out! I'll review your message and get back to you soon.",
     'cf.failed': "Your message couldn't be sent. Please try again later, or reach me on Lancers.",
     'cf.mailto': 'Your email app will open with your message. Just review it and hit send.',
+    'tm.title': 'Thank you for reaching out!', 'tm.body': "I've received your message and will get back to you at the email address you provided.",
+    'tm.note': "I usually reply within one business day. If you haven't heard back in a few days, please message me on Lancers.",
+    'tm.close': 'Close', 'tm.works': 'View my work',
     'shape.show': 'Show {label}',
     shapes: {
       crane: ['CRANE', 'Technology that takes you further'],

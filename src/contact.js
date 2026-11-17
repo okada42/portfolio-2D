@@ -8,6 +8,18 @@ export const FORM_ENDPOINT = `https://formsubmit.co/ajax/${CONTACT_EMAIL}`;
 
 import { t } from './i18n.js';
 
+// thank-you pop-up shown after a message is delivered
+function openThanks() {
+  const d = document.querySelector('#thanks-modal');
+  if (!d) return;
+  if (!d.dataset.ready) {
+    d.addEventListener('click', (e) => { if (e.target === d || e.target.closest('[data-tm-close]')) d.close(); });
+    d.dataset.ready = '1';
+  }
+  d.showModal();
+  d.querySelector('[data-tm-close]')?.focus();
+}
+
 export function initContactForm() {
   const form = document.querySelector('#contact-form');
   if (!form) return;
@@ -55,6 +67,7 @@ export function initContactForm() {
       if (!res.ok || String(json.success) !== 'true') throw new Error(json.message || res.status);
       form.reset();
       show('cf.sent', 'ok');
+      openThanks();
     } catch {
       show('cf.failed', 'error');
     } finally {

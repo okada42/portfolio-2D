@@ -148,7 +148,7 @@
       <div class="contact-grid">
         <div class="contact-links reveal">
           <a class="c-link" href="https://www.lancers.jp/profile/Serion7" target="_blank" rel="noopener">
-            <span class="c-ico c-avatar" aria-hidden="true"><img src="./avatar-256.webp" alt="" width="44" height="44" loading="lazy" /></span>
+            <span class="c-ico c-avatar" aria-hidden="true"><img src="./lancers-icon.png" alt="" width="44" height="44" loading="lazy" /></span>
             <span class="c-txt"><strong data-i18n="cf.lancers"></strong><small data-i18n="cf.lancersSub"></small></span>
             <span class="c-arrow" aria-hidden="true">↗</span>
           </a>
@@ -189,6 +189,20 @@
       </div>
     </section>
   </main>
+
+  <dialog class="thanks-modal" id="thanks-modal" aria-labelledby="thanks-title">
+    <div class="tm-inner">
+      <img class="tm-avatar" src="./avatar-256.webp" alt="" width="84" height="84" />
+      <span class="hanko tm-hanko" aria-hidden="true">縁</span>
+      <h2 id="thanks-title" data-i18n="tm.title"></h2>
+      <p data-i18n="tm.body"></p>
+      <p class="tm-note" data-i18n="tm.note"></p>
+      <div class="tm-actions">
+        <button type="button" class="btn" data-tm-close data-i18n="tm.close"></button>
+        <a class="btn ghost" href="works.html" data-i18n="tm.works"></a>
+      </div>
+    </div>
+  </dialog>
 
   <footer class="footer">© <span class="year"></span> Serion<span class="footer-tag" data-i18n="brand.tagline"></span></footer>
   <script type="module" src="/src/main.js"></script>

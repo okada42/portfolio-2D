@@ -490,3 +490,26 @@ html[lang='ja'] .eyebrow { font-family: var(--sans); font-weight: 500; letter-sp
   .shape-caption strong { white-space: nowrap; font-size: 18px; }
   .shape-caption small { flex-basis: 100%; text-align: right; font-size: 11px; }
 }
+
+/* Lancers icon on the contact card */
+.c-avatar img[src*="lancers"] { border-radius: 10px; }
+
+/* thank-you pop-up after sending the contact form */
+.thanks-modal { width: min(460px, calc(100% - 32px)); padding: 0; border: 0; border-radius: 22px; background: #0a0e18; color: var(--fg); overflow: visible; }
+.thanks-modal::backdrop { background: rgba(3,5,10,.75); backdrop-filter: blur(6px); }
+.thanks-modal[open] { animation: modal-in .4s cubic-bezier(.2,.7,.2,1); }
+.thanks-modal::before { content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px; pointer-events: none;
+  background: linear-gradient(135deg, #5fd4ff, #b98cff 45%, #ffb86b 75%, #5fd4ff);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+.tm-inner { position: relative; padding: 36px 30px 30px; text-align: center; }
+.tm-avatar { width: 84px; height: 84px; border-radius: 50%; box-shadow: 0 0 0 2px rgba(106,215,255,.4), 0 0 30px rgba(106,215,255,.35); }
+.tm-hanko { position: absolute; top: 30px; left: calc(50% + 26px); width: 34px; height: 34px; margin: 0; font-size: 18px; border-radius: 6px; }
+.thanks-modal h2 { font-size: clamp(20px, 3vw, 24px); margin: 18px 0 10px; }
+.thanks-modal p { color: #c9d4e6; font-size: 14.5px; }
+.tm-note { margin-top: 10px; color: var(--muted) !important; font-size: 12.5px !important; }
+.tm-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 24px; }
+.tm-actions .btn { border: 0; cursor: pointer; font: 600 14px var(--sans); }
+.tm-actions .btn.ghost { border: 1px solid var(--line); }
+
+/* the global "* { margin: 0 }" reset removes the browser's auto-centering of <dialog>; restore it */
+dialog.w-modal, dialog.thanks-modal { margin: auto; }
