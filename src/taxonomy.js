@@ -81,7 +81,7 @@ export const SEARCH_SYNONYMS = {
   seo: ['seo / meo'], meo: ['seo / meo'], 'エスイーオー': ['seo / meo'], '集客': ['seo / meo'], '福祉': ['welfare'], 'グループホーム': ['welfare', 'group home'], '障がい': ['障害'], '障害': ['障がい'],
   '採用': ['recruit', 'careers'], '求人': ['recruit', 'careers'], 'リクルート': ['recruit'], 'スパ': ['spa'], 'リラクゼーション': ['relaxation'],
   'エステ': ['esthe', 'beauty'], '脱毛': ['hair removal', 'wax'],
-  'リフォーム': ['renovation', 'リノベーション'], 'リノベーション': ['renovation', 'リフォーム'], 'リノベ': ['renovation', 'リノベーション'], '工務店': ['construction'], 'モルタル': ['mortar'],
+  'リフォーム': ['renovation', 'リノベーション'], 'リノベーション': ['renovation', 'リフォーム'], 'リノベ': ['renovation', 'リノベーション'], '工務店': ['construction'], '注文住宅': ['custom home', '工務店'], '住宅': ['housing', 'home'], 'パッシブハウス': ['passive house'], '鳥取': ['tottori'], 'モルタル': ['mortar'],
   'カフェ': ['cafe', 'café'], '飲食店': ['food', 'restaurant'], '多言語': ['multilingual', 'インバウンド'], 'インバウンド': ['multilingual', '多言語'], '英語': ['multilingual'], 'ギフト': ['gift'], 'アイス': ['gelato', 'ice cream'], 'ジェラート': ['gelato'], 'ショッピファイ': ['shopify'],
   'サーバー移転': ['server migration'], '移転': ['server migration'], 'ドメイン移管': ['server migration'], '静的': ['静的サイト', 'static'], static: ['静的'],
   'エクセル': ['excel'], 'フィグマ': ['figma'], 'フォトショップ': ['photoshop'], 'イラストレーター': ['illustrator'],
