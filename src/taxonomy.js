@@ -79,6 +79,7 @@ export const SEARCH_SYNONYMS = {
   'ドメイン': ['domain setup', 'server migration'], 'スタジオ': ['studio'],
   '音楽': ['music'], 'ジャズ': ['jazz'], '教室': ['school', 'スクール'], 'スクール': ['school', '教室'],
   seo: ['seo / meo'], meo: ['seo / meo'], 'エスイーオー': ['seo / meo'], '集客': ['seo / meo'], '福祉': ['welfare'], 'グループホーム': ['welfare', 'group home'], '障がい': ['障害'], '障害': ['障がい'],
+  '採用': ['recruit', 'careers'], '求人': ['recruit', 'careers'], 'リクルート': ['recruit'], 'スパ': ['spa'], 'リラクゼーション': ['relaxation'],
   'サーバー移転': ['server migration'], '移転': ['server migration'], 'ドメイン移管': ['server migration'], '静的': ['静的サイト', 'static'], static: ['静的'],
   'エクセル': ['excel'], 'フィグマ': ['figma'], 'フォトショップ': ['photoshop'], 'イラストレーター': ['illustrator'],
 };
