@@ -1,10 +1,10 @@
-// Contact form. GitHub Pages can't send mail, so the form posts to a form service.
-//
-// SETUP: create a free form at https://formspree.io (or a compatible service), then paste its
-// endpoint below, e.g. 'https://formspree.io/f/abcdwxyz'. Until then, submitting opens the
-// visitor's email app with the message filled in, addressed to CONTACT_EMAIL.
-export const FORM_ENDPOINT = '';
-export const CONTACT_EMAIL = 'hello@example.com';
+// Contact form. GitHub Pages can't send mail, so the form posts to FormSubmit (formsubmit.co):
+// free, no account needed. The first submission sends a one-time activation email to CONTACT_EMAIL;
+// after clicking "Activate", every submission is delivered to that inbox.
+// Tip: after activation, FormSubmit emails you a random alias. Replace the email in FORM_ENDPOINT
+// with that alias so your address isn't visible in the page source.
+export const CONTACT_EMAIL = 'opensource2117@gmail.com';
+export const FORM_ENDPOINT = `https://formsubmit.co/ajax/${CONTACT_EMAIL}`;
 
 import { t } from './i18n.js';
 
@@ -41,8 +41,18 @@ export function initContactForm() {
 
     btn.disabled = true; show('cf.sending', 'info');
     try {
+      // readable labels in the email, plus FormSubmit options
+      const pick2 = (sel) => form.querySelector(`${sel} option:checked`)?.textContent || '';
+      data.set('type', pick2('#cf-type'));
+      data.set('budget', pick2('#cf-budget'));
+      data.set('consent', 'yes');
+      data.set('_subject', `${t('cf.subject')}: ${data.get('name')}`);
+      data.set('_replyto', String(data.get('email')));
+      data.set('_template', 'table');
+      data.set('_captcha', 'false');
       const res = await fetch(FORM_ENDPOINT, { method: 'POST', body: data, headers: { Accept: 'application/json' } });
-      if (!res.ok) throw new Error(res.status);
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok || String(json.success) !== 'true') throw new Error(json.message || res.status);
       form.reset();
       show('cf.sent', 'ok');
     } catch {
