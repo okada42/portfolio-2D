@@ -127,7 +127,8 @@ const chip = ({ key, text: txt, count, active, disabled, extra = '' }) =>
 function renderServices() {
   const all = countBy('service', () => true);
   els.service.innerHTML = chip({ key: 'all', text: esc(t('wf.all')), count: all, active: state.service === 'all' }) +
-    SERVICES.map((s) => {
+    // only services that have at least one project (others reappear once a project is added)
+    SERVICES.filter((s) => WORKS.some((w) => w.service === s.key)).map((s) => {
       const n = countBy('service', (w) => w.service === s.key);
       return chip({ key: s.key, text: esc(label(s)), count: n, active: state.service === s.key, disabled: !n && state.service !== s.key });
     }).join('');
