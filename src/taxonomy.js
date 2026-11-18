@@ -48,7 +48,7 @@ export const SKILL_GROUPS = [
   {
     key: 'code', ja: 'プログラミング', en: 'Coding',
     skills: ['PHP', 'Python', 'JavaScript', 'TypeScript', 'Java', 'Laravel', 'React', 'Next.js', 'Vue.js', 'Node.js',
-      'MySQL', 'Firebase', 'Google Apps Script', 'LLM / AI API', 'LINE API', 'Zoom API', 'Selenium', 'BeautifulSoup', 'pandas', 'Google Sheets API', 'three.js', 'Canvas'],
+      'MySQL', 'Firebase', 'Google Apps Script', 'LLM / AI API', 'LINE API', 'Zoom API', 'Selenium', 'BeautifulSoup', 'pandas', 'matplotlib', 'SentenceTransformers', 'Word2Vec', 'AutoGluon', 'YouTube API', 'Google Sheets API', 'three.js', 'Canvas'],
   },
   {
     key: 'nocode', ja: 'ノーコード・デザインツール', en: 'No-code & design tools',
@@ -60,7 +60,7 @@ export const SKILL_GROUPS = [
       // marketing
       'SEO / MEO', 'Multilingual',
       // business & automation
-      'kintone', 'Zapier', 'Make', 'Notion', 'Google Workspace', 'Excel / CSV',
+      'kintone', 'Zapier', 'Make', 'Notion', 'Google Workspace', 'Excel / CSV', 'Looker Studio',
       // design
       'Figma', 'Photoshop', 'Illustrator', 'Adobe XD', 'Canva', 'Premiere Pro',
     ],
@@ -74,7 +74,7 @@ export const SEARCH_SYNONYMS = {
   hp: ['ホームページ', 'website'], 'ホームページ': ['hp', 'website'], website: ['ホームページ', 'hp'],
   lp: ['ランディングページ', 'landing page'], 'ランディングページ': ['lp'],
   ec: ['ecサイト', 'e-commerce', 'online store', 'ネットショップ'], 'ネットショップ': ['ec', 'online store'], store: ['ecサイト', 'online store'], shop: ['ecサイト', 'online store'],
-  ai: ['ai', 'llm'], 'エーアイ': ['ai'],
+  'エーアイ': ['ai'],
   line: ['line公式', 'ライン', 'line api'], 'ライン': ['line', 'line api'], zoom: ['zoom api'], 'ズーム': ['zoom api'], 'オンライン診療': ['zoom api', 'オンライン相談'], '連携': ['api', 'integration'], '整形外科': ['medical', 'clinic'],
   'ドメイン': ['domain setup', 'server migration'], 'スタジオ': ['studio'],
   '音楽': ['music'], 'ジャズ': ['jazz'], '教室': ['school', 'スクール'], 'スクール': ['school', '教室'],
@@ -84,6 +84,7 @@ export const SEARCH_SYNONYMS = {
   'リフォーム': ['renovation', 'リノベーション'], 'リノベーション': ['renovation', 'リフォーム'], 'リノベ': ['renovation', 'リノベーション'], '工務店': ['construction'], '注文住宅': ['custom home', '工務店'], '住宅': ['housing', 'home'], 'パッシブハウス': ['passive house'], '鳥取': ['tottori'], 'モルタル': ['mortar'],
   'カフェ': ['cafe', 'café'], '飲食店': ['food', 'restaurant'], '多言語': ['multilingual', 'インバウンド'], 'インバウンド': ['multilingual', '多言語'], '英語': ['multilingual'], 'ギフト': ['gift'], 'ヘアケア': ['hair care', 'shampoo'], 'レザー': ['leather'], '革': ['leather'], '財布': ['wallet', 'leather'], 'ブログ': ['blog', 'media'], 'ニュース': ['news', 'blog'], 'シャンプー': ['shampoo', 'hair care'], 'コスメ': ['cosmetics', 'skincare'], 'スキンケア': ['skincare', 'cosmetics'], 'ドクターズコスメ': ['skincare', 'doctor'], '美容液': ['skincare'], '化粧品': ['cosmetics'], 'ネット販売': ['ec', 'online store'], 'd2c': ['online store', 'ecサイト'], 'アイス': ['gelato', 'ice cream'], 'ジェラート': ['gelato'], 'ショッピファイ': ['shopify'],
   'スクレイピング': ['selenium', 'beautifulsoup', 'scraping'], 'rpa': ['selenium', '自動化'], '在庫': ['inventory', '在庫管理'], '楽天': ['rakuten'], 'buyma': ['buyma'], 'amazon': ['amazon'], 'アマゾン': ['amazon'], 'スプレッドシート': ['google sheets api'], 'パイソン': ['python'],
+  'youtube': ['youtube api'], 'ユーチューブ': ['youtube api'], 'データ分析': ['pandas', 'looker studio', 'analytics'], '分析': ['pandas', 'analytics'], '機械学習': ['autogluon', 'machine learning'], 'ai': ['ai', 'llm', 'autogluon', 'sentencetransformers'], '自然言語処理': ['sentencetransformers', 'word2vec'], 'nlp': ['sentencetransformers', 'word2vec'], 'ダッシュボード': ['looker studio'],
   'サーバー移転': ['server migration'], '移転': ['server migration'], 'ドメイン移管': ['server migration'], '静的': ['静的サイト', 'static'], static: ['静的'],
   'エクセル': ['excel'], 'フィグマ': ['figma'], 'フォトショップ': ['photoshop'], 'イラストレーター': ['illustrator'],
 };

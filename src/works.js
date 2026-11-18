@@ -65,6 +65,8 @@ const index = new Map(WORKS.map((w) => [w.id, {
 function termMatches(ix, term) {
   return [term, ...(SYN[term] || [])].some((t) => {
     if (allSkillNames.has(t)) return ix.skills.has(t) || new RegExp(`(^|[^a-z0-9])${reEsc(t)}([^a-z0-9]|$)`).test(ix.text);
+    // very short terms (AI, HP, LP, EC…) must be a whole word, so "ai" doesn't match "airy"
+    if (LATIN.test(t) && t.length <= 2) return new RegExp(`(^|[^a-z0-9])${reEsc(t)}([^a-z0-9]|$)`).test(ix.text);
     if (LATIN.test(t)) return new RegExp(`(^|[^a-z0-9])${reEsc(t)}`).test(ix.text);
     return ix.text.includes(t);
   });
