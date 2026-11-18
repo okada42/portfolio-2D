@@ -513,3 +513,7 @@ html[lang='ja'] .eyebrow { font-family: var(--sans); font-weight: 500; letter-sp
 
 /* the global "* { margin: 0 }" reset removes the browser's auto-centering of <dialog>; restore it */
 dialog.w-modal, dialog.thanks-modal { margin: auto; }
+
+/* contact: while the link cards are hidden, show the form alone, centered */
+.contact-links[hidden] { display: none; }
+.contact-grid:has(.contact-links[hidden]) { grid-template-columns: minmax(0, 720px); justify-content: center; }
