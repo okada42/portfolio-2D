@@ -33,13 +33,12 @@
       <a href="#about"><span class="nav-en" data-i18n="nav.about"></span><span class="nav-ja" lang="ja">私について</span></a>
       <a href="#services"><span class="nav-en" data-i18n="nav.services"></span><span class="nav-ja" lang="ja">サービス</span></a>
       <a href="works.html"><span class="nav-en" data-i18n="nav.work"></span><span class="nav-ja" lang="ja">制作実績</span></a>
-      <a href="#contact"><span class="nav-en" data-i18n="nav.contactNav"></span><span class="nav-ja" lang="ja">お問い合わせ</span></a>
       </nav>
     <div class="clock" role="timer" data-i18n-attr="aria-label:clock.label">
       <span class="clock-time">--:--:--</span>
       <span class="clock-date"></span>
     </div>
-    <a href="#contact" class="nav-cta status-pill"><span class="pill-dot" aria-hidden="true"></span><span data-i18n="nav.contact"></span></a>
+    <span class="nav-cta status-pill"><span class="pill-dot" aria-hidden="true"></span><span data-i18n="nav.contact"></span></span>
     <div class="lang-switch" role="group" aria-label="Language">
       <button type="button" data-lang="ja" aria-pressed="true">JP</button>
       <button type="button" data-lang="en" aria-pressed="false">EN</button>
@@ -56,7 +55,7 @@
       <p class="hero-note" data-i18n="hero.note"></p>
       <p class="status"><span class="dot"></span><span data-i18n="hero.status"></span></p>
       <div class="actions">
-        <a class="btn" href="#contact" data-i18n="hero.cta1"></a>
+        <a class="btn" href="works.html" data-i18n="hero.cta1"></a>
         <a class="btn ghost" href="#services" data-i18n="hero.cta2"></a>
       </div>
     </div>
@@ -139,71 +138,7 @@
       <p class="note reveal" id="featured-note" data-i18n="work.note" hidden></p>
       <div class="center reveal"><a class="btn" href="works.html" data-i18n="feat.all"></a></div>
     </section>
-
-    <section id="contact" class="section contact" data-kanji="縁">
-      <p class="sec-no reveal" data-i18n="contact.no"></p>
-      <span class="hanko reveal" aria-hidden="true">縁</span>
-      <h2 class="reveal" data-i18n="contact.title"></h2>
-      <p class="reveal" data-i18n="contact.body"></p>
-      <div class="contact-grid">
-        <!-- Lancers / GitHub links: hidden for now. Remove "hidden" to show them again. -->
-        <div class="contact-links reveal" hidden>
-          <a class="c-link" href="https://www.lancers.jp/profile/Serion7" target="_blank" rel="noopener">
-            <span class="c-ico c-avatar" aria-hidden="true"><img src="./lancers-icon.png" alt="" width="44" height="44" loading="lazy" /></span>
-            <span class="c-txt"><strong data-i18n="cf.lancers"></strong><small data-i18n="cf.lancersSub"></small></span>
-            <span class="c-arrow" aria-hidden="true">↗</span>
-          </a>
-          <a class="c-link" href="https://github.com/okada42" target="_blank" rel="noopener">
-            <span class="c-ico c-gh" aria-hidden="true"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg></span>
-            <span class="c-txt"><strong>GitHub</strong><small data-i18n="cf.githubSub"></small></span>
-            <span class="c-arrow" aria-hidden="true">↗</span>
-          </a>
-          <p class="c-note" data-i18n="cf.note"></p>
-        </div>
-
-        <form id="contact-form" class="contact-form reveal" novalidate>
-          <div class="cf-row two">
-            <label><span><b data-i18n="cf.name"></b><em data-i18n="cf.req"></em></span><input name="name" type="text" autocomplete="name" required maxlength="80" /></label>
-            <label><span><b data-i18n="cf.email"></b><em data-i18n="cf.req"></em></span><input name="email" type="email" autocomplete="email" required maxlength="120" /></label>
-          </div>
-          <label><span><b data-i18n="cf.company"></b><i data-i18n="cf.opt"></i></span><input name="company" type="text" autocomplete="organization" maxlength="120" /></label>
-          <div class="cf-row two">
-            <label><span><b data-i18n="cf.type"></b></span>
-              <select id="cf-type" name="type">
-                <option value="web" data-i18n="cf.t1"></option><option value="system" data-i18n="cf.t2"></option>
-                <option value="automation" data-i18n="cf.t3"></option><option value="design" data-i18n="cf.t4"></option>
-                <option value="other" data-i18n="cf.t5"></option>
-              </select></label>
-            <label><span><b data-i18n="cf.budget"></b><i data-i18n="cf.opt"></i></span>
-              <select id="cf-budget" name="budget">
-                <option value="undecided" data-i18n="cf.b0"></option><option value="under100k" data-i18n="cf.b1"></option>
-                <option value="100-300k" data-i18n="cf.b2"></option><option value="300-500k" data-i18n="cf.b3"></option>
-                <option value="over500k" data-i18n="cf.b4"></option>
-              </select></label>
-          </div>
-          <label><span><b data-i18n="cf.message"></b><em data-i18n="cf.req"></em></span><textarea name="message" rows="6" required maxlength="4000" data-i18n-attr="placeholder:cf.messagePh"></textarea></label>
-          <label class="cf-hp" aria-hidden="true">Website<input name="website" type="text" tabindex="-1" autocomplete="off" /></label>
-          <label class="cf-consent"><input name="consent" type="checkbox" required /><span data-i18n="cf.consent"></span></label>
-          <button class="btn cf-submit" type="submit" data-i18n="cf.submit"></button>
-          <p class="cf-status" role="status" aria-live="polite"></p>
-        </form>
-      </div>
-    </section>
   </main>
-
-  <dialog class="thanks-modal" id="thanks-modal" aria-labelledby="thanks-title">
-    <div class="tm-inner">
-      <img class="tm-avatar" src="./avatar-256.webp" alt="" width="84" height="84" />
-      <span class="hanko tm-hanko" aria-hidden="true">縁</span>
-      <h2 id="thanks-title" data-i18n="tm.title"></h2>
-      <p data-i18n="tm.body"></p>
-      <p class="tm-note" data-i18n="tm.note"></p>
-      <div class="tm-actions">
-        <button type="button" class="btn" data-tm-close data-i18n="tm.close"></button>
-        <a class="btn ghost" href="works.html" data-i18n="tm.works"></a>
-      </div>
-    </div>
-  </dialog>
 
   <footer class="footer">© <span class="year"></span> Serion<span class="footer-tag" data-i18n="brand.tagline"></span></footer>
   <script type="module" src="/src/main.js"></script>

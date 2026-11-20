@@ -292,7 +292,6 @@ function openModal(id) {
       <div class="m-actions">
         ${w.url ? `<a class="btn" href="${esc(w.url)}" target="_blank" rel="noopener">${esc(t('wm.visit'))} ↗</a>` : ''}
         ${w.figma ? `<a class="btn ghost m-figma" href="${esc(w.figma)}" target="_blank" rel="noopener">${esc(t('wm.figma'))} ↗</a>` : ''}
-        <a class="btn ghost" href="index.html#contact">${esc(t('wm.contact'))}</a>
       </div>
     </div>`;
   if (!els.modal.open) els.modal.showModal();
